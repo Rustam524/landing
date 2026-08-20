@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ===== FADE-IN БЛОКОВ ПРИ СКРОЛЛЕ ===== */
   const revealTargets = document.querySelectorAll(
-    '.service-card, .strength-card, .price-card, .case-card, .capability-card, .review-card, .about__text, .about__card, .contact__form, .contact__left, .pricing__cta'
+    '.service-card, .strength-card, .price-card, .cases__instagram, .capability-card, .about__text, .about__card, .contact__form, .contact__left, .pricing__cta'
   );
   revealTargets.forEach(el => el.classList.add('reveal'));
 
@@ -112,32 +112,37 @@ document.addEventListener('DOMContentLoaded', () => {
   const yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  /* ===== МОКАП ТЕЛЕФОНА: цикл переписок в мессенджере ===== */
+  /* ===== МОКАП ТЕЛЕФОНА: непрерывная переписка из 6 вопросов и ответов ===== */
   const chat = document.getElementById('phoneChat');
   const statusEl = document.getElementById('phoneStatus');
 
-  const dialogs = [
-    {
-      client: 'Здравствуйте! Меня интересует SMM услуга',
-      bot: 'Здравствуйте! Ведём Instagram и TikTok под ключ — от 120 000 ₸/мес. Расскажете, какая у вас сфера?'
-    },
-    {
-      client: 'Можно бота, который сам отвечает клиентам?',
-      bot: 'Да, настроим ИИ-бота для WhatsApp — отвечает 24/7 и собирает заявки. Стоимость — от 250 000 ₸.'
-    },
-    {
-      client: 'Сколько стоит настройка таргета?',
-      bot: 'Таргет в Meta Ads или TikTok Ads — от 150 000 ₸/мес, бюджет рекламы отдельно. Можем запустить тест уже на этой неделе.'
-    }
+  const conversation = [
+    { from: 'in', text: 'Здравствуйте! Меня интересует SMM услуга' },
+    { from: 'out', text: 'Здравствуйте! Ведём Instagram и TikTok под ключ — от 120 000 ₸/мес. В какой сфере у вас бизнес?' },
+    { from: 'in', text: 'У нас кофейня, хотим больше заявок с рекламы' },
+    { from: 'out', text: 'Отлично, подключим таргет в Meta и TikTok Ads — от 150 000 ₸/мес, бюджет отдельно. Настроим и протестируем креативы.' },
+    { from: 'in', text: 'А можно бота, который сам отвечает клиентам?' },
+    { from: 'out', text: 'Да, настроим ИИ-бота для WhatsApp — отвечает 24/7, консультирует и собирает заявки. Стоимость — от 250 000 ₸.' },
+    { from: 'in', text: 'Заявки часто теряются, менеджер забывает перезванивать' },
+    { from: 'out', text: 'Настроим amoCRM: заявка сразу попадает в воронку с задачей для менеджера. Ни один клиент не потеряется.' },
+    { from: 'in', text: 'Сколько занимает запуск проекта?' },
+    { from: 'out', text: 'В среднем 3–7 дней на настройку, дальше тестируем и оптимизируем. Ведёт весь цикл одна команда.' },
+    { from: 'in', text: 'Хочу обсудить проект, куда написать?' },
+    { from: 'out', text: 'Пишите нам в WhatsApp — ответим в течение рабочего дня и подберём тариф под задачи 🙂' }
   ];
 
   const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
+  const scrollChatDown = () => {
+    chat.scrollTo({ top: chat.scrollHeight, behavior: reduceMotion ? 'auto' : 'smooth' });
+  };
+
   const addBubble = (type, text) => {
     const bubble = document.createElement('div');
-    bubble.className = `msg msg--${type}`;
+    bubble.className = `msg msg--${type === 'in' ? 'in' : 'out'}`;
     bubble.textContent = text;
     chat.appendChild(bubble);
+    scrollChatDown();
     return bubble;
   };
 
@@ -146,44 +151,43 @@ document.addEventListener('DOMContentLoaded', () => {
     typing.className = 'msg msg--typing';
     typing.innerHTML = '<span></span><span></span><span></span>';
     chat.appendChild(typing);
+    scrollChatDown();
     return typing;
   };
 
-  let dialogIndex = 0;
-
-  async function playDialog() {
+  async function playConversation() {
     if (!chat) return;
-    const dialog = dialogs[dialogIndex % dialogs.length];
-    dialogIndex++;
 
     chat.classList.add('is-fading');
     await wait(300);
     chat.innerHTML = '';
     chat.classList.remove('is-fading');
-
-    await wait(400);
-    addBubble('in', dialog.client);
-
-    await wait(1000);
-    if (statusEl) statusEl.textContent = 'печатает…';
-    const typingEl = addTyping();
-
-    await wait(1500);
-    typingEl.remove();
-    addBubble('out', dialog.bot);
     if (statusEl) statusEl.textContent = 'онлайн';
 
-    await wait(3200);
-    playDialog();
+    for (const msg of conversation) {
+      if (msg.from === 'in') {
+        await wait(900);
+        addBubble('in', msg.text);
+      } else {
+        await wait(700);
+        if (statusEl) statusEl.textContent = 'печатает…';
+        const typingEl = addTyping();
+        await wait(1300);
+        typingEl.remove();
+        addBubble('out', msg.text);
+        if (statusEl) statusEl.textContent = 'онлайн';
+      }
+    }
+
+    await wait(3500);
+    playConversation();
   }
 
   if (chat) {
     if (reduceMotion) {
-      const d = dialogs[0];
-      addBubble('in', d.client);
-      addBubble('out', d.bot);
+      conversation.forEach(msg => addBubble(msg.from, msg.text));
     } else {
-      playDialog();
+      playConversation();
     }
   }
 
