@@ -46,18 +46,22 @@ document.addEventListener('DOMContentLoaded', () => {
     nav.querySelectorAll('.nav__link').forEach(link => link.addEventListener('click', closeMenu));
   }
 
-  /* ===== ПЛАВНАЯ ПРОКРУТКА К РАЗДЕЛАМ ===== */
-  document.querySelectorAll('a[href^="#"]').forEach(link => {
-    link.addEventListener('click', (e) => {
-      const id = link.getAttribute('href');
-      if (id.length < 2) return;
-      const target = document.querySelector(id);
-      if (!target) return;
-      e.preventDefault();
-      const offset = 76;
-      const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
-      window.scrollTo({ top, behavior: reduceMotion ? 'auto' : 'smooth' });
-    });
+  /* ===== ПЛАВНАЯ ПРОКРУТКА К РАЗДЕЛАМ =====
+     Делегирование на document, а не привязка к конкретным узлам: ссылка
+     внутри чекбокса согласия пересоздаётся при переключении языка
+     (I18N переписывает innerHTML), и делегированный обработчик продолжает
+     работать даже после такой замены. */
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href^="#"]');
+    if (!link) return;
+    const id = link.getAttribute('href');
+    if (id.length < 2) return;
+    const target = document.querySelector(id);
+    if (!target) return;
+    e.preventDefault();
+    const offset = 76;
+    const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+    window.scrollTo({ top, behavior: reduceMotion ? 'auto' : 'smooth' });
   });
 
   /* ===== ИНТЕРАКТИВНЫЙ ЛОГОТИП: клик/тап запускает вращение ===== */

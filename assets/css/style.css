@@ -926,50 +926,30 @@ input, textarea, select{ font-family: inherit; }
 .checkbox__text a{ color: var(--red); text-decoration: underline; text-underline-offset: 2px; }
 .form-group--checkbox.has-error .checkbox__box{ border-color: var(--red); }
 
-/* ============ ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ ============ */
-.privacy{ padding: 150px 0 110px; }
+/* ============ ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ ============
+   Компактный блок в конце страницы (не отдельная страница) — отступы
+   заметно меньше, чем у остальных смысловых разделов сайта. */
+.privacy{ padding: 56px 0; border-top: 1px solid var(--line); }
 .privacy__inner{ max-width: 760px; }
-.privacy__back{
-  display:inline-flex;
-  align-items:center;
-  gap: 6px;
-  font-size: .88rem;
-  font-weight: 600;
-  color: var(--muted);
-  margin-bottom: 28px;
-  transition: color var(--transition);
-}
-.privacy__back:hover{ color: var(--red); }
-.privacy__intro{ max-width: 100%; margin-bottom: 56px; }
+.privacy .section-title{ font-size: clamp(1.4rem, 2.6vw, 1.9rem); }
+.privacy__intro{ max-width: 100%; margin-bottom: 36px; }
 
 .privacy__sections{
   display:flex;
   flex-direction: column;
-  gap: 34px;
-  margin-bottom: 64px;
+  gap: 22px;
+  margin-bottom: 28px;
 }
-.privacy__section h2{
+.privacy__section h3{
   font-family: var(--font-display);
-  font-size: 1.2rem;
+  font-size: 1.02rem;
   font-weight: 700;
-  margin-bottom: 12px;
+  margin-bottom: 6px;
 }
-.privacy__section p{ color: var(--muted); font-size: .95rem; max-width: 68ch; }
+.privacy__section p{ color: var(--muted); font-size: .89rem; max-width: 68ch; }
 
-.privacy__contact{
-  padding: 34px;
-  background: var(--night);
-  color: var(--cream-text);
-  border-radius: var(--radius);
-}
-.privacy__contact h3{ font-family: var(--font-display); font-size: 1.15rem; margin-bottom: 10px; }
-.privacy__contact p{ color: var(--muted-on-night); font-size: .92rem; margin-bottom: 22px; max-width: 56ch; }
-.privacy__contact-actions{ display:flex; gap: 14px; flex-wrap: wrap; }
-
-@media (max-width: 760px){
-  .privacy{ padding: 120px 0 80px; }
-  .privacy__contact{ padding: 26px; }
-}
+.privacy__contact-line{ font-size: .89rem; color: var(--muted); }
+.privacy__contact-line a{ color: var(--red); }
 
 /* ============ FOOTER ============ */
 .footer{ background: var(--night); color: var(--cream-text); padding-top: 70px; }
