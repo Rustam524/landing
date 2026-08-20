@@ -46,12 +46,48 @@ document.addEventListener('DOMContentLoaded', () => {
     nav.querySelectorAll('.nav__link').forEach(link => link.addEventListener('click', closeMenu));
   }
 
+  /* ===== МОДАЛЬНОЕ ОКНО ПОЛИТИКИ КОНФИДЕНЦИАЛЬНОСТИ =====
+     На странице остаётся только ссылка — полный текст открывается поверх
+     контента и не разворачивается в общей ленте сайта. */
+  const openModal = (id) => {
+    const modal = document.getElementById(id);
+    if (!modal) return;
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    modal.querySelector('.modal__close')?.focus();
+  };
+  const closeModal = (modal) => {
+    if (!modal) return;
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  };
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    document.querySelectorAll('.modal.is-open').forEach(closeModal);
+  });
+
   /* ===== ПЛАВНАЯ ПРОКРУТКА К РАЗДЕЛАМ =====
      Делегирование на document, а не привязка к конкретным узлам: ссылка
      внутри чекбокса согласия пересоздаётся при переключении языка
      (I18N переписывает innerHTML), и делегированный обработчик продолжает
      работать даже после такой замены. */
   document.addEventListener('click', (e) => {
+    const modalTrigger = e.target.closest('[data-modal-open]');
+    if (modalTrigger) {
+      e.preventDefault();
+      openModal(modalTrigger.getAttribute('data-modal-open'));
+      return;
+    }
+    const modalCloser = e.target.closest('[data-modal-close]');
+    if (modalCloser) {
+      e.preventDefault();
+      closeModal(modalCloser.closest('.modal'));
+      return;
+    }
+
     const link = e.target.closest('a[href^="#"]');
     if (!link) return;
     const id = link.getAttribute('href');
@@ -74,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ===== FADE-IN БЛОКОВ ПРИ СКРОЛЛЕ ===== */
   const revealTargets = document.querySelectorAll(
-    '.service-card, .strength-card, .price-card, .cases__instagram, .capability-card, .about__text, .about__card, .contact__form, .contact__left, .pricing__cta, .privacy__section'
+    '.service-card, .strength-card, .price-card, .cases__instagram, .capability-card, .about__text, .about__card, .contact__form, .contact__left, .pricing__cta'
   );
   revealTargets.forEach(el => el.classList.add('reveal'));
 

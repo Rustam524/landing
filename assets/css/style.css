@@ -926,13 +926,59 @@ input, textarea, select{ font-family: inherit; }
 .checkbox__text a{ color: var(--red); text-decoration: underline; text-underline-offset: 2px; }
 .form-group--checkbox.has-error .checkbox__box{ border-color: var(--red); }
 
-/* ============ ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ ============
-   Компактный блок в конце страницы (не отдельная страница) — отступы
-   заметно меньше, чем у остальных смысловых разделов сайта. */
-.privacy{ padding: 56px 0; border-top: 1px solid var(--line); }
-.privacy__inner{ max-width: 760px; }
-.privacy .section-title{ font-size: clamp(1.4rem, 2.6vw, 1.9rem); }
-.privacy__intro{ max-width: 100%; margin-bottom: 36px; }
+/* ============ МОДАЛЬНОЕ ОКНО (политика конфиденциальности) ============
+   На странице остаётся только ссылка — полный текст открывается по клику
+   поверх контента и не разворачивается в общей ленте сайта. */
+.modal{
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 24px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition), visibility var(--transition);
+}
+.modal.is-open{ opacity:1; visibility:visible; }
+.modal__backdrop{
+  position:absolute;
+  inset:0;
+  background: rgba(20,17,15,.58);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+.modal__panel{
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 720px;
+  max-height: 85vh;
+  overflow-y: auto;
+  background: var(--paper);
+  border-radius: var(--radius);
+  padding: 44px 38px;
+  transform: translateY(16px) scale(.98);
+  transition: transform var(--transition);
+}
+.modal.is-open .modal__panel{ transform: translateY(0) scale(1); }
+.modal__close{
+  position: absolute;
+  top: 16px; right: 16px;
+  width: 38px; height:38px;
+  border-radius: 50%;
+  background: var(--cream);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 1rem;
+  display:flex; align-items:center; justify-content:center;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+}
+.modal__close:hover{ background: var(--red); border-color: var(--red); color: var(--white); }
+
+.modal__body .section-title{ font-size: clamp(1.4rem, 2.6vw, 1.9rem); }
+.privacy__intro{ max-width: 100%; margin-bottom: 32px; }
 
 .privacy__sections{
   display:flex;
@@ -950,6 +996,10 @@ input, textarea, select{ font-family: inherit; }
 
 .privacy__contact-line{ font-size: .89rem; color: var(--muted); }
 .privacy__contact-line a{ color: var(--red); }
+
+@media (max-width: 600px){
+  .modal__panel{ padding: 32px 22px; }
+}
 
 /* ============ FOOTER ============ */
 .footer{ background: var(--night); color: var(--cream-text); padding-top: 70px; }

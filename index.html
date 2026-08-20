@@ -572,7 +572,7 @@
         <label class="checkbox">
           <input type="checkbox" id="consent" name="consent" required>
           <span class="checkbox__box" aria-hidden="true"></span>
-          <span class="checkbox__text" data-i18n="form.consent">Я согласен(на) на сбор и обработку моих персональных данных в соответствии с <a href="#privacy">Политикой конфиденциальности</a></span>
+          <span class="checkbox__text" data-i18n="form.consent">Я согласен(на) на сбор и обработку моих персональных данных в соответствии с <a href="#privacy" data-modal-open="privacyModal">Политикой конфиденциальности</a></span>
         </label>
         <span class="form-error" data-error-for="consent"></span>
       </div>
@@ -583,59 +583,65 @@
   </div>
 </section>
 
-<!-- ===== ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ (компактный блок в конце сайта) ===== -->
-<section class="privacy" id="privacy">
-  <div class="container privacy__inner">
-    <div class="section-tag" data-i18n="privacy.updated">Дата публикации: 20 августа 2026 г.</div>
-    <h2 class="section-title" data-i18n="privacy.title">Политика конфиденциальности</h2>
-    <p class="section-subtitle privacy__intro" data-i18n="privacy.intro">
-      Данная Политика конфиденциальности объясняет, как ИП «ALGORITM KZ» собирает, использует и
-      защищает персональные данные посетителей сайта в соответствии с Законом Республики Казахстан
-      «О персональных данных и их защите» № 94-V от 21.05.2013.
-    </p>
+<!-- ===== ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ: модальное окно =====
+     Ссылки в футере и в чекбоксе согласия только открывают текст — на
+     странице остаётся просто ссылка, ничего не разворачивается в ленте. -->
+<div class="modal" id="privacyModal" aria-hidden="true">
+  <div class="modal__backdrop" data-modal-close></div>
+  <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="privacyModalTitle">
+    <button type="button" class="modal__close" data-modal-close data-i18n-aria-label="aria.modalClose" aria-label="Закрыть">✕</button>
+    <div class="modal__body">
+      <div class="section-tag" data-i18n="privacy.updated">Дата публикации: 20 августа 2026 г.</div>
+      <h2 class="section-title" id="privacyModalTitle" data-i18n="privacy.title">Политика конфиденциальности</h2>
+      <p class="section-subtitle privacy__intro" data-i18n="privacy.intro">
+        Данная Политика конфиденциальности объясняет, как ИП «ALGORITM KZ» собирает, использует и
+        защищает персональные данные посетителей сайта в соответствии с Законом Республики Казахстан
+        «О персональных данных и их защите» № 94-V от 21.05.2013.
+      </p>
 
-    <div class="privacy__sections">
-      <div class="privacy__section">
-        <h3 data-i18n="privacy.s1.title">1. Кто собирает и обрабатывает ваши данные</h3>
-        <p data-i18n="privacy.s1.text">Оператором персональных данных является ИП «ALGORITM KZ» (г. Шымкент, ул. Карасу 2/1, Республика Казахстан). Именно мы принимаем и обрабатываем данные, которые вы оставляете на этом сайте.</p>
+      <div class="privacy__sections">
+        <div class="privacy__section">
+          <h3 data-i18n="privacy.s1.title">1. Кто собирает и обрабатывает ваши данные</h3>
+          <p data-i18n="privacy.s1.text">Оператором персональных данных является ИП «ALGORITM KZ» (г. Шымкент, ул. Карасу 2/1, Республика Казахстан). Именно мы принимаем и обрабатываем данные, которые вы оставляете на этом сайте.</p>
+        </div>
+
+        <div class="privacy__section">
+          <h3 data-i18n="privacy.s2.title">2. Какие данные мы собираем</h3>
+          <p data-i18n="privacy.s2.text">Через форму заявки на сайте мы собираем: имя, номер телефона (WhatsApp) и, при необходимости, адрес электронной почты. Мы не запрашиваем и не храним данные банковских карт, документов, удостоверяющих личность, и другую специальную категорию персональных данных.</p>
+        </div>
+
+        <div class="privacy__section">
+          <h3 data-i18n="privacy.s3.title">3. Цель сбора данных</h3>
+          <p data-i18n="privacy.s3.text">Указанные данные используются исключительно для: обработки вашей заявки на услуги ALGORITM, обратной связи по интересующему вас вопросу, подготовки коммерческого предложения и договора (при необходимости).</p>
+        </div>
+
+        <div class="privacy__section">
+          <h3 data-i18n="privacy.s4.title">4. Согласие на обработку данных</h3>
+          <p data-i18n="privacy.s4.text">Отправляя форму заявки, вы подтверждаете чекбоксом согласие на сбор и обработку персональных данных на условиях настоящей Политики. Согласие даётся добровольно и может быть отозвано в любой момент.</p>
+        </div>
+
+        <div class="privacy__section">
+          <h3 data-i18n="privacy.s5.title">5. Срок и способ хранения данных</h3>
+          <p data-i18n="privacy.s5.text">Ваши данные хранятся в защищённом виде и используются только внутри компании ALGORITM — для связи с вами и учёта заявок. Мы не передаём и не продаём ваши данные третьим лицам. Данные хранятся до момента отзыва согласия или до достижения цели обработки, после чего удаляются.</p>
+        </div>
+
+        <div class="privacy__section">
+          <h3 data-i18n="privacy.s6.title">6. Ваше право на отзыв согласия</h3>
+          <p data-i18n="privacy.s6.text">Вы можете в любой момент отозвать согласие на обработку персональных данных и потребовать их удаления, направив письмо на адрес ruscom2010@gmail.com с темой «Отзыв согласия на обработку персональных данных». Мы обработаем обращение и удалим данные в разумный срок.</p>
+        </div>
+
+        <div class="privacy__section">
+          <h3 data-i18n="privacy.s7.title">7. Правовая основа</h3>
+          <p data-i18n="privacy.s7.text">Настоящая Политика составлена в соответствии с Законом Республики Казахстан «О персональных данных и их защите» № 94-V от 21.05.2013 и применяется ко всем данным, полученным через этот сайт.</p>
+        </div>
       </div>
 
-      <div class="privacy__section">
-        <h3 data-i18n="privacy.s2.title">2. Какие данные мы собираем</h3>
-        <p data-i18n="privacy.s2.text">Через форму заявки на сайте мы собираем: имя, номер телефона (WhatsApp) и, при необходимости, адрес электронной почты. Мы не запрашиваем и не храним данные банковских карт, документов, удостоверяющих личность, и другую специальную категорию персональных данных.</p>
-      </div>
-
-      <div class="privacy__section">
-        <h3 data-i18n="privacy.s3.title">3. Цель сбора данных</h3>
-        <p data-i18n="privacy.s3.text">Указанные данные используются исключительно для: обработки вашей заявки на услуги ALGORITM, обратной связи по интересующему вас вопросу, подготовки коммерческого предложения и договора (при необходимости).</p>
-      </div>
-
-      <div class="privacy__section">
-        <h3 data-i18n="privacy.s4.title">4. Согласие на обработку данных</h3>
-        <p data-i18n="privacy.s4.text">Отправляя форму заявки, вы подтверждаете чекбоксом согласие на сбор и обработку персональных данных на условиях настоящей Политики. Согласие даётся добровольно и может быть отозвано в любой момент.</p>
-      </div>
-
-      <div class="privacy__section">
-        <h3 data-i18n="privacy.s5.title">5. Срок и способ хранения данных</h3>
-        <p data-i18n="privacy.s5.text">Ваши данные хранятся в защищённом виде и используются только внутри компании ALGORITM — для связи с вами и учёта заявок. Мы не передаём и не продаём ваши данные третьим лицам. Данные хранятся до момента отзыва согласия или до достижения цели обработки, после чего удаляются.</p>
-      </div>
-
-      <div class="privacy__section">
-        <h3 data-i18n="privacy.s6.title">6. Ваше право на отзыв согласия</h3>
-        <p data-i18n="privacy.s6.text">Вы можете в любой момент отозвать согласие на обработку персональных данных и потребовать их удаления, направив письмо на адрес ruscom2010@gmail.com с темой «Отзыв согласия на обработку персональных данных». Мы обработаем обращение и удалим данные в разумный срок.</p>
-      </div>
-
-      <div class="privacy__section">
-        <h3 data-i18n="privacy.s7.title">7. Правовая основа</h3>
-        <p data-i18n="privacy.s7.text">Настоящая Политика составлена в соответствии с Законом Республики Казахстан «О персональных данных и их защите» № 94-V от 21.05.2013 и применяется ко всем данным, полученным через этот сайт.</p>
-      </div>
+      <p class="privacy__contact-line">
+        <span data-i18n="privacy.contact.text">Свяжитесь с нами по email ruscom2010@gmail.com или в WhatsApp — ответим на любые вопросы о том, как мы обрабатываем ваши данные.</span>
+      </p>
     </div>
-
-    <p class="privacy__contact-line">
-      <span data-i18n="privacy.contact.text">Свяжитесь с нами по email ruscom2010@gmail.com или в WhatsApp — ответим на любые вопросы о том, как мы обрабатываем ваши данные.</span>
-    </p>
   </div>
-</section>
+</div>
 
 <!-- ===== ФУТЕР ===== -->
 <footer class="footer">
@@ -662,7 +668,7 @@
       <span data-i18n="footer.addressShort">г. Шымкент, ул. Карасу 2/1</span>
       <a href="tel:+77058903755">+7 705 890 37 55</a>
       <a href="mailto:ruscom2010@gmail.com">ruscom2010@gmail.com</a>
-      <a href="#privacy" data-i18n="footer.privacy">Политика конфиденциальности</a>
+      <a href="#privacy" data-modal-open="privacyModal" data-i18n="footer.privacy">Политика конфиденциальности</a>
     </div>
 
     <div class="footer__col">

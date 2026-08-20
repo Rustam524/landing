@@ -14,6 +14,7 @@ const I18N_TRANSLATIONS = {
     'aria.logoHome': 'ALGORITM — на главную',
     'aria.langSwitch': 'Выбор языка',
     'aria.burger': 'Открыть меню',
+    'aria.modalClose': 'Закрыть',
 
     'nav.about': 'О нас',
     'nav.services': 'Услуги',
@@ -204,7 +205,7 @@ const I18N_TRANSLATIONS = {
     'form.service.opt8': 'Не знаю, нужна консультация',
     'form.message.label': 'Комментарий',
     'form.message.placeholder': 'Коротко о задаче (необязательно)',
-    'form.consent': 'Я согласен(на) на сбор и обработку моих персональных данных в соответствии с <a href="#privacy">Политикой конфиденциальности</a>',
+    'form.consent': 'Я согласен(на) на сбор и обработку моих персональных данных в соответствии с <a href="#privacy" data-modal-open="privacyModal">Политикой конфиденциальности</a>',
 
     'form.error.name': 'Укажите имя',
     'form.error.phoneEmpty': 'Укажите номер телефона',
@@ -256,6 +257,7 @@ const I18N_TRANSLATIONS = {
     'aria.logoHome': 'ALGORITM — басты бетке',
     'aria.langSwitch': 'Тілді таңдау',
     'aria.burger': 'Мәзірді ашу',
+    'aria.modalClose': 'Жабу',
 
     'nav.about': 'Біз туралы',
     'nav.services': 'Қызметтер',
@@ -446,7 +448,7 @@ const I18N_TRANSLATIONS = {
     'form.service.opt8': 'Білмеймін, кеңес керек',
     'form.message.label': 'Түсініктеме',
     'form.message.placeholder': 'Тапсырма туралы қысқаша (міндетті емес)',
-    'form.consent': 'Мен дербес деректерімді <a href="#privacy">Құпиялылық саясатына</a> сәйкес жинауға және өңдеуге келісемін',
+    'form.consent': 'Мен дербес деректерімді <a href="#privacy" data-modal-open="privacyModal">Құпиялылық саясатына</a> сәйкес жинауға және өңдеуге келісемін',
 
     'form.error.name': 'Атыңызды көрсетіңіз',
     'form.error.phoneEmpty': 'Телефон нөмірін көрсетіңіз',
@@ -603,5 +605,12 @@ const I18N = {
     });
   }
 };
+
+// ВАЖНО: top-level `const` в обычном (не module) скрипте НЕ становится
+// свойством window — а script.js читает переводы именно через window.I18N.
+// Без этой строки объект был недоступен снаружи, и телефон-мокап оставался
+// пустым (пустой массив диалога), а WhatsApp-тексты/ошибки формы молча
+// откатывались на английские ключи вместо переводов.
+window.I18N = I18N;
 
 document.addEventListener('DOMContentLoaded', () => I18N.init());
