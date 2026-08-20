@@ -4,41 +4,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ===== ПРЕЛОАДЕР ===== */
   const preloader = document.getElementById('preloader');
-  window.addEventListener('load', () => {
-    setTimeout(() => preloader.classList.add('is-hidden'), reduceMotion ? 200 : 2100);
-  });
-  setTimeout(() => preloader.classList.add('is-hidden'), reduceMotion ? 400 : 3200);
+  if (preloader) {
+    window.addEventListener('load', () => {
+      setTimeout(() => preloader.classList.add('is-hidden'), reduceMotion ? 200 : 2100);
+    });
+    setTimeout(() => preloader.classList.add('is-hidden'), reduceMotion ? 400 : 3200);
+  }
 
   /* ===== ШАПКА: фон при скролле ===== */
   const header = document.getElementById('header');
-  const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 30);
-  onScroll();
-  window.addEventListener('scroll', onScroll, { passive: true });
+  if (header) {
+    const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 30);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
 
   /* ===== МОБИЛЬНОЕ МЕНЮ-ГАМБУРГЕР ===== */
   const burger = document.getElementById('burger');
   const nav = document.getElementById('nav');
 
-  const overlay = document.createElement('div');
-  overlay.className = 'nav-overlay';
-  document.body.appendChild(overlay);
+  if (burger && nav) {
+    const overlay = document.createElement('div');
+    overlay.className = 'nav-overlay';
+    document.body.appendChild(overlay);
 
-  const closeMenu = () => {
-    burger.classList.remove('is-open');
-    nav.classList.remove('is-open');
-    overlay.classList.remove('is-open');
-    document.body.style.overflow = '';
-  };
-  const toggleMenu = () => {
-    const isOpen = nav.classList.toggle('is-open');
-    burger.classList.toggle('is-open', isOpen);
-    overlay.classList.toggle('is-open', isOpen);
-    document.body.style.overflow = isOpen ? 'hidden' : '';
-  };
+    const closeMenu = () => {
+      burger.classList.remove('is-open');
+      nav.classList.remove('is-open');
+      overlay.classList.remove('is-open');
+      document.body.style.overflow = '';
+    };
+    const toggleMenu = () => {
+      const isOpen = nav.classList.toggle('is-open');
+      burger.classList.toggle('is-open', isOpen);
+      overlay.classList.toggle('is-open', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    };
 
-  burger.addEventListener('click', toggleMenu);
-  overlay.addEventListener('click', closeMenu);
-  nav.querySelectorAll('.nav__link').forEach(link => link.addEventListener('click', closeMenu));
+    burger.addEventListener('click', toggleMenu);
+    overlay.addEventListener('click', closeMenu);
+    nav.querySelectorAll('.nav__link').forEach(link => link.addEventListener('click', closeMenu));
+  }
 
   /* ===== ПЛАВНАЯ ПРОКРУТКА К РАЗДЕЛАМ ===== */
   document.querySelectorAll('a[href^="#"]').forEach(link => {
@@ -64,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ===== FADE-IN БЛОКОВ ПРИ СКРОЛЛЕ ===== */
   const revealTargets = document.querySelectorAll(
-    '.service-card, .strength-card, .price-card, .cases__instagram, .capability-card, .about__text, .about__card, .contact__form, .contact__left, .pricing__cta'
+    '.service-card, .strength-card, .price-card, .cases__instagram, .capability-card, .about__text, .about__card, .contact__form, .contact__left, .pricing__cta, .privacy__section'
   );
   revealTargets.forEach(el => el.classList.add('reveal'));
 
@@ -112,24 +118,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  /* ===== МОКАП ТЕЛЕФОНА: непрерывная переписка из 6 вопросов и ответов ===== */
+  /* ===== МОКАП ТЕЛЕФОНА: непрерывная переписка, зависит от текущего языка ===== */
   const chat = document.getElementById('phoneChat');
   const statusEl = document.getElementById('phoneStatus');
-
-  const conversation = [
-    { from: 'in', text: 'Здравствуйте! Меня интересует SMM услуга' },
-    { from: 'out', text: 'Здравствуйте! Ведём Instagram и TikTok под ключ — от 120 000 ₸/мес. В какой сфере у вас бизнес?' },
-    { from: 'in', text: 'У нас кофейня, хотим больше заявок с рекламы' },
-    { from: 'out', text: 'Отлично, подключим таргет в Meta и TikTok Ads — от 150 000 ₸/мес, бюджет отдельно. Настроим и протестируем креативы.' },
-    { from: 'in', text: 'А можно бота, который сам отвечает клиентам?' },
-    { from: 'out', text: 'Да, настроим ИИ-бота для WhatsApp — отвечает 24/7, консультирует и собирает заявки. Стоимость — от 250 000 ₸.' },
-    { from: 'in', text: 'Заявки часто теряются, менеджер забывает перезванивать' },
-    { from: 'out', text: 'Настроим amoCRM: заявка сразу попадает в воронку с задачей для менеджера. Ни один клиент не потеряется.' },
-    { from: 'in', text: 'Сколько занимает запуск проекта?' },
-    { from: 'out', text: 'В среднем 3–7 дней на настройку, дальше тестируем и оптимизируем. Ведёт весь цикл одна команда.' },
-    { from: 'in', text: 'Хочу обсудить проект, куда написать?' },
-    { from: 'out', text: 'Пишите нам в WhatsApp — ответим в течение рабочего дня и подберём тариф под задачи 🙂' }
-  ];
 
   const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -155,49 +146,70 @@ document.addEventListener('DOMContentLoaded', () => {
     return typing;
   };
 
-  async function playConversation() {
+  // generation-токен: при смене языка текущий цикл переписки прерывается,
+  // не дожидаясь своих pending-таймаутов, и стартует заново на новом языке
+  let phoneGeneration = 0;
+
+  async function playConversation(myGeneration) {
     if (!chat) return;
+    const conversation = (window.I18N ? window.I18N.conversation() : []);
 
     chat.classList.add('is-fading');
     await wait(300);
+    if (myGeneration !== phoneGeneration) return;
     chat.innerHTML = '';
     chat.classList.remove('is-fading');
-    if (statusEl) statusEl.textContent = 'онлайн';
+    if (statusEl) statusEl.textContent = window.I18N ? window.I18N.t('phone.online') : 'онлайн';
 
     for (const msg of conversation) {
+      if (myGeneration !== phoneGeneration) return;
       if (msg.from === 'in') {
         await wait(900);
+        if (myGeneration !== phoneGeneration) return;
         addBubble('in', msg.text);
       } else {
         await wait(700);
-        if (statusEl) statusEl.textContent = 'печатает…';
+        if (myGeneration !== phoneGeneration) return;
+        if (statusEl) statusEl.textContent = window.I18N ? window.I18N.t('phone.typing') : 'печатает…';
         const typingEl = addTyping();
         await wait(1300);
+        if (myGeneration !== phoneGeneration) return;
         typingEl.remove();
         addBubble('out', msg.text);
-        if (statusEl) statusEl.textContent = 'онлайн';
+        if (statusEl) statusEl.textContent = window.I18N ? window.I18N.t('phone.online') : 'онлайн';
       }
     }
 
     await wait(3500);
-    playConversation();
+    if (myGeneration !== phoneGeneration) return;
+    playConversation(myGeneration);
   }
 
-  if (chat) {
+  const restartConversation = () => {
+    phoneGeneration++;
+    if (!chat) return;
     if (reduceMotion) {
+      chat.innerHTML = '';
+      const conversation = window.I18N ? window.I18N.conversation() : [];
       conversation.forEach(msg => addBubble(msg.from, msg.text));
     } else {
-      playConversation();
+      playConversation(phoneGeneration);
     }
+  };
+
+  if (chat) {
+    restartConversation();
+    document.addEventListener('algoritm:langchange', restartConversation);
   }
 
-  /* ===== ФОРМА ЗАЯВКИ: проверка полей + отправка в WhatsApp ===== */
+  /* ===== ФОРМА ЗАЯВКИ: проверка полей, согласие и отправка в WhatsApp ===== */
   const form = document.getElementById('leadForm');
   const note = document.getElementById('formNote');
 
-  const setFieldError = (field, message) => {
-    const group = field.closest('.form-group');
-    const errorEl = form.querySelector(`[data-error-for="${field.name}"]`);
+  const t = (key) => (window.I18N ? window.I18N.t(key) : key);
+
+  const setFieldError = (nameAttr, group, message) => {
+    const errorEl = form.querySelector(`[data-error-for="${nameAttr}"]`);
     if (message) {
       group.classList.add('has-error');
       if (errorEl) errorEl.textContent = message;
@@ -212,22 +224,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const name = form.name.value.trim();
     if (!name) {
-      setFieldError(form.name, 'Укажите имя');
+      setFieldError('name', form.name.closest('.form-group'), t('form.error.name'));
       valid = false;
     } else {
-      setFieldError(form.name, '');
+      setFieldError('name', form.name.closest('.form-group'), '');
     }
 
     const phone = form.phone.value.trim();
     const phoneDigits = phone.replace(/\D/g, '');
     if (!phone) {
-      setFieldError(form.phone, 'Укажите номер телефона');
+      setFieldError('phone', form.phone.closest('.form-group'), t('form.error.phoneEmpty'));
       valid = false;
     } else if (phoneDigits.length < 10) {
-      setFieldError(form.phone, 'Проверьте номер — слишком короткий');
+      setFieldError('phone', form.phone.closest('.form-group'), t('form.error.phoneShort'));
       valid = false;
     } else {
-      setFieldError(form.phone, '');
+      setFieldError('phone', form.phone.closest('.form-group'), '');
+    }
+
+    if (form.consent && !form.consent.checked) {
+      setFieldError('consent', form.consent.closest('.form-group--checkbox'), t('form.error.consent'));
+      valid = false;
+    } else if (form.consent) {
+      setFieldError('consent', form.consent.closest('.form-group--checkbox'), '');
     }
 
     return valid;
@@ -241,13 +260,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     });
+    if (form.consent) {
+      form.consent.addEventListener('change', () => {
+        if (form.consent.closest('.form-group--checkbox').classList.contains('has-error')) {
+          validateForm();
+        }
+      });
+    }
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
 
       if (!validateForm()) {
         note.style.color = '#b91c1c';
-        note.textContent = 'Проверьте поля, отмеченные красным.';
+        note.textContent = t('form.note.invalid');
         return;
       }
 
@@ -260,15 +286,15 @@ document.addEventListener('DOMContentLoaded', () => {
       // Формируем сообщение и открываем WhatsApp с заполненным текстом,
       // чтобы заявка точно дошла до агентства.
       const text = encodeURIComponent(
-        `Здравствуйте! Заявка с сайта ALGORITM.\n` +
-        `Имя: ${name}\n` +
-        `Телефон: ${phone}\n` +
-        `Услуга: ${service}\n` +
-        (message ? `Комментарий: ${message}` : '')
+        `${t('wa.formGreeting')}\n` +
+        `${t('wa.formName')} ${name}\n` +
+        `${t('wa.formPhone')} ${phone}\n` +
+        `${t('wa.formService')} ${service}\n` +
+        (message ? `${t('wa.formComment')} ${message}` : '')
       );
 
       note.style.color = '#1b1712';
-      note.textContent = 'Открываем WhatsApp для отправки заявки...';
+      note.textContent = t('form.note.opening');
 
       window.open(`https://wa.me/77058903755?text=${text}`, '_blank');
       form.reset();

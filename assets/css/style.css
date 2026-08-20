@@ -289,6 +289,29 @@ input, textarea, select{ font-family: inherit; }
 
 .header__cta{ padding: 11px 22px; font-size: .85rem; }
 
+/* переключатель языка RU / KZ */
+.lang-switch{
+  display:flex;
+  align-items:center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  flex-shrink: 0;
+}
+.lang-switch__btn{
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .02em;
+  color: var(--muted);
+  transition: background var(--transition), color var(--transition);
+}
+.lang-switch__btn:hover{ color: var(--ink); }
+.lang-switch__btn.is-active{ background: var(--red); color: var(--white); }
+
 .burger{
   display:none;
   flex-direction: column;
@@ -862,6 +885,91 @@ input, textarea, select{ font-family: inherit; }
 }
 .form-submit{ width:100%; margin-top: 6px; }
 .form-note{ margin-top: 14px; font-size: .85rem; color: var(--red); text-align:center; min-height: 1.2em; }
+
+/* чекбокс согласия на обработку персональных данных */
+.form-group--checkbox{ margin-bottom: 14px; }
+.checkbox{
+  display:flex;
+  align-items:flex-start;
+  gap: 10px;
+  cursor: pointer;
+}
+.checkbox input{
+  position:absolute;
+  opacity:0;
+  width:1px; height:1px;
+}
+.checkbox__box{
+  flex-shrink:0;
+  width: 20px; height:20px;
+  margin-top: 1px;
+  border: 1.5px solid var(--line);
+  border-radius: 6px;
+  background: var(--cream);
+  position: relative;
+  transition: border-color var(--transition), background var(--transition);
+}
+.checkbox__box::after{
+  content:'';
+  position:absolute;
+  left: 6px; top: 2px;
+  width: 5px; height: 10px;
+  border: solid var(--white);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) scale(0);
+  transition: transform .15s ease;
+}
+.checkbox input:checked + .checkbox__box{ background: var(--red); border-color: var(--red); }
+.checkbox input:checked + .checkbox__box::after{ transform: rotate(45deg) scale(1); }
+.checkbox input:focus-visible + .checkbox__box{ outline: 2px solid var(--red); outline-offset: 2px; }
+.checkbox__text{ font-size: .82rem; color: var(--muted); line-height: 1.5; }
+.checkbox__text a{ color: var(--red); text-decoration: underline; text-underline-offset: 2px; }
+.form-group--checkbox.has-error .checkbox__box{ border-color: var(--red); }
+
+/* ============ ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ ============ */
+.privacy{ padding: 150px 0 110px; }
+.privacy__inner{ max-width: 760px; }
+.privacy__back{
+  display:inline-flex;
+  align-items:center;
+  gap: 6px;
+  font-size: .88rem;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 28px;
+  transition: color var(--transition);
+}
+.privacy__back:hover{ color: var(--red); }
+.privacy__intro{ max-width: 100%; margin-bottom: 56px; }
+
+.privacy__sections{
+  display:flex;
+  flex-direction: column;
+  gap: 34px;
+  margin-bottom: 64px;
+}
+.privacy__section h2{
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.privacy__section p{ color: var(--muted); font-size: .95rem; max-width: 68ch; }
+
+.privacy__contact{
+  padding: 34px;
+  background: var(--night);
+  color: var(--cream-text);
+  border-radius: var(--radius);
+}
+.privacy__contact h3{ font-family: var(--font-display); font-size: 1.15rem; margin-bottom: 10px; }
+.privacy__contact p{ color: var(--muted-on-night); font-size: .92rem; margin-bottom: 22px; max-width: 56ch; }
+.privacy__contact-actions{ display:flex; gap: 14px; flex-wrap: wrap; }
+
+@media (max-width: 760px){
+  .privacy{ padding: 120px 0 80px; }
+  .privacy__contact{ padding: 26px; }
+}
 
 /* ============ FOOTER ============ */
 .footer{ background: var(--night); color: var(--cream-text); padding-top: 70px; }
