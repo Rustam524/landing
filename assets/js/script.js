@@ -1,12 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-  /* ===== ПРЕЛОАДЕР: анимация появления ALGORITM сверху ===== */
+  /* ===== ПРЕЛОАДЕР: колесо крутится, внутри проявляется ALGORITM ===== */
   const preloader = document.getElementById('preloader');
   window.addEventListener('load', () => {
-    setTimeout(() => preloader.classList.add('is-hidden'), 900);
+    setTimeout(() => preloader.classList.add('is-hidden'), 2100);
   });
   // подстраховка на случай медленной загрузки шрифтов
-  setTimeout(() => preloader.classList.add('is-hidden'), 2500);
+  setTimeout(() => preloader.classList.add('is-hidden'), 3200);
+
+  /* ===== ИНТЕРАКТИВНЫЙ ЛОГОТИП: клик/тап запускает вращение колеса ===== */
+  document.querySelectorAll('.logo').forEach(logo => {
+    logo.addEventListener('click', () => {
+      logo.classList.add('is-spinning');
+      setTimeout(() => logo.classList.remove('is-spinning'), 700);
+    });
+  });
 
   /* ===== ШАПКА: фон при скролле ===== */
   const header = document.getElementById('header');

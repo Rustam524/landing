@@ -5,23 +5,31 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ALGORITM — цифровое агентство полного цикла</title>
 <meta name="description" content="ALGORITM — цифровое агентство полного цикла в Шымкенте. SMM, таргетированная реклама, автоматизация бизнеса, ИИ-боты, ИИ-контент, внедрение amoCRM.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%23000%22/><text x=%2250%22 y=%2268%22 font-size=%2260%22 fill=%22%23e6112a%22 text-anchor=%22middle%22 font-family=%22Arial%22>A</text></svg>">
+<link rel="icon" type="image/png" href="assets/img/favicon.png">
+<meta name="theme-color" content="#0a0506">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 
-<!-- ===== ПРЕЛОАДЕР / АНИМАЦИЯ ЛОГОТИПА ===== -->
+<!-- ===== ПРЕЛОАДЕР: колесо крутится, внутри проявляется название ===== -->
 <div class="preloader" id="preloader">
+  <div class="preloader__wheel" aria-hidden="true">
+    <span class="preloader__ring"></span>
+    <span class="preloader__core"></span>
+  </div>
   <span class="preloader__logo">ALGORITM</span>
 </div>
 
 <!-- ===== ШАПКА ===== -->
 <header class="header" id="header">
   <div class="container header__inner">
-    <a href="#hero" class="logo">ALGORITM<span class="logo__dot">.</span></a>
+    <a href="#hero" class="logo" aria-label="ALGORITM — на главную">
+      <span class="logo__mark"><img src="assets/img/logo.png" alt="" class="logo__img"></span>
+      <span class="logo__word">ALGORITM<span class="logo__dot">.</span></span>
+    </a>
 
     <nav class="nav" id="nav">
       <a href="#about" class="nav__link">О нас</a>
@@ -378,7 +386,10 @@
 <footer class="footer">
   <div class="container footer__inner">
     <div class="footer__brand">
-      <a href="#hero" class="logo">ALGORITM<span class="logo__dot">.</span></a>
+      <a href="#hero" class="logo" aria-label="ALGORITM — на главную">
+        <span class="logo__mark"><img src="assets/img/logo.png" alt="" class="logo__img"></span>
+        <span class="logo__word">ALGORITM<span class="logo__dot">.</span></span>
+      </a>
       <p>Цифровое агентство полного цикла. Маркетинг, автоматизация и ИИ для вашего бизнеса.</p>
     </div>
 
