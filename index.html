@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ALGORITM — цифровое агентство полного цикла</title>
-<meta name="description" content="ALGORITM — цифровое агентство полного цикла в Шымкенте. SMM, таргетированная реклама, автоматизация бизнеса, ИИ-боты, ИИ-контент, внедрение amoCRM.">
+<title>ALGORITM — digital-агентство полного цикла по всему Казахстану</title>
+<meta name="description" content="ALGORITM — digital-агентство полного цикла. SMM, таргетированная реклама, автоматизация бизнеса, ИИ-боты и amoCRM. Работаем удалённо по всему Казахстану.">
 <link rel="icon" type="image/png" href="assets/img/favicon.png">
-<meta name="theme-color" content="#0a0506">
+<meta name="theme-color" content="#f4f0eb">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
@@ -14,13 +14,12 @@
 </head>
 <body>
 
-<!-- ===== ПРЕЛОАДЕР: колесо крутится, внутри проявляется название ===== -->
+<!-- ===== ПРЕЛОАДЕР: герб + буквы ALGORITM появляются по очереди ===== -->
 <div class="preloader" id="preloader">
-  <div class="preloader__wheel" aria-hidden="true">
-    <span class="preloader__ring"></span>
-    <span class="preloader__core"></span>
-  </div>
-  <span class="preloader__logo">ALGORITM</span>
+  <span class="preloader__mark"><img src="assets/img/logo.png" alt="" width="96" height="96"></span>
+  <span class="preloader__word" aria-label="ALGORITM">
+    <span>A</span><span>L</span><span>G</span><span>O</span><span>R</span><span>I</span><span>T</span><span>M</span>
+  </span>
 </div>
 
 <!-- ===== ШАПКА ===== -->
@@ -34,6 +33,7 @@
     <nav class="nav" id="nav">
       <a href="#about" class="nav__link">О нас</a>
       <a href="#services" class="nav__link">Услуги</a>
+      <a href="#pricing" class="nav__link">Тарифы</a>
       <a href="#cases" class="nav__link">Кейсы</a>
       <a href="#reviews" class="nav__link">Отзывы</a>
       <a href="#contact" class="nav__link">Контакты</a>
@@ -49,98 +49,106 @@
 
 <!-- ===== ГЕРОЙ ===== -->
 <section class="hero" id="hero">
-  <div class="hero__glow"></div>
   <div class="container hero__inner">
-    <div class="hero__badge">Цифровое агентство полного цикла</div>
-    <h1 class="hero__title">
-      Продвигаем бренды <span class="text-accent">и внедряем ИИ</span>,<br>
-      пока конкуренты думают, с чего начать
-    </h1>
-    <p class="hero__subtitle">
-      SMM, таргетированная реклама, автоматизация процессов, ИИ-боты и amoCRM —
-      всё под ключ, в одной команде, без посредников.
-    </p>
-    <div class="hero__actions">
-      <a href="https://wa.me/77058903755" target="_blank" rel="noopener" class="btn btn--primary btn--hover-panel">
-        <span class="btn__icon">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.5-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5C10 9 9.5 7.8 9.3 7.3c-.2-.5-.4-.4-.5-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.1s.9 2.4 1.1 2.6c.1.2 1.8 2.8 4.4 3.9.6.3 1.1.4 1.5.5.6.2 1.2.2 1.6.1.5-.1 1.7-.7 1.9-1.3.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.6-.3z"/><path d="M12 2C6.5 2 2 6.5 2 12c0 1.9.5 3.7 1.5 5.3L2 22l4.8-1.5c1.5.9 3.3 1.4 5.2 1.4 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18.3c-1.7 0-3.4-.5-4.8-1.3l-.3-.2-3.2 1 1-3.1-.2-.3C3.6 15 3 13.5 3 12c0-5 4-9 9-9s9 4 9 9-4 9-9 9z"/></svg>
-        </span>
-        Написать в WhatsApp
-      </a>
-      <a href="https://instagram.com/algoritm_co" target="_blank" rel="noopener" class="btn btn--outline btn--hover-panel">
-        <span class="btn__icon">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 2 .3 2.4.5.6.2 1 .5 1.5 1 .4.4.7.8 1 1.5.2.5.4 1.2.5 2.4.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.3 2-.5 2.4-.2.6-.5 1-1 1.5-.4.4-.8.7-1.5 1-.5.2-1.2.4-2.4.5-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-2-.3-2.4-.5-.6-.2-1-.5-1.5-1-.4-.4-.7-.8-1-1.5-.2-.5-.4-1.2-.5-2.4C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.3-2 .5-2.4.2-.6.5-1 1-1.5.4-.4.8-.7 1.5-1 .5-.2 1.2-.4 2.4-.5C8.4 2.2 8.8 2.2 12 2.2zM12 0C8.7 0 8.3 0 7 .1 5.7.1 4.8.3 4 .6c-.8.3-1.5.7-2.2 1.4C1.1 2.7.7 3.4.4 4.2.1 5 0 5.9 0 7.2 0 8.5 0 8.9 0 12s0 3.5.1 4.8c.1 1.3.2 2.2.5 3 .3.8.7 1.5 1.4 2.2.7.7 1.4 1.1 2.2 1.4.8.3 1.7.4 3 .5 1.3.1 1.7.1 4.8.1s3.5 0 4.8-.1c1.3-.1 2.2-.2 3-.5.8-.3 1.5-.7 2.2-1.4.7-.7 1.1-1.4 1.4-2.2.3-.8.4-1.7.5-3 .1-1.3.1-1.7.1-4.8s0-3.5-.1-4.8c-.1-1.3-.2-2.2-.5-3-.3-.8-.7-1.5-1.4-2.2C21.3 1.1 20.6.7 19.8.4c-.8-.3-1.7-.4-3-.5C15.5 0 15.1 0 12 0z"/><path d="M12 5.8A6.2 6.2 0 1 0 12 18.2 6.2 6.2 0 0 0 12 5.8zm0 10.2a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/><circle cx="18.4" cy="5.6" r="1.4"/></svg>
-        </span>
-        Написать в Instagram
-      </a>
+    <div class="hero__col">
+      <div class="hero__badge">Digital-агентство полного цикла</div>
+      <h1 class="hero__title">
+        Продвигаем бизнес <span class="text-accent">по всему Казахстану</span> —
+        удалённо, без привязки к городу
+      </h1>
+      <p class="hero__subtitle">
+        SMM, таргетированная реклама, автоматизация процессов, ИИ-боты и amoCRM — всё под ключ.
+        Работаем онлайн с клиентами из Алматы, Астаны, Шымкента и любого другого города:
+        офис не нужен, всё решаем в переписке и на видеозвонках.
+      </p>
+      <div class="hero__actions">
+        <a href="https://wa.me/77058903755" target="_blank" rel="noopener" class="btn btn--primary btn--hover-panel">
+          <span class="btn__icon">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.5-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5C10 9 9.5 7.8 9.3 7.3c-.2-.5-.4-.4-.5-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.1s.9 2.4 1.1 2.6c.1.2 1.8 2.8 4.4 3.9.6.3 1.1.4 1.5.5.6.2 1.2.2 1.6.1.5-.1 1.7-.7 1.9-1.3.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.6-.3z"/><path d="M12 2C6.5 2 2 6.5 2 12c0 1.9.5 3.7 1.5 5.3L2 22l4.8-1.5c1.5.9 3.3 1.4 5.2 1.4 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18.3c-1.7 0-3.4-.5-4.8-1.3l-.3-.2-3.2 1 1-3.1-.2-.3C3.6 15 3 13.5 3 12c0-5 4-9 9-9s9 4 9 9-4 9-9 9z"/></svg>
+          </span>
+          Написать в WhatsApp
+        </a>
+        <a href="https://instagram.com/algoritm_co" target="_blank" rel="noopener" class="btn btn--outline btn--hover-panel">
+          <span class="btn__icon">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 2 .3 2.4.5.6.2 1 .5 1.5 1 .4.4.7.8 1 1.5.2.5.4 1.2.5 2.4.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.3 2-.5 2.4-.2.6-.5 1-1 1.5-.4.4-.8.7-1.5 1-.5.2-1.2.4-2.4.5-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-2-.3-2.4-.5-.6-.2-1-.5-1.5-1-.4-.4-.7-.8-1-1.5-.2-.5-.4-1.2-.5-2.4C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.3-2 .5-2.4.2-.6.5-1 1-1.5.4-.4.8-.7 1.5-1 .5-.2 1.2-.4 2.4-.5C8.4 2.2 8.8 2.2 12 2.2zM12 0C8.7 0 8.3 0 7 .1 5.7.1 4.8.3 4 .6c-.8.3-1.5.7-2.2 1.4C1.1 2.7.7 3.4.4 4.2.1 5 0 5.9 0 7.2 0 8.5 0 8.9 0 12s0 3.5.1 4.8c.1 1.3.2 2.2.5 3 .3.8.7 1.5 1.4 2.2.7.7 1.4 1.1 2.2 1.4.8.3 1.7.4 3 .5 1.3.1 1.7.1 4.8.1s3.5 0 4.8-.1c1.3-.1 2.2-.2 3-.5.8-.3 1.5-.7 2.2-1.4.7-.7 1.1-1.4 1.4-2.2.3-.8.4-1.7.5-3 .1-1.3.1-1.7.1-4.8s0-3.5-.1-4.8c-.1-1.3-.2-2.2-.5-3-.3-.8-.7-1.5-1.4-2.2C21.3 1.1 20.6.7 19.8.4c-.8-.3-1.7-.4-3-.5C15.5 0 15.1 0 12 0z"/><path d="M12 5.8A6.2 6.2 0 1 0 12 18.2 6.2 6.2 0 0 0 12 5.8zm0 10.2a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/><circle cx="18.4" cy="5.6" r="1.4"/></svg>
+          </span>
+          Написать в Instagram
+        </a>
+      </div>
+
+      <div class="hero__stats">
+        <div class="stat">
+          <span class="stat__num" data-count-to="3" data-suffix="+">0</span>
+          <span class="stat__label">года на рынке</span>
+        </div>
+        <div class="stat">
+          <span class="stat__num" data-count-to="40" data-suffix="+">0</span>
+          <span class="stat__label">проектов реализовано</span>
+        </div>
+        <div class="stat">
+          <span class="stat__num" data-count-to="12" data-suffix="">0</span>
+          <span class="stat__label">специалистов в команде</span>
+        </div>
+      </div>
     </div>
 
-    <div class="hero__stats">
-      <div class="stat">
-        <span class="stat__num">40+</span>
-        <span class="stat__label">проектов запущено</span>
+    <div class="hero__col hero__col--phone">
+      <div class="phone" id="phone">
+        <div class="phone__notch"></div>
+        <div class="phone__statusbar">
+          <span>21:14</span>
+          <span class="phone__statusicons">
+            <svg viewBox="0 0 20 12" width="20" height="12" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="0.5"/><rect x="4.5" y="4.5" width="3" height="7.5" rx="0.5"/><rect x="9" y="2" width="3" height="10" rx="0.5"/><rect x="13.5" y="0" width="3" height="12" rx="0.5"/></svg>
+          </span>
+        </div>
+        <div class="phone__chatbar">
+          <span class="phone__avatar"><img src="assets/img/logo.png" alt=""></span>
+          <div class="phone__who">
+            <b>ALGORITM</b>
+            <span id="phoneStatus">онлайн</span>
+          </div>
+        </div>
+        <div class="phone__chat" id="phoneChat"></div>
       </div>
-      <div class="stat">
-        <span class="stat__num">6</span>
-        <span class="stat__label">направлений услуг</span>
-      </div>
-      <div class="stat">
-        <span class="stat__num">24/7</span>
-        <span class="stat__label">на связи в WhatsApp</span>
-      </div>
+      <div class="hero__phone-glow" aria-hidden="true"></div>
     </div>
   </div>
-  <a href="#about" class="scroll-down" aria-label="Пролистать вниз"><span></span></a>
 </section>
 
 <!-- ===== О КОМПАНИИ ===== -->
 <section class="about" id="about">
   <div class="container about__inner">
-    <div class="section-tag">01 — О компании</div>
-    <h2 class="section-title">Мы соединяем маркетинг, <span class="text-accent">автоматизацию</span> и искусственный интеллект</h2>
+    <div class="about__text">
+      <div class="section-tag">01 — О компании</div>
+      <h2 class="section-title">Соединяем классический SMM <span class="text-accent">с ИИ и автоматизацией</span></h2>
+      <p>
+        <strong>ALGORITM</strong> — digital-агентство полного цикла. Мы начинали с продвижения
+        в социальных сетях и быстро поняли: красивый контент без системы за ним — деньги на ветер.
+        Поэтому сегодня мы объединяем классический SMM с современными технологиями — таргетом,
+        автоматизацией бизнес-процессов, ИИ-ботами и amoCRM — и выстраиваем бизнесу цельный
+        алгоритм роста от первого касания с клиентом до сделки.
+      </p>
+      <p>
+        Мы работаем удалённо с клиентами по всей территории Казахстана — из Алматы, Астаны,
+        Шымкента, Караганды и любого другого города. Формат съёмок и выездов гибкий, а всё
+        остальное — стратегия, реклама, боты, отчётность — ведётся онлайн, без привязки к офису
+        и часовому поясу заказчика.
+      </p>
+      <p>
+        Наша миссия — избавить бизнес от рутины и хаоса в продвижении. Мы верим, что реклама,
+        боты и CRM должны работать без постоянного ручного участия человека, а команда клиента —
+        заниматься делом, а не разбираться в настройках рекламных кабинетов. Именно такой
+        алгоритм роста мы строим для каждого партнёра.
+      </p>
+    </div>
 
-    <div class="about__grid">
-      <div class="about__text">
-        <p>
-          <strong>ALGORITM</strong> — цифровое агентство полного цикла из Шымкента. Мы начинали
-          с продвижения в соцсетях, но быстро поняли: красивый контент без системы за ним —
-          деньги на ветер. Поэтому сегодня мы не просто «ведём инстаграм», а выстраиваем
-          бизнесу цельный алгоритм роста — от первого касания с клиентом до сделки в CRM.
-        </p>
-        <p>
-          В команде — таргетологи, SMM-специалисты, разработчики автоматизаций и инженеры
-          по внедрению ИИ. Мы объединяем креатив и технологии в одном подрядчике, чтобы
-          клиент не бегал между пятью разными исполнителями, а получал результат из одних рук.
-        </p>
-        <blockquote class="about__mission">
-          «Наша миссия — избавить бизнес от рутины и хаоса в продвижении. Мы верим, что
-          через 5 лет у каждой компании будет свой цифровой алгоритм: реклама, боты и CRM
-          будут работать без ручного участия человека. Мы помогаем нашим клиентам построить
-          этот алгоритм уже сегодня.»
-        </blockquote>
+    <div class="about__card">
+      <div class="about__photo">
+        <img src="assets/img/saera.jpg" alt="Саера Абдуллаева, директор ALGORITM">
       </div>
-
-      <div class="about__values">
-        <div class="value-card">
-          <span class="value-card__num">01</span>
-          <h3>Полный цикл</h3>
-          <p>От контента и рекламы до CRM и ИИ-ботов — закрываем весь путь клиента в одном агентстве.</p>
-        </div>
-        <div class="value-card">
-          <span class="value-card__num">02</span>
-          <h3>Системный подход</h3>
-          <p>Не разовые посты и креативы, а выстроенная система, которая работает на цифры, а не на «охваты ради охватов».</p>
-        </div>
-        <div class="value-card">
-          <span class="value-card__num">03</span>
-          <h3>Технологии + креатив</h3>
-          <p>ИИ-инструменты ускоряют производство контента и рутину, освобождая время команды на стратегию.</p>
-        </div>
-        <div class="value-card">
-          <span class="value-card__num">04</span>
-          <h3>Честная отчётность</h3>
-          <p>Показываем реальные цифры — бюджет, лиды, конверсии. Без воды и «успешного успеха».</p>
-        </div>
+      <div class="about__caption">
+        <b>Саера Абдуллаева</b>
+        <span>директор ALGORITM</span>
       </div>
     </div>
   </div>
@@ -171,7 +179,8 @@
         <p>Meta Ads и TikTok Ads: настройка, тесты креативов, оптимизация бюджета и снижение стоимости заявки.</p>
       </div>
 
-      <div class="service-card">
+      <div class="service-card service-card--strong">
+        <span class="service-card__badge">наша сила</span>
         <div class="service-card__icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4z"/><path d="M14 17h6M17 14v6"/></svg>
         </div>
@@ -179,7 +188,8 @@
         <p>Связываем сайт, мессенджеры, таблицы и CRM в единую цепочку — заявки обрабатываются без ручной рутины.</p>
       </div>
 
-      <div class="service-card">
+      <div class="service-card service-card--strong">
+        <span class="service-card__badge">наша сила</span>
         <div class="service-card__icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="7" width="16" height="12" rx="3"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/><circle cx="9" cy="13" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="13" r="1" fill="currentColor" stroke="none"/></svg>
         </div>
@@ -195,7 +205,8 @@
         <p>Тексты, изображения и видео с помощью нейросетей — быстрее и дешевле классического производства контента.</p>
       </div>
 
-      <div class="service-card">
+      <div class="service-card service-card--strong">
+        <span class="service-card__badge">наша сила</span>
         <div class="service-card__icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="12" r="3"/><circle cx="17" cy="6" r="3"/><circle cx="17" cy="18" r="3"/><path d="M9.5 10.5 14.5 7.5M9.5 13.5 14.5 16.5"/></svg>
         </div>
@@ -207,12 +218,233 @@
   </div>
 </section>
 
+<!-- ===== СИЛЬНЫЕ СТОРОНЫ (тёмный блок) ===== -->
+<section class="strengths" id="strengths">
+  <div class="container">
+    <div class="section-tag section-tag--night">Наша специализация</div>
+    <h2 class="section-title section-title--night">
+      Автоматизация, ИИ и amoCRM — то, <span class="text-accent">в чём мы сильнее всего</span>
+    </h2>
+    <p class="section-subtitle section-subtitle--night">
+      Пока другие агентства только предлагают SMM и таргет, мы строим бизнесу систему,
+      которая работает и без постоянного участия человека.
+    </p>
+
+    <div class="strengths__grid">
+      <div class="strength-card">
+        <div class="strength-card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4z"/><path d="M14 17h6M17 14v6"/></svg>
+        </div>
+        <h3>Автоматизация процессов</h3>
+        <ul>
+          <li>Заявки автоматически попадают в CRM</li>
+          <li>Уведомления и задачи без ручного ввода</li>
+          <li>Связка сайта, мессенджеров и таблиц</li>
+        </ul>
+      </div>
+
+      <div class="strength-card">
+        <div class="strength-card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="7" width="16" height="12" rx="3"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/><circle cx="9" cy="13" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="13" r="1" fill="currentColor" stroke="none"/></svg>
+        </div>
+        <h3>ИИ-боты</h3>
+        <ul>
+          <li>Отвечают клиентам 24/7 без выходных</li>
+          <li>Консультируют по услугам и ценам</li>
+          <li>Квалифицируют заявку и передают менеджеру</li>
+        </ul>
+      </div>
+
+      <div class="strength-card">
+        <div class="strength-card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="12" r="3"/><circle cx="17" cy="6" r="3"/><circle cx="17" cy="18" r="3"/><path d="M9.5 10.5 14.5 7.5M9.5 13.5 14.5 16.5"/></svg>
+        </div>
+        <h3>amoCRM</h3>
+        <ul>
+          <li>Воронки продаж под ваш бизнес-процесс</li>
+          <li>Автозадачи для менеджеров</li>
+          <li>Ни одна заявка не теряется</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ТАРИФЫ ===== -->
+<section class="pricing" id="pricing">
+  <div class="container">
+    <div class="section-tag">03 — Тарифы</div>
+    <h2 class="section-title">Сколько это стоит</h2>
+    <p class="section-subtitle">Прозрачные пакеты услуг — выбирайте то, что нужно бизнесу именно сейчас</p>
+
+    <!-- SMM -->
+    <h3 class="pricing__group-title">SMM-тарифы</h3>
+    <div class="pricing__grid pricing__grid--3">
+      <div class="price-card">
+        <div class="price-card__head">
+          <h4>SMM Light</h4>
+          <div class="price-card__price">120 000 <span>₸/мес</span></div>
+        </div>
+        <ul class="price-card__list">
+          <li>Аудит аккаунта</li>
+          <li>План работ и контент-план</li>
+          <li>8 Reels в месяц</li>
+          <li>2 Stories в день (кроме воскресенья)</li>
+          <li>2 съёмочных выезда в месяц</li>
+          <li>Публикация и базовая аналитика</li>
+        </ul>
+        <a href="#contact" class="btn btn--outline btn--hover-panel price-card__btn">Оставить заявку</a>
+      </div>
+
+      <div class="price-card price-card--popular">
+        <span class="price-card__ribbon">популярный</span>
+        <div class="price-card__head">
+          <h4>SMM Стандарт</h4>
+          <div class="price-card__price">200 000 <span>₸/мес</span></div>
+        </div>
+        <ul class="price-card__list">
+          <li>Аудит аккаунта</li>
+          <li>План работ и контент-план</li>
+          <li>16 Reels в месяц</li>
+          <li>3 Stories ежедневно (кроме воскресенья)</li>
+          <li>4 съёмочных выезда в месяц</li>
+          <li>Оформление профиля</li>
+          <li>Публикация</li>
+          <li>Отчёт и аналитика</li>
+        </ul>
+        <a href="#contact" class="btn btn--primary btn--hover-panel price-card__btn">Оставить заявку</a>
+      </div>
+
+      <div class="price-card">
+        <div class="price-card__head">
+          <h4>SMM Pro</h4>
+          <div class="price-card__price">300 000 <span>₸/мес</span></div>
+        </div>
+        <ul class="price-card__list">
+          <li>Всё из тарифа «Стандарт»</li>
+          <li>20 Reels в месяц</li>
+          <li>Съёмка на профессиональную камеру</li>
+          <li>3 Stories ежедневно (кроме воскресенья)</li>
+          <li>4 съёмочных выезда в месяц</li>
+          <li>Отчёт и аналитика</li>
+        </ul>
+        <a href="#contact" class="btn btn--outline btn--hover-panel price-card__btn">Оставить заявку</a>
+      </div>
+    </div>
+
+    <!-- SMM + Target -->
+    <h3 class="pricing__group-title">SMM + Таргет</h3>
+    <div class="pricing__grid pricing__grid--2">
+      <div class="price-card">
+        <div class="price-card__head">
+          <h4>Стандарт + Таргет</h4>
+          <div class="price-card__price">300 000 <span>₸/мес</span></div>
+        </div>
+        <ul class="price-card__list">
+          <li>Всё из тарифа SMM «Стандарт»</li>
+          <li>Настройка Meta Ads</li>
+          <li>Рекламные креативы</li>
+          <li>Тестирование и оптимизация</li>
+          <li>Аналитика рекламы</li>
+          <li class="price-card__bonus">🎁 Бонус: дублирование Reels в TikTok</li>
+        </ul>
+        <p class="price-card__note">Рекламный бюджет оплачивается отдельно</p>
+        <a href="#contact" class="btn btn--outline btn--hover-panel price-card__btn">Оставить заявку</a>
+      </div>
+
+      <div class="price-card">
+        <div class="price-card__head">
+          <h4>Pro + Таргет</h4>
+          <div class="price-card__price">400 000 <span>₸/мес</span></div>
+        </div>
+        <ul class="price-card__list">
+          <li>Всё из тарифа SMM «Pro»</li>
+          <li>20 Reels на профессиональную камеру</li>
+          <li>Meta Ads</li>
+          <li>Подготовка и тестирование креативов</li>
+          <li>Оптимизация и аналитика</li>
+          <li class="price-card__bonus">🎁 Бонус: дублирование Reels в TikTok</li>
+        </ul>
+        <p class="price-card__note">Рекламный бюджет оплачивается отдельно</p>
+        <a href="#contact" class="btn btn--outline btn--hover-panel price-card__btn">Оставить заявку</a>
+      </div>
+    </div>
+
+    <!-- Target alone -->
+    <h3 class="pricing__group-title">Таргет отдельно</h3>
+    <div class="pricing__grid pricing__grid--2">
+      <div class="price-card">
+        <div class="price-card__head">
+          <h4>Таргет</h4>
+          <div class="price-card__price">150 000 <span>₸/мес</span></div>
+        </div>
+        <ul class="price-card__list">
+          <li>Одна площадка на выбор: Meta Ads или TikTok Ads</li>
+          <li>Настройка кампаний и аудиторий</li>
+          <li>Создание рекламных креативов</li>
+          <li>Тестирование, оптимизация, масштабирование</li>
+          <li>Еженедельная аналитика</li>
+        </ul>
+        <p class="price-card__note">Рекламный бюджет оплачивается отдельно</p>
+        <a href="#contact" class="btn btn--outline btn--hover-panel price-card__btn">Оставить заявку</a>
+      </div>
+
+      <div class="price-card price-card--callout">
+        <div class="price-card__callout-icon">%</div>
+        <h4>Выгода комплексного пакета</h4>
+        <p>
+          При подключении таргета вместе с SMM-тарифом стоимость рекламного блока —
+          <b>+100 000 ₸</b> вместо 150 000 ₸ отдельно.
+        </p>
+        <p class="price-card__note">Экономия — когда SMM и таргет ведёт одна команда</p>
+      </div>
+    </div>
+
+    <!-- AI bots -->
+    <h3 class="pricing__group-title">ИИ-боты</h3>
+    <div class="pricing__grid pricing__grid--1">
+      <div class="price-card price-card--wide">
+        <div class="price-card__head">
+          <h4>Внедрение ИИ-бота</h4>
+          <div class="price-card__price">от 250 000 <span>₸</span></div>
+        </div>
+        <ul class="price-card__list price-card__list--2col">
+          <li>Анализ задач и сценариев</li>
+          <li>Разработка логики бота</li>
+          <li>Создание базы знаний</li>
+          <li>Ответы клиентам 24/7</li>
+          <li>Консультации по услугам и товарам</li>
+          <li>Сбор и квалификация заявок</li>
+          <li>Передача диалога сотруднику</li>
+          <li>Тестирование и запуск</li>
+        </ul>
+        <p class="price-card__note">Дополнительные интеграции (CRM, календари, таблицы) рассчитываются индивидуально</p>
+        <a href="#contact" class="btn btn--primary btn--hover-panel price-card__btn">Обсудить бота</a>
+      </div>
+    </div>
+
+    <!-- Automation & amoCRM CTA -->
+    <h3 class="pricing__group-title">Автоматизация и amoCRM</h3>
+    <div class="pricing__cta">
+      <div class="pricing__cta-text">
+        <h4>Стоимость — по проекту</h4>
+        <p>Каждая автоматизация и настройка amoCRM индивидуальны: зависят от количества
+          процессов, интеграций и глубины внедрения. Обсудим задачи и посчитаем точную стоимость.</p>
+      </div>
+      <div class="pricing__cta-actions">
+        <a href="https://wa.me/77058903755" target="_blank" rel="noopener" class="btn btn--primary btn--hover-panel">Обсудить проект</a>
+        <a href="#contact" class="btn btn--outline btn--hover-panel">Оставить заявку</a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ===== КЕЙСЫ ===== -->
 <section class="cases" id="cases">
   <div class="container">
-    <div class="section-tag">03 — Кейсы</div>
+    <div class="section-tag">04 — Кейсы</div>
     <h2 class="section-title">Примеры работ</h2>
-    <p class="section-subtitle">Демо-кейсы — реальные проекты и цифры добавим по мере запуска</p>
+    <p class="section-subtitle">Демо-кейсы по SMM и таргету — реальные проекты и цифры добавим по мере запуска</p>
 
     <div class="cases__grid">
       <div class="case-card">
@@ -231,29 +463,65 @@
 
       <div class="case-card">
         <div class="case-card__top">
-          <span class="case-card__tag">ИИ-бот + CRM</span>
+          <span class="case-card__tag">SMM</span>
           <span class="case-card__badge">demo</span>
         </div>
-        <h3>Стоматологическая клиника</h3>
-        <p>ИИ-бот в WhatsApp для записи + amoCRM с автозадачами для админов.</p>
+        <h3>Фитнес-клуб</h3>
+        <p>Контент-стратегия и Reels под запись на абонементы.</p>
         <div class="case-card__metrics">
-          <div><b>70%</b><span>заявок без оператора</span></div>
-          <div><b>0</b><span>потерянных лидов</span></div>
-          <div><b>3 дня</b><span>на запуск</span></div>
+          <div><b>+94%</b><span>охваты Reels</span></div>
+          <div><b>+58</b><span>заявок за месяц</span></div>
+          <div><b>3.1x</b><span>подписчики</span></div>
         </div>
       </div>
 
       <div class="case-card">
         <div class="case-card__top">
-          <span class="case-card__tag">Автоматизация</span>
+          <span class="case-card__tag">Таргет</span>
           <span class="case-card__badge">demo</span>
         </div>
-        <h3>Онлайн-школа</h3>
-        <p>Автоматическая цепочка «заявка → бот → CRM → оплата» без участия менеджера.</p>
+        <h3>Интернет-магазин косметики</h3>
+        <p>Meta Ads с фокусом на продажи через рассрочку и акции.</p>
         <div class="case-card__metrics">
-          <div><b>−60%</b><span>рутины у менеджеров</span></div>
-          <div><b>+41%</b><span>конверсия в оплату</span></div>
-          <div><b>24/7</b><span>обработка заявок</span></div>
+          <div><b>−28%</b><span>цена клика</span></div>
+          <div><b>4.2x</b><span>ROAS</span></div>
+          <div><b>+120</b><span>заказов за месяц</span></div>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-card__top">
+          <span class="case-card__tag">SMM + Таргет</span>
+          <span class="case-card__badge">demo</span>
+        </div>
+        <h3>Салон красоты</h3>
+        <p>Ведение Instagram + TikTok Ads на запись к мастерам.</p>
+        <div class="case-card__metrics">
+          <div><b>+210%</b><span>охваты TikTok</span></div>
+          <div><b>−24%</b><span>цена записи</span></div>
+          <div><b>2x</b><span>загрузка мастеров</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Возможности вместо кейсов для ИИ/автоматизации/amoCRM -->
+    <div class="capabilities">
+      <h3 class="capabilities__title">ИИ-боты, автоматизация и amoCRM — кейсов пока нет, но вот что уже умеем</h3>
+      <div class="capabilities__grid">
+        <div class="capability-card">
+          <span class="capability-card__icon">⚡</span>
+          <h4>Бот отвечает 24/7</h4>
+          <p>Клиент получает ответ мгновенно — даже ночью, в выходные и во время загруженного рабочего дня.</p>
+        </div>
+        <div class="capability-card">
+          <span class="capability-card__icon">🎯</span>
+          <h4>Ни одной потерянной заявки</h4>
+          <p>Все обращения автоматически попадают в amoCRM с задачами для менеджера — ничего не теряется в переписке.</p>
+        </div>
+        <div class="capability-card">
+          <span class="capability-card__icon">🕒</span>
+          <h4>Экономия времени команды</h4>
+          <p>Рутинные вопросы и первичная квалификация — на боте. Менеджеры занимаются только сделками.</p>
         </div>
       </div>
     </div>
@@ -263,7 +531,7 @@
 <!-- ===== ОТЗЫВЫ ===== -->
 <section class="reviews" id="reviews">
   <div class="container">
-    <div class="section-tag">04 — Отзывы</div>
+    <div class="section-tag">05 — Отзывы</div>
     <h2 class="section-title">Что говорят клиенты</h2>
     <p class="section-subtitle">Демо-отзывы — реальные отклики появятся здесь после первых проектов</p>
 
@@ -275,7 +543,7 @@
           <div class="review-card__avatar">А</div>
           <div>
             <b>Айгерим Т.</b>
-            <span>Владелец сети кофеен</span>
+            <span>Владелец сети кофеен, Шымкент</span>
           </div>
         </div>
       </div>
@@ -287,19 +555,31 @@
           <div class="review-card__avatar">Р</div>
           <div>
             <b>Руслан К.</b>
-            <span>Директор клиники</span>
+            <span>Директор фитнес-клуба, Алматы</span>
           </div>
         </div>
       </div>
 
       <div class="review-card">
         <div class="review-card__stars">★★★★★</div>
-        <p>«Команда ALGORITM разобралась в нашей воронке лучше нас самих. Реклама стала окупаться уже на второй неделе.»</p>
+        <p>«Команда ALGORITM работает полностью удалённо, но ощущение, будто маркетолог сидит с нами в одном офисе. Реклама окупилась уже на второй неделе.»</p>
         <div class="review-card__author">
           <div class="review-card__avatar">Д</div>
           <div>
             <b>Диас М.</b>
-            <span>Основатель онлайн-школы</span>
+            <span>Интернет-магазин косметики, Астана</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-card__stars">★★★★★</div>
+        <p>«Взяли пакет SMM + Таргет — получили и красивый профиль, и стабильный поток записей. Плюс бонусом дублируют Reels в TikTok, это приятно.»</p>
+        <div class="review-card__author">
+          <div class="review-card__avatar">М</div>
+          <div>
+            <b>Мадина С.</b>
+            <span>Салон красоты, Караганда</span>
           </div>
         </div>
       </div>
@@ -307,15 +587,24 @@
   </div>
 </section>
 
+<!-- ===== CTA БАННЕР (красный) ===== -->
+<section class="cta-banner">
+  <div class="container cta-banner__inner">
+    <h2>Один подрядчик — вместо пяти. Один результат — вместо хаоса.</h2>
+    <p>SMM, реклама, автоматизация, ИИ и CRM — всё в одной команде, по всему Казахстану, удалённо.</p>
+    <a href="https://wa.me/77058903755" target="_blank" rel="noopener" class="btn btn--light btn--hover-panel">Обсудить проект в WhatsApp</a>
+  </div>
+</section>
+
 <!-- ===== ФОРМА ЗАЯВКИ ===== -->
 <section class="contact" id="contact">
   <div class="container contact__inner">
     <div class="contact__left">
-      <div class="section-tag">05 — Контакты</div>
+      <div class="section-tag">06 — Контакты</div>
       <h2 class="section-title">Готовы обсудить проект?</h2>
       <p class="section-subtitle">
-        Оставьте заявку — перезвоним или ответим в WhatsApp в течение рабочего дня.
-        Либо напишите нам напрямую любым удобным способом.
+        Оставьте заявку — ответим в WhatsApp в течение рабочего дня. Работаем по всему
+        Казахстану удалённо: город и часовой пояс значения не имеют.
       </p>
 
       <ul class="contact__list">
@@ -323,7 +612,7 @@
           <span class="contact__icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 22s7-7.1 7-12a7 7 0 1 0-14 0c0 4.9 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>
           </span>
-          <span>г. Шымкент, ул. Карасу 2/1</span>
+          <span>Офис: г. Шымкент, ул. Карасу 2/1 — услуги оказываем по всему Казахстану удалённо</span>
         </li>
         <li>
           <span class="contact__icon">
@@ -345,17 +634,19 @@
       </div>
     </div>
 
-    <form class="contact__form" id="leadForm">
+    <form class="contact__form" id="leadForm" novalidate>
       <h3>Оставить заявку</h3>
 
       <div class="form-group">
         <label for="name">Имя</label>
         <input type="text" id="name" name="name" placeholder="Как к вам обращаться?" required>
+        <span class="form-error" data-error-for="name"></span>
       </div>
 
       <div class="form-group">
         <label for="phone">Телефон или WhatsApp</label>
         <input type="tel" id="phone" name="phone" placeholder="+7 700 000 00 00" required>
+        <span class="form-error" data-error-for="phone"></span>
       </div>
 
       <div class="form-group">
@@ -363,6 +654,7 @@
         <select id="service" name="service">
           <option>Ведение Instagram и TikTok</option>
           <option>Таргетированная реклама</option>
+          <option>SMM + Таргет</option>
           <option>Автоматизация бизнес-процессов</option>
           <option>Внедрение ИИ-ботов</option>
           <option>Генерация ИИ-контента</option>
@@ -390,13 +682,14 @@
         <span class="logo__mark"><img src="assets/img/logo.png" alt="" class="logo__img"></span>
         <span class="logo__word">ALGORITM<span class="logo__dot">.</span></span>
       </a>
-      <p>Цифровое агентство полного цикла. Маркетинг, автоматизация и ИИ для вашего бизнеса.</p>
+      <p>Digital-агентство полного цикла. Маркетинг, автоматизация и ИИ — работаем по всему Казахстану удалённо.</p>
     </div>
 
     <div class="footer__col">
       <h4>Навигация</h4>
       <a href="#about">О нас</a>
       <a href="#services">Услуги</a>
+      <a href="#pricing">Тарифы</a>
       <a href="#cases">Кейсы</a>
       <a href="#reviews">Отзывы</a>
       <a href="#contact">Контакты</a>
@@ -419,7 +712,7 @@
   <div class="footer__bottom">
     <div class="container footer__bottom-inner">
       <span>© <span id="year"></span> ALGORITM. Все права защищены.</span>
-      <span>Шымкент, Казахстан</span>
+      <span>Казахстан — работаем удалённо</span>
     </div>
   </div>
 </footer>
