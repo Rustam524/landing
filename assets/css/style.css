@@ -779,12 +779,7 @@ input, textarea, select{ font-family: inherit; }
 
 /* ============ CONTACT ============ */
 .contact{ padding: 110px 0; }
-.contact__inner{
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  align-items: start;
-}
+.contact__inner{ max-width: 560px; }
 .contact__list{ margin: 28px 0 32px; display:flex; flex-direction: column; gap: 16px; }
 .contact__list li{ display:flex; align-items:center; gap: 14px; color: var(--muted); font-size: .92rem; }
 .contact__list a{ color: var(--muted); transition: color var(--transition); }
@@ -800,32 +795,6 @@ input, textarea, select{ font-family: inherit; }
 }
 .contact__icon svg{ width:18px; height:18px; }
 .contact__socials{ display:flex; gap: 14px; flex-wrap: wrap; }
-
-/* карточка «Есть вопрос?» — вместо формы заявки, которая никуда не отправлялась.
-   Кнопка сейчас ведёт в WhatsApp; когда подключим чат-виджет с ИИ-ботом,
-   поменяется только href/обработчик — разметка и стиль останутся те же. */
-.contact__ask{
-  display:flex;
-  flex-direction: column;
-  align-items: flex-start;
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 40px 34px;
-  text-align: left;
-}
-.contact__ask-icon{
-  width: 52px; height:52px;
-  border-radius: 14px;
-  background: rgba(185,28,28,.1);
-  color: var(--red);
-  display:flex; align-items:center; justify-content:center;
-  margin-bottom: 20px;
-}
-.contact__ask-icon svg{ width:26px; height:26px; }
-.contact__ask h3{ font-family: var(--font-display); font-size: 1.3rem; margin-bottom: 10px; }
-.contact__ask p{ color: var(--muted); font-size: .95rem; margin-bottom: 26px; }
-.contact__ask-btn{ width:100%; }
 
 /* ============ МОДАЛЬНОЕ ОКНО (политика конфиденциальности) ============
    На странице остаётся только ссылка — полный текст открывается по клику
@@ -966,7 +935,6 @@ input, textarea, select{ font-family: inherit; }
   .pricing__grid--3{ grid-template-columns: repeat(2, 1fr); }
   .pricing__grid--2{ grid-template-columns: 1fr; }
   .price-card__list--2col{ grid-template-columns: 1fr; }
-  .contact__inner{ grid-template-columns: 1fr; }
   .footer__inner{ grid-template-columns: 1fr 1fr; }
 }
 
@@ -1002,7 +970,6 @@ input, textarea, select{ font-family: inherit; }
   .footer__inner{ grid-template-columns: 1fr; gap: 30px; }
   .footer__bottom-inner{ flex-direction: column; text-align:center; }
 
-  .contact__ask{ padding: 26px; }
   .pricing__cta{ flex-direction: column; align-items: flex-start; }
 }
 

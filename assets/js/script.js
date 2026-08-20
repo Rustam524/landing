@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ===== FADE-IN БЛОКОВ ПРИ СКРОЛЛЕ ===== */
   const revealTargets = document.querySelectorAll(
-    '.service-card, .strength-card, .price-card, .about__text, .about__card, .contact__ask, .contact__left, .pricing__cta'
+    '.service-card, .strength-card, .price-card, .about__text, .about__card, .contact__left, .pricing__cta'
   );
   revealTargets.forEach(el => el.classList.add('reveal'));
 
