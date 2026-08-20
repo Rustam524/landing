@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ===== FADE-IN БЛОКОВ ПРИ СКРОЛЛЕ ===== */
   const revealTargets = document.querySelectorAll(
-    '.service-card, .strength-card, .price-card, .cases__instagram, .capability-card, .about__text, .about__card, .contact__form, .contact__left, .pricing__cta'
+    '.service-card, .strength-card, .price-card, .about__text, .about__card, .contact__form, .contact__left, .pricing__cta'
   );
   revealTargets.forEach(el => el.classList.add('reveal'));
 
@@ -336,8 +336,11 @@ document.addEventListener('DOMContentLoaded', () => {
       note.style.color = '#1b1712';
       note.textContent = t('form.note.opening');
 
-      window.open(`https://wa.me/77058903755?text=${text}`, '_blank');
+      // Переход в том же окне: window.open(..., '_blank') ненадёжен внутри
+      // мобильных вебвью (в том числе встроенных в приложения) — многие из
+      // них не поддерживают всплывающие окна, и WhatsApp просто не открывался.
       form.reset();
+      window.location.href = `https://wa.me/77058903755?text=${text}`;
     });
   }
 

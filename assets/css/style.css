@@ -197,7 +197,8 @@ input, textarea, select{ font-family: inherit; }
   position: fixed;
   top:0; left:0; right:0;
   z-index: 500;
-  padding: 18px 0;
+  /* safe-area: не даём шапке залезать под вырез/чёлку экрана в вебвью мобильных приложений */
+  padding: calc(18px + env(safe-area-inset-top, 0px)) 0 18px;
   background: rgba(244,240,235,.65);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -205,7 +206,7 @@ input, textarea, select{ font-family: inherit; }
   transition: background var(--transition), border-color var(--transition), padding var(--transition);
 }
 .header.is-scrolled{
-  padding: 12px 0;
+  padding: calc(12px + env(safe-area-inset-top, 0px)) 0 12px;
   background: rgba(244,240,235,.92);
   border-bottom-color: var(--line);
 }
@@ -757,55 +758,6 @@ input, textarea, select{ font-family: inherit; }
 .pricing__cta-text p{ color: var(--muted-on-night); max-width: 46ch; font-size: .92rem; }
 .pricing__cta-actions{ display:flex; gap: 14px; flex-wrap: wrap; }
 
-/* ============ CASES ============ */
-.cases{ padding: 110px 0; border-top: 1px solid var(--line); }
-
-.cases__instagram{
-  display:grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 28px;
-  padding: 34px;
-  margin-bottom: 70px;
-  background: var(--night);
-  color: var(--cream-text);
-  border-radius: var(--radius);
-}
-.cases__instagram-icon{
-  width: 56px; height:56px;
-  border-radius: 16px;
-  background: rgba(220,38,38,.16);
-  color: var(--red-bright);
-  display:flex; align-items:center; justify-content:center;
-  flex-shrink:0;
-}
-.cases__instagram-icon svg{ width:28px; height:28px; }
-.cases__instagram-text h3{ font-family: var(--font-display); font-size: 1.15rem; margin-bottom: 6px; }
-.cases__instagram-text p{ color: var(--muted-on-night); font-size: .9rem; max-width: 46ch; }
-
-.capabilities__title{
-  font-family: var(--font-display);
-  font-size: 1.3rem;
-  font-weight: 700;
-  margin-bottom: 26px;
-  max-width: 720px;
-  text-wrap: balance;
-}
-.capabilities__grid{
-  display:grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
-.capability-card{
-  padding: 26px 24px;
-  background: rgba(185,28,28,.05);
-  border: 1px solid rgba(185,28,28,.2);
-  border-radius: var(--radius);
-}
-.capability-card__icon{ font-size: 1.6rem; display:block; margin-bottom: 14px; }
-.capability-card h4{ font-size: 1rem; margin-bottom: 8px; }
-.capability-card p{ font-size: .87rem; color: var(--muted); }
-
 /* ============ CTA BANNER (красный) ============ */
 .cta-banner{ background: var(--red); }
 .cta-banner__inner{
@@ -1030,7 +982,9 @@ input, textarea, select{ font-family: inherit; }
 /* ============ FLOATING WHATSAPP ============ */
 .fab-whatsapp{
   position: fixed;
-  bottom: 24px; right: 24px;
+  /* safe-area: не даём кнопке прятаться под индикатор "домой" на iOS/Android */
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  right: calc(24px + env(safe-area-inset-right, 0px));
   width: 58px; height:58px;
   background: var(--red);
   border-radius: 50%;
@@ -1055,8 +1009,6 @@ input, textarea, select{ font-family: inherit; }
   .phone{ width: min(280px, 60vw); }
   .about__inner{ grid-template-columns: 1fr; }
   .about__card{ position: static; max-width: 320px; }
-  .cases__instagram{ grid-template-columns: 1fr; text-align: center; }
-  .cases__instagram-icon{ margin: 0 auto; }
 }
 
 @media (max-width: 980px){
@@ -1065,7 +1017,6 @@ input, textarea, select{ font-family: inherit; }
   .pricing__grid--3{ grid-template-columns: repeat(2, 1fr); }
   .pricing__grid--2{ grid-template-columns: 1fr; }
   .price-card__list--2col{ grid-template-columns: 1fr; }
-  .capabilities__grid{ grid-template-columns: 1fr; }
   .contact__inner{ grid-template-columns: 1fr; }
   .footer__inner{ grid-template-columns: 1fr 1fr; }
 }
@@ -1075,6 +1026,7 @@ input, textarea, select{ font-family: inherit; }
     position: fixed;
     top: 0; right: 0;
     height: 100vh;
+    height: 100dvh;
     width: min(78vw, 320px);
     background: var(--night);
     border-left: 1px solid var(--night-line);
@@ -1082,7 +1034,8 @@ input, textarea, select{ font-family: inherit; }
     align-items: flex-start;
     justify-content: center;
     gap: 28px;
-    padding: 40px;
+    /* safe-area: панель меню — во всю высоту экрана вебвью, поэтому учитываем вырезы */
+    padding: calc(40px + env(safe-area-inset-top, 0px)) calc(40px + env(safe-area-inset-right, 0px)) calc(40px + env(safe-area-inset-bottom, 0px)) 40px;
     transform: translateX(100%);
     transition: transform var(--transition);
     z-index: 550;
@@ -1097,7 +1050,6 @@ input, textarea, select{ font-family: inherit; }
 
   .services__grid{ grid-template-columns: 1fr; }
   .pricing__grid--3{ grid-template-columns: 1fr; }
-  .cases__instagram{ padding: 26px; }
   .footer__inner{ grid-template-columns: 1fr; gap: 30px; }
   .footer__bottom-inner{ flex-direction: column; text-align:center; }
 
