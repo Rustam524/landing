@@ -35,7 +35,6 @@ const I18N_TRANSLATIONS = {
     'btn.leaveRequest': 'Оставить заявку',
     'btn.discussBot': 'Обсудить бота',
     'btn.discussProject': 'Обсудить проект',
-    'btn.submit': 'Отправить заявку',
 
     'phone.online': 'онлайн',
     'phone.typing': 'печатает…',
@@ -173,39 +172,16 @@ const I18N_TRANSLATIONS = {
 
     'contact.tag': '05 — Контакты',
     'contact.title': 'Готовы обсудить проект?',
-    'contact.subtitle': 'Оставьте заявку — ответим в WhatsApp в течение рабочего дня. Работаем по всему Казахстану удалённо: город и часовой пояс значения не имеют.',
+    'contact.subtitle': 'Напишите нам в WhatsApp или задайте вопрос — ответим в течение рабочего дня. Работаем по всему Казахстану удалённо: город и часовой пояс значения не имеют.',
     'contact.address': 'Офис: г. Шымкент, ул. Карасу 2/1 — услуги оказываем по всему Казахстану удалённо',
+    'contact.ask.title': 'Есть вопрос?',
+    'contact.ask.text': 'Не обязательно заполнять форму — просто напишите нам, и мы быстро ответим.',
+    'contact.ask.btn': 'Задать вопрос',
+    'wa.askText': 'Здравствуйте! У меня есть вопрос:',
 
-    'form.title': 'Оставить заявку',
-    'form.name.label': 'Имя',
-    'form.name.placeholder': 'Как к вам обращаться?',
-    'form.phone.label': 'Телефон или WhatsApp',
-    'form.service.label': 'Интересующая услуга',
-    'form.service.opt1': 'Ведение Instagram и TikTok',
-    'form.service.opt2': 'Таргетированная реклама',
-    'form.service.opt3': 'SMM + Таргет',
-    'form.service.opt4': 'Автоматизация бизнес-процессов',
-    'form.service.opt5': 'Внедрение ИИ-ботов',
-    'form.service.opt6': 'Генерация ИИ-контента',
-    'form.service.opt7': 'Внедрение amoCRM',
-    'form.service.opt8': 'Не знаю, нужна консультация',
-    'form.message.label': 'Комментарий',
-    'form.message.placeholder': 'Коротко о задаче (необязательно)',
-    'form.consent': 'Я согласен(на) на сбор и обработку моих персональных данных в соответствии с <a href="#privacy" data-modal-open="privacyModal">Политикой конфиденциальности</a>',
 
-    'form.error.name': 'Укажите имя',
-    'form.error.phoneEmpty': 'Укажите номер телефона',
-    'form.error.phoneShort': 'Проверьте номер — слишком короткий',
-    'form.error.consent': 'Подтвердите согласие на обработку данных',
-    'form.note.invalid': 'Проверьте поля, отмеченные красным.',
-    'form.note.opening': 'Открываем WhatsApp для отправки заявки...',
 
     'wa.defaultText': 'Здравствуйте! Меня интересует...',
-    'wa.formGreeting': 'Здравствуйте! Заявка с сайта ALGORITM.',
-    'wa.formName': 'Имя:',
-    'wa.formPhone': 'Телефон:',
-    'wa.formService': 'Услуга:',
-    'wa.formComment': 'Комментарий:',
 
     'footer.tagline': 'Digital-агентство полного цикла. Маркетинг, автоматизация и ИИ — работаем по всему Казахстану удалённо.',
     'footer.nav.title': 'Навигация',
@@ -264,7 +240,6 @@ const I18N_TRANSLATIONS = {
     'btn.leaveRequest': 'Өтінім қалдыру',
     'btn.discussBot': 'Ботты талқылау',
     'btn.discussProject': 'Жобаны талқылау',
-    'btn.submit': 'Өтінімді жіберу',
 
     'phone.online': 'желіде',
     'phone.typing': 'жазып жатыр…',
@@ -402,39 +377,16 @@ const I18N_TRANSLATIONS = {
 
     'contact.tag': '05 — Байланыс',
     'contact.title': 'Жобаны талқылауға дайынсыз ба?',
-    'contact.subtitle': 'Өтінім қалдырыңыз — жұмыс күні ішінде WhatsApp-та жауап береміз. Қазақстан бойынша қашықтан жұмыс істейміз: қала мен уақыт белдеуінің маңызы жоқ.',
+    'contact.subtitle': 'WhatsApp-қа жазыңыз немесе сұрақ қойыңыз — жұмыс күні ішінде жауап береміз. Қазақстан бойынша қашықтан жұмыс істейміз: қала мен уақыт белдеуінің маңызы жоқ.',
     'contact.address': 'Кеңсе: Шымкент қ., Қарасу к-сі, 2/1 — қызметтерді Қазақстан бойынша қашықтан көрсетеміз',
+    'contact.ask.title': 'Сұрағыңыз бар ма?',
+    'contact.ask.text': 'Форманы толтырудың қажеті жоқ — бізге жаза беріңіз, жылдам жауап береміз.',
+    'contact.ask.btn': 'Сұрақ қою',
+    'wa.askText': 'Сәлеметсіз бе! Менде сұрақ бар:',
 
-    'form.title': 'Өтінім қалдыру',
-    'form.name.label': 'Аты-жөні',
-    'form.name.placeholder': 'Сізге қалай хабарласуға болады?',
-    'form.phone.label': 'Телефон немесе WhatsApp',
-    'form.service.label': 'Қызығушылық тудыратын қызмет',
-    'form.service.opt1': 'Instagram және TikTok жүргізу',
-    'form.service.opt2': 'Таргетті жарнама',
-    'form.service.opt3': 'SMM + Таргет',
-    'form.service.opt4': 'Бизнес-процестерді автоматтандыру',
-    'form.service.opt5': 'ЖИ-боттарды енгізу',
-    'form.service.opt6': 'ЖИ-контент генерациясы',
-    'form.service.opt7': 'amoCRM енгізу',
-    'form.service.opt8': 'Білмеймін, кеңес керек',
-    'form.message.label': 'Түсініктеме',
-    'form.message.placeholder': 'Тапсырма туралы қысқаша (міндетті емес)',
-    'form.consent': 'Мен дербес деректерімді <a href="#privacy" data-modal-open="privacyModal">Құпиялылық саясатына</a> сәйкес жинауға және өңдеуге келісемін',
 
-    'form.error.name': 'Атыңызды көрсетіңіз',
-    'form.error.phoneEmpty': 'Телефон нөмірін көрсетіңіз',
-    'form.error.phoneShort': 'Нөмірді тексеріңіз — тым қысқа',
-    'form.error.consent': 'Деректерді өңдеуге келісіміңізді растаңыз',
-    'form.note.invalid': 'Қызыл түспен белгіленген өрістерді тексеріңіз.',
-    'form.note.opening': 'Өтінімді жіберу үшін WhatsApp ашылып жатыр...',
 
     'wa.defaultText': 'Сәлеметсіз бе! Мені қызықтыратыны...',
-    'wa.formGreeting': 'Сәлеметсіз бе! ALGORITM сайтынан өтінім.',
-    'wa.formName': 'Аты-жөні:',
-    'wa.formPhone': 'Телефон:',
-    'wa.formService': 'Қызмет:',
-    'wa.formComment': 'Түсініктеме:',
 
     'footer.tagline': 'Толық циклді digital-агенттік. Маркетинг, автоматтандыру және ЖИ — Қазақстан бойынша қашықтан жұмыс істейміз.',
     'footer.nav.title': 'Навигация',
@@ -548,10 +500,14 @@ const I18N = {
     const descEl = document.getElementById('pageDescription');
     if (descEl) descEl.setAttribute('content', this.t('meta.description'));
 
-    // предзаполненный текст для всех WhatsApp-ссылок сайта
+    // предзаполненный текст для всех WhatsApp-ссылок сайта; значение
+    // атрибута — необязательный ключ перевода для своего текста
+    // (например data-wa-link="wa.askText" у кнопки «Задать вопрос»),
+    // без значения используется общий wa.defaultText
     document.querySelectorAll('[data-wa-link]').forEach(a => {
       const base = a.getAttribute('href').split('?')[0];
-      a.setAttribute('href', this.waLink(base, this.t('wa.defaultText')));
+      const textKey = a.getAttribute('data-wa-link') || 'wa.defaultText';
+      a.setAttribute('href', this.waLink(base, this.t(textKey)));
     });
 
     document.querySelectorAll('.lang-switch__btn').forEach(btn => {

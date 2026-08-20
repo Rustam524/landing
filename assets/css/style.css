@@ -801,82 +801,31 @@ input, textarea, select{ font-family: inherit; }
 .contact__icon svg{ width:18px; height:18px; }
 .contact__socials{ display:flex; gap: 14px; flex-wrap: wrap; }
 
-.contact__form{
+/* карточка «Есть вопрос?» — вместо формы заявки, которая никуда не отправлялась.
+   Кнопка сейчас ведёт в WhatsApp; когда подключим чат-виджет с ИИ-ботом,
+   поменяется только href/обработчик — разметка и стиль останутся те же. */
+.contact__ask{
+  display:flex;
+  flex-direction: column;
+  align-items: flex-start;
   background: var(--paper);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 34px;
+  padding: 40px 34px;
+  text-align: left;
 }
-.contact__form h3{ font-family: var(--font-display); font-size: 1.25rem; margin-bottom: 22px; }
-.form-group{ margin-bottom: 18px; }
-.form-group label{ display:block; font-size: .82rem; color: var(--muted); margin-bottom: 8px; }
-.form-group input,
-.form-group select,
-.form-group textarea{
-  width: 100%;
-  padding: 13px 16px;
-  background: var(--cream);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  color: var(--ink);
-  font-size: .92rem;
-  transition: border-color var(--transition);
-  resize: vertical;
-}
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus{ outline:none; border-color: var(--red); }
-.form-group.has-error input,
-.form-group.has-error textarea{ border-color: var(--red); background: rgba(185,28,28,.05); }
-.form-error{
-  display:block;
-  min-height: 1.1em;
-  margin-top: 6px;
-  font-size: .78rem;
+.contact__ask-icon{
+  width: 52px; height:52px;
+  border-radius: 14px;
+  background: rgba(185,28,28,.1);
   color: var(--red);
+  display:flex; align-items:center; justify-content:center;
+  margin-bottom: 20px;
 }
-.form-submit{ width:100%; margin-top: 6px; }
-.form-note{ margin-top: 14px; font-size: .85rem; color: var(--red); text-align:center; min-height: 1.2em; }
-
-/* чекбокс согласия на обработку персональных данных */
-.form-group--checkbox{ margin-bottom: 14px; }
-.checkbox{
-  display:flex;
-  align-items:flex-start;
-  gap: 10px;
-  cursor: pointer;
-}
-.checkbox input{
-  position:absolute;
-  opacity:0;
-  width:1px; height:1px;
-}
-.checkbox__box{
-  flex-shrink:0;
-  width: 20px; height:20px;
-  margin-top: 1px;
-  border: 1.5px solid var(--line);
-  border-radius: 6px;
-  background: var(--cream);
-  position: relative;
-  transition: border-color var(--transition), background var(--transition);
-}
-.checkbox__box::after{
-  content:'';
-  position:absolute;
-  left: 6px; top: 2px;
-  width: 5px; height: 10px;
-  border: solid var(--white);
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg) scale(0);
-  transition: transform .15s ease;
-}
-.checkbox input:checked + .checkbox__box{ background: var(--red); border-color: var(--red); }
-.checkbox input:checked + .checkbox__box::after{ transform: rotate(45deg) scale(1); }
-.checkbox input:focus-visible + .checkbox__box{ outline: 2px solid var(--red); outline-offset: 2px; }
-.checkbox__text{ font-size: .82rem; color: var(--muted); line-height: 1.5; }
-.checkbox__text a{ color: var(--red); text-decoration: underline; text-underline-offset: 2px; }
-.form-group--checkbox.has-error .checkbox__box{ border-color: var(--red); }
+.contact__ask-icon svg{ width:26px; height:26px; }
+.contact__ask h3{ font-family: var(--font-display); font-size: 1.3rem; margin-bottom: 10px; }
+.contact__ask p{ color: var(--muted); font-size: .95rem; margin-bottom: 26px; }
+.contact__ask-btn{ width:100%; }
 
 /* ============ МОДАЛЬНОЕ ОКНО (политика конфиденциальности) ============
    На странице остаётся только ссылка — полный текст открывается по клику
@@ -1053,7 +1002,7 @@ input, textarea, select{ font-family: inherit; }
   .footer__inner{ grid-template-columns: 1fr; gap: 30px; }
   .footer__bottom-inner{ flex-direction: column; text-align:center; }
 
-  .contact__form{ padding: 24px; }
+  .contact__ask{ padding: 26px; }
   .pricing__cta{ flex-direction: column; align-items: flex-start; }
 }
 

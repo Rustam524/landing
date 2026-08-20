@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ===== FADE-IN БЛОКОВ ПРИ СКРОЛЛЕ ===== */
   const revealTargets = document.querySelectorAll(
-    '.service-card, .strength-card, .price-card, .about__text, .about__card, .contact__form, .contact__left, .pricing__cta'
+    '.service-card, .strength-card, .price-card, .about__text, .about__card, .contact__ask, .contact__left, .pricing__cta'
   );
   revealTargets.forEach(el => el.classList.add('reveal'));
 
@@ -240,108 +240,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (chat) {
     restartConversation();
     document.addEventListener('algoritm:langchange', restartConversation);
-  }
-
-  /* ===== ФОРМА ЗАЯВКИ: проверка полей, согласие и отправка в WhatsApp ===== */
-  const form = document.getElementById('leadForm');
-  const note = document.getElementById('formNote');
-
-  const t = (key) => (window.I18N ? window.I18N.t(key) : key);
-
-  const setFieldError = (nameAttr, group, message) => {
-    const errorEl = form.querySelector(`[data-error-for="${nameAttr}"]`);
-    if (message) {
-      group.classList.add('has-error');
-      if (errorEl) errorEl.textContent = message;
-    } else {
-      group.classList.remove('has-error');
-      if (errorEl) errorEl.textContent = '';
-    }
-  };
-
-  const validateForm = () => {
-    let valid = true;
-
-    const name = form.name.value.trim();
-    if (!name) {
-      setFieldError('name', form.name.closest('.form-group'), t('form.error.name'));
-      valid = false;
-    } else {
-      setFieldError('name', form.name.closest('.form-group'), '');
-    }
-
-    const phone = form.phone.value.trim();
-    const phoneDigits = phone.replace(/\D/g, '');
-    if (!phone) {
-      setFieldError('phone', form.phone.closest('.form-group'), t('form.error.phoneEmpty'));
-      valid = false;
-    } else if (phoneDigits.length < 10) {
-      setFieldError('phone', form.phone.closest('.form-group'), t('form.error.phoneShort'));
-      valid = false;
-    } else {
-      setFieldError('phone', form.phone.closest('.form-group'), '');
-    }
-
-    if (form.consent && !form.consent.checked) {
-      setFieldError('consent', form.consent.closest('.form-group--checkbox'), t('form.error.consent'));
-      valid = false;
-    } else if (form.consent) {
-      setFieldError('consent', form.consent.closest('.form-group--checkbox'), '');
-    }
-
-    return valid;
-  };
-
-  if (form) {
-    ['name', 'phone'].forEach(fieldName => {
-      form[fieldName].addEventListener('input', () => {
-        if (form[fieldName].closest('.form-group').classList.contains('has-error')) {
-          validateForm();
-        }
-      });
-    });
-    if (form.consent) {
-      form.consent.addEventListener('change', () => {
-        if (form.consent.closest('.form-group--checkbox').classList.contains('has-error')) {
-          validateForm();
-        }
-      });
-    }
-
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      if (!validateForm()) {
-        note.style.color = '#b91c1c';
-        note.textContent = t('form.note.invalid');
-        return;
-      }
-
-      const name = form.name.value.trim();
-      const phone = form.phone.value.trim();
-      const service = form.service.value;
-      const message = form.message.value.trim();
-
-      // Демо-режим: отправка на бэкенд не подключена.
-      // Формируем сообщение и открываем WhatsApp с заполненным текстом,
-      // чтобы заявка точно дошла до агентства.
-      const text = encodeURIComponent(
-        `${t('wa.formGreeting')}\n` +
-        `${t('wa.formName')} ${name}\n` +
-        `${t('wa.formPhone')} ${phone}\n` +
-        `${t('wa.formService')} ${service}\n` +
-        (message ? `${t('wa.formComment')} ${message}` : '')
-      );
-
-      note.style.color = '#1b1712';
-      note.textContent = t('form.note.opening');
-
-      // Переход в том же окне: window.open(..., '_blank') ненадёжен внутри
-      // мобильных вебвью (в том числе встроенных в приложения) — многие из
-      // них не поддерживают всплывающие окна, и WhatsApp просто не открывался.
-      form.reset();
-      window.location.href = `https://wa.me/77058903755?text=${text}`;
-    });
   }
 
 });
