@@ -984,7 +984,12 @@ input, textarea, select{ font-family: inherit; }
   background: rgba(20,17,15,.5);
   opacity:0; visibility:hidden;
   transition: opacity var(--transition), visibility var(--transition);
-  z-index: 540;
+  /* Должен быть НИЖЕ .header (z-index:500), а не выше. .header — position:fixed
+     со своим z-index, поэтому .nav внутри него (z-index:550) действует только
+     внутри стека шапки — глобально вся шапка стоит на уровне 500. Overlay с
+     z-index выше 500 визуально почти не отличим (похожий тёмный цвет), но
+     на самом деле перехватывает тапы по пунктам меню поверх них. */
+  z-index: 490;
 }
 .nav-overlay.is-open{ opacity:1; visibility:visible; }
 
