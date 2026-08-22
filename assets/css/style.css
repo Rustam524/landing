@@ -199,16 +199,33 @@ input, textarea, select{ font-family: inherit; }
   z-index: 500;
   /* safe-area: не даём шапке залезать под вырез/чёлку экрана в вебвью мобильных приложений */
   padding: calc(18px + env(safe-area-inset-top, 0px)) 0 18px;
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--transition), padding var(--transition);
+}
+/* Фон и блюр — на псевдоэлементе, а не на самом .header.
+   Причина: filter/backdrop-filter на элементе создаёт для него новый
+   containing block для всех потомков с position:fixed. .nav (мобильное
+   выезжающее меню) — потомок .header и тоже position:fixed, поэтому в
+   Safari на реальном iPhone она «прижималась» к рамке шапки (~80px)
+   вместо всего экрана — визуально что-то открывалось, но пункты меню
+   физически не помещались в кликабельную область. У псевдоэлемента нет
+   потомков, поэтому на .nav он никак не влияет. */
+.header::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  z-index:-1;
   background: rgba(244,240,235,.65);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid transparent;
-  transition: background var(--transition), border-color var(--transition), padding var(--transition);
+  transition: background var(--transition);
 }
 .header.is-scrolled{
   padding: calc(12px + env(safe-area-inset-top, 0px)) 0 12px;
-  background: rgba(244,240,235,.92);
   border-bottom-color: var(--line);
+}
+.header.is-scrolled::before{
+  background: rgba(244,240,235,.92);
 }
 .header__inner{
   display:flex;
