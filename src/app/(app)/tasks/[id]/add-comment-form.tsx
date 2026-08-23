@@ -24,7 +24,7 @@ export function AddCommentForm({ taskId }: { taskId: string }) {
       <Textarea name="text" placeholder={dict.tasks.commentPlaceholder} rows={2} required />
       <FieldError>{state?.error}</FieldError>
       <Button type="submit" size="sm" disabled={pending}>
-        {dict.tasks.addComment}
+        {pending ? dict.common.processing : dict.tasks.addComment}
       </Button>
     </form>
   );

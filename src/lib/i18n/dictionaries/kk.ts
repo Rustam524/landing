@@ -35,6 +35,7 @@ export const kk: Dictionary = {
     forbidden: "Бұл әрекетке құқығыңыз жеткіліксіз",
     illegalTransition: "Мұндай мәртебе ауысымы қолжетімсіз",
     notFound: "Табылмады",
+    processing: "Бір сәт…",
   },
   nav: {
     home: "Басты бет",
@@ -116,6 +117,8 @@ export const kk: Dictionary = {
     language: "Интерфейс тілі",
     tempPassword: "Уақытша құпия сөз",
     tempPasswordNotice: "Бұл құпия сөзді қызметкерге жеке беріңіз — ол тек бір рет көрсетіледі. Алғашқы кіруде жүйе оны ауыстыруды сұрайды.",
+    copyPassword: "Құпия сөзді көшіру",
+    copied: "Көшірілді ✓",
     block: "Бұғаттау",
     restore: "Қатынасты қалпына келтіру",
     createSuccess: "Қызметкер қосылды",

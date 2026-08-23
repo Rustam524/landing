@@ -43,7 +43,7 @@ export function AddClientDialog({ open, onClose }: { open: boolean; onClose: () 
 
         <div className="flex gap-2 pt-2">
           <Button type="submit" className="flex-1" disabled={pending}>
-            {dict.common.create}
+            {pending ? dict.common.processing : dict.common.create}
           </Button>
           <Button type="button" variant="secondary" onClick={onClose}>
             {dict.common.cancel}

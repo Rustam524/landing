@@ -44,7 +44,7 @@ export function SettingsClient({ profile, email }: { profile: Profile; email: st
             {state?.success && <p className="text-sm text-emerald-700">{dict.settings.saved}</p>}
 
             <Button type="submit" disabled={pending}>
-              {dict.settings.save}
+              {pending ? dict.common.processing : dict.settings.save}
             </Button>
           </form>
         </CardBody>

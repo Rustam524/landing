@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState } from "react";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Select, FieldError } from "@/components/ui/input";
@@ -20,12 +20,9 @@ export function AddEmployeeDialog({
     createEmployee,
     undefined,
   );
-  const [copied, setCopied] = useState(false);
-
   const created = state && "success" in state ? state : null;
 
   function handleClose() {
-    setCopied(false);
     onClose();
   }
 
@@ -43,17 +40,8 @@ export function AddEmployeeDialog({
             </div>
           </div>
           <p className="text-xs text-brand-text-muted">{dict.employees.tempPasswordNotice}</p>
-          <Button
-            className="w-full"
-            onClick={() => {
-              navigator.clipboard?.writeText(created.tempPassword).catch(() => {});
-              setCopied(true);
-            }}
-          >
-            {copied ? dict.common.success : dict.common.confirm}
-          </Button>
-          <Button variant="secondary" className="w-full" onClick={handleClose}>
-            {dict.common.close}
+          <Button className="w-full" onClick={handleClose}>
+            {dict.common.success}
           </Button>
         </div>
       ) : (
@@ -109,7 +97,7 @@ export function AddEmployeeDialog({
 
           <div className="flex gap-2 pt-2">
             <Button type="submit" className="flex-1" disabled={pending}>
-              {dict.common.create}
+              {pending ? dict.common.processing : dict.common.create}
             </Button>
             <Button type="button" variant="secondary" onClick={handleClose}>
               {dict.common.cancel}

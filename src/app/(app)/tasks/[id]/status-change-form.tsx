@@ -67,7 +67,7 @@ export function StatusChangeForm({ taskId, currentStatus }: { taskId: string; cu
       </FieldError>
 
       <Button type="submit" size="sm" disabled={pending || !nextStatus}>
-        {dict.common.confirm}
+        {pending ? dict.common.processing : dict.common.confirm}
       </Button>
     </form>
   );
