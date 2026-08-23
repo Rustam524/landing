@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { canManageProjects } from "@/lib/auth/permissions";
 import { TASK_STATUS_TRANSITIONS } from "@/lib/constants";
+import { sendPushToUser } from "@/lib/push/send";
 import type { TaskStatus } from "@/lib/types/database";
 
 async function requireUser() {
@@ -67,6 +68,14 @@ export async function createTask(
     details: { title },
   });
 
+  if (assigneeId && assigneeId !== ctx.userId) {
+    await sendPushToUser(assigneeId, {
+      title: "Новая задача",
+      body: title,
+      url: `/tasks/${task.id}`,
+    });
+  }
+
   revalidatePath("/tasks");
   if (projectId) revalidatePath(`/projects/${projectId}`);
   redirect(`/tasks/${task.id}`);
@@ -87,7 +96,7 @@ export async function updateTaskStatus(
 
   const { data: task } = await ctx.supabase
     .from("tasks")
-    .select("id, project_id, status")
+    .select("id, title, project_id, status, assignee_id, created_by")
     .eq("id", taskId)
     .single();
 
@@ -123,10 +132,49 @@ export async function updateTaskStatus(
     details: { from: task.status, to: nextStatus },
   });
 
+  await notifyStatusChange({
+    taskId,
+    title: task.title,
+    nextStatus,
+    assigneeId: task.assignee_id,
+    createdBy: task.created_by,
+    actorId: ctx.userId,
+  });
+
   revalidatePath(`/tasks/${taskId}`);
   revalidatePath("/tasks");
   if (task.project_id) revalidatePath(`/projects/${task.project_id}`);
   return undefined;
+}
+
+/** Notifies whoever needs to act next after a status change — never the person who just triggered it. */
+async function notifyStatusChange(params: {
+  taskId: string;
+  title: string;
+  nextStatus: TaskStatus;
+  assigneeId: string | null;
+  createdBy: string | null;
+  actorId: string;
+}) {
+  const { taskId, title, nextStatus, assigneeId, createdBy, actorId } = params;
+  const url = `/tasks/${taskId}`;
+  const notify = (userId: string | null, body: string) =>
+    userId && userId !== actorId ? sendPushToUser(userId, { title: "ALGORITM", body, url }) : undefined;
+
+  switch (nextStatus) {
+    case "review":
+      await notify(createdBy, `Задача «${title}» отправлена на проверку`);
+      break;
+    case "needs_revision":
+      await notify(assigneeId, `Задача «${title}» возвращена на доработку`);
+      break;
+    case "done":
+      await notify(assigneeId, `Задача «${title}» принята`);
+      break;
+    case "cancelled":
+      await notify(assigneeId, `Задача «${title}» отменена`);
+      break;
+  }
 }
 
 export type CommentFormState = { error?: string } | undefined;

@@ -4,3 +4,13 @@
 # Netlify auto-detects Next.js (App Router) and installs its Next.js Runtime,
 # which handles Server Components, Server Actions, and the proxy/middleware
 # file automatically — no publish directory or manual functions needed.
+
+[build.environment]
+  # These are server-only secrets (never read from client code — both are
+  # guarded by `import "server-only"`, see src/lib/supabase/admin.ts and
+  # src/lib/push/send.ts). Netlify's secret scanner walks the whole deploy
+  # output, including the server-function bundle that legitimately embeds
+  # them so the running function can use them — that's not the same as
+  # shipping them to the browser, so it's a false positive here. Omitting
+  # them by name keeps the scanner active for every other variable.
+  SECRETS_SCAN_OMIT_KEYS = "SUPABASE_SERVICE_ROLE_KEY,VAPID_PRIVATE_KEY"

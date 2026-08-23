@@ -201,5 +201,11 @@ export const kk: Dictionary = {
     account: "Аккаунт",
     role: "Рөлі",
     position: "Лауазымы",
+    notifications: "Хабарландырулар",
+    pushDescription: "Жаңа тапсырмалар мен мәртебе өзгерістері туралы push-хабарландырулар",
+    pushEnable: "Қосу",
+    pushDisable: "Өшіру",
+    pushDenied: "Хабарландырулар браузерде бұғатталған — қосу үшін сайт баптауларында рұқсат беріңіз.",
+    pushUnsupported: "Бұл браузер push-хабарландыруларды қолдамайды",
   },
 };

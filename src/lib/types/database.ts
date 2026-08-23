@@ -113,6 +113,15 @@ export type ActivityLogEntry = {
   created_at: string;
 };
 
+export type PushSubscription = {
+  id: string;
+  user_id: string;
+  endpoint: string;
+  p256dh: string;
+  auth: string;
+  created_at: string;
+};
+
 export type Database = {
   public: {
     Tables: {
@@ -156,6 +165,12 @@ export type Database = {
         Row: ActivityLogEntry;
         Insert: Partial<ActivityLogEntry> & { action: string; entity_type: string };
         Update: Partial<ActivityLogEntry>;
+        Relationships: [];
+      };
+      push_subscriptions: {
+        Row: PushSubscription;
+        Insert: Partial<PushSubscription> & { user_id: string; endpoint: string; p256dh: string; auth: string };
+        Update: Partial<PushSubscription>;
         Relationships: [];
       };
     };

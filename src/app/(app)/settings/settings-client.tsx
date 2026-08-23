@@ -6,6 +6,7 @@ import { Card, CardBody, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input, Label, FieldError } from "@/components/ui/input";
 import { LanguageSwitcher } from "@/components/layout/language-switcher";
+import { PushNotificationsToggle } from "./push-notifications-toggle";
 import { updateProfile, type ProfileFormState } from "./actions";
 import type { Profile } from "@/lib/types/database";
 
@@ -68,6 +69,15 @@ export function SettingsClient({ profile, email }: { profile: Profile; email: st
             <span className="text-brand-text-muted">{dict.settings.language}</span>
             <LanguageSwitcher currentLanguage={profile.language} />
           </div>
+        </CardBody>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{dict.settings.notifications}</CardTitle>
+        </CardHeader>
+        <CardBody>
+          <PushNotificationsToggle />
         </CardBody>
       </Card>
     </div>
