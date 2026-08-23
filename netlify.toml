@@ -1,0 +1,6 @@
+[build]
+  command = "npm run build"
+
+# Netlify auto-detects Next.js (App Router) and installs its Next.js Runtime,
+# which handles Server Components, Server Actions, and the proxy/middleware
+# file automatically — no publish directory or manual functions needed.
