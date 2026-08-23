@@ -32,7 +32,9 @@ export function AppShell({
       {/* Desktop sidebar */}
       <aside className="hidden w-60 shrink-0 flex-col bg-brand-ink text-brand-cream md:flex">
         <div className="flex items-center gap-2.5 px-5 py-5">
-          <Image src="/brand/logo.png" alt="ALGORITM" width={32} height={32} className="rounded-full" />
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-cream p-[3px] shadow-sm">
+            <Image src="/brand/logo.png" alt="ALGORITM" width={30} height={30} className="rounded-full" />
+          </div>
           <span className="text-sm font-semibold tracking-wide">ALGORITM</span>
         </div>
         <nav className="flex-1 space-y-1 px-3">

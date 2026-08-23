@@ -64,19 +64,9 @@ export function AddTaskDialog({
             </Select>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <Label htmlFor="deadline">{dict.tasks.deadline}</Label>
-            <Input id="deadline" name="deadline" type="datetime-local" />
-          </div>
-          <div>
-            <Label htmlFor="complexity">{dict.tasks.complexity}</Label>
-            <Select id="complexity" name="complexity" defaultValue="1">
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-            </Select>
-          </div>
+        <div>
+          <Label htmlFor="deadline">{dict.tasks.deadline}</Label>
+          <Input id="deadline" name="deadline" type="datetime-local" />
         </div>
 
         <FieldError>{state?.error}</FieldError>

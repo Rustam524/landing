@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Clock, User, FolderKanban, Gauge, RotateCcw } from "lucide-react";
+import { ArrowLeft, Clock, User, FolderKanban, RotateCcw } from "lucide-react";
 import { useDictionary } from "@/lib/i18n/dictionary-provider";
 import { Card, CardBody } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -84,9 +84,6 @@ export function TaskDetailClient({
                 </span>
               </InfoItem>
             )}
-            <InfoItem icon={Gauge} label={dict.tasks.complexity}>
-              {task.complexity}
-            </InfoItem>
             {task.revision_count > 0 && (
               <InfoItem icon={RotateCcw} label={dict.tasks.revisionCount}>
                 {task.revision_count}
