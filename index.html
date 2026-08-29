@@ -56,13 +56,97 @@
 </head>
 <body>
 
-<!-- ===== ПРЕЛОАДЕР: герб + буквы ALGORITM появляются по очереди ===== -->
-<div class="preloader" id="preloader">
-  <span class="preloader__mark"><img src="assets/img/logo.png" alt="" width="96" height="96"></span>
-  <span class="preloader__word" aria-label="ALGORITM">
-    <span>A</span><span>L</span><span>G</span><span>O</span><span>R</span><span>I</span><span>T</span><span>M</span>
-  </span>
+<!-- ===== ИНТРО-ЗАСТАВКА: частицы + линия-горизонт + наплыв логотипа =====
+     Показывается один раз за сессию (sessionStorage), автостарт без клика,
+     ~3 сек, затем полностью удаляется из DOM. Логика — в inline-скрипте
+     сразу после разметки, чтобы стартовать как можно раньше (до основного
+     script.js, который подключается в самом низу страницы). -->
+<div id="intro-overlay">
+  <canvas id="intro-canvas"></canvas>
+  <div id="intro-horizon"></div>
+  <div id="intro-content">
+    <img id="intro-logo" src="assets/img/logo.png" alt="ALGORITM">
+    <div id="intro-tagline">Маркетинговое агентство</div>
+  </div>
 </div>
+<script>
+(function () {
+  var overlay = document.getElementById('intro-overlay');
+  if (!overlay) return;
+
+  var canvas = document.getElementById('intro-canvas');
+  var ctx = canvas.getContext('2d');
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Показ только 1 раз за сессию — если уже видели, убираем заставку сразу.
+  if (sessionStorage.getItem('algoritm_introShown')) {
+    overlay.remove();
+    return;
+  }
+
+  var particleColor = getComputedStyle(document.documentElement)
+    .getPropertyValue('--particle-color').trim() || '#f4ede2';
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  var particles = [];
+  var count = window.innerWidth < 600 ? 60 : 140;
+  for (var i = 0; i < count; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: canvas.height + Math.random() * canvas.height,
+      r: Math.random() * 2 + 0.6,
+      speed: Math.random() * 0.6 + 0.2,
+      drift: (Math.random() - 0.5) * 0.4,
+      twinkle: Math.random() * Math.PI * 2
+    });
+  }
+
+  var raf;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = particleColor;
+    for (var i = 0; i < particles.length; i++) {
+      var p = particles[i];
+      p.y -= p.speed;
+      p.x += p.drift;
+      p.twinkle += 0.05;
+      if (p.y < -10) {
+        p.y = canvas.height + 10;
+        p.x = Math.random() * canvas.width;
+      }
+      ctx.globalAlpha = 0.4 + Math.sin(p.twinkle) * 0.3;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    raf = requestAnimationFrame(draw);
+  }
+
+  function hideIntro() {
+    if (raf) cancelAnimationFrame(raf);
+    overlay.classList.add('hide');
+    sessionStorage.setItem('algoritm_introShown', '1');
+    setTimeout(function () {
+      overlay.remove();
+      window.removeEventListener('resize', resize);
+    }, 700);
+  }
+
+  if (!reducedMotion) draw();
+
+  var durationMs = reducedMotion ? 600 :
+    parseFloat(getComputedStyle(document.documentElement)
+      .getPropertyValue('--intro-duration')) * 1000;
+  setTimeout(hideIntro, durationMs);
+})();
+</script>
 
 <!-- ===== ШАПКА ===== -->
 <header class="header" id="header">

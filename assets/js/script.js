@@ -2,14 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ===== ПРЕЛОАДЕР ===== */
-  const preloader = document.getElementById('preloader');
-  if (preloader) {
-    window.addEventListener('load', () => {
-      setTimeout(() => preloader.classList.add('is-hidden'), reduceMotion ? 200 : 2100);
-    });
-    setTimeout(() => preloader.classList.add('is-hidden'), reduceMotion ? 400 : 3200);
-  }
+  /* Интро-заставка (#intro-overlay) живёт в своём inline-скрипте в index.html —
+     запускается раньше этого файла, стартует сама и сама себя убирает. */
 
   /* ===== ШАПКА: фон при скролле ===== */
   const header = document.getElementById('header');

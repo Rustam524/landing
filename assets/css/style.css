@@ -59,52 +59,85 @@ input, textarea, select{ font-family: inherit; }
   *, *::before, *::after{ animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
 
-/* ============ PRELOADER ============ */
-.preloader{
-  position: fixed; inset:0; z-index: 9999;
-  background: var(--cream);
-  display:flex; flex-direction: column; align-items:center; justify-content:center;
-  gap: 22px;
-  transition: opacity .6s ease, visibility .6s ease;
+/* ============ ИНТРО-ЗАСТАВКА ============
+   Один раз за сессию, автостарт, ~3 сек, потом полностью удаляется из DOM
+   (см. inline-скрипт в index.html сразу после разметки #intro-overlay). */
+:root{
+  --intro-bg: var(--night);
+  --particle-color: var(--cream-text);
+  --accent-color: var(--red);
+  --text-color: var(--cream-text);
+  --intro-duration: 3s;
 }
-.preloader.is-hidden{ opacity:0; visibility:hidden; pointer-events:none; }
 
-.preloader__mark{
-  width: 96px; height: 96px;
+#intro-overlay{
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--intro-bg);
+  overflow: hidden;
+  transition: opacity .7s ease;
+}
+#intro-overlay.hide{ opacity: 0; pointer-events: none; }
+
+#intro-canvas{
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+}
+
+#intro-horizon{
+  position: absolute; left: 0; right: 0; bottom: 22%; height: 3px;
+  background: linear-gradient(90deg,
+    transparent,
+    var(--accent-color),
+    var(--particle-color),
+    var(--accent-color),
+    transparent);
+  transform: scaleX(0);
+  opacity: 0;
+  animation: horizon-in 1.2s ease-out .3s forwards;
+  box-shadow: 0 0 24px 2px var(--particle-color);
+}
+@keyframes horizon-in{
+  to{ transform: scaleX(1); opacity: 1; }
+}
+
+#intro-content{
+  position: relative; z-index: 2; height: 100%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 24px;
+}
+
+#intro-logo{
+  width: clamp(64px, 14vw, 88px);
+  height: clamp(64px, 14vw, 88px);
   border-radius: 50%;
-  opacity:0;
-  transform: scale(.5);
-  animation: markIn .6s cubic-bezier(.2,.85,.3,1.2) forwards .1s;
+  opacity: 0;
+  transform: scale(1.15);
+  animation: logo-in 1s cubic-bezier(.2,.8,.2,1) .5s forwards;
 }
-.preloader__mark img{ width:100%; height:100%; border-radius:50%; }
-@keyframes markIn{
-  to{ opacity:1; transform: scale(1); }
+@keyframes logo-in{
+  to{ opacity: 1; transform: scale(1); }
 }
 
-.preloader__word{
-  display:flex;
-  gap: .04em;
+#intro-tagline{
+  margin-top: 14px;
   font-family: var(--font-display);
-  font-size: clamp(1.6rem, 6vw, 2.6rem);
-  font-weight: 700;
-  letter-spacing: .1em;
-  color: var(--ink);
+  font-size: clamp(13px, 2vw, 16px);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--text-color);
+  opacity: 0;
+  transform: translateY(10px);
+  animation: tag-in .8s ease-out 1.2s forwards;
 }
-.preloader__word span{
-  opacity:0;
-  transform: translateY(12px) scale(.7);
-  animation: letterIn .5s cubic-bezier(.2,.9,.3,1) forwards;
+@keyframes tag-in{
+  to{ opacity: .85; transform: translateY(0); }
 }
-.preloader__word span:nth-child(1){ animation-delay: .70s; }
-.preloader__word span:nth-child(2){ animation-delay: .76s; }
-.preloader__word span:nth-child(3){ animation-delay: .82s; }
-.preloader__word span:nth-child(4){ animation-delay: .88s; }
-.preloader__word span:nth-child(5){ animation-delay: .94s; color: var(--red); }
-.preloader__word span:nth-child(6){ animation-delay: 1.00s; }
-.preloader__word span:nth-child(7){ animation-delay: 1.06s; }
-.preloader__word span:nth-child(8){ animation-delay: 1.12s; }
-@keyframes letterIn{
-  to{ opacity:1; transform: translateY(0) scale(1); }
+
+@media (prefers-reduced-motion: reduce){
+  #intro-canvas{ display: none; }
+  #intro-horizon, #intro-logo, #intro-tagline{
+    animation: none !important; opacity: 1 !important; transform: none !important;
+  }
 }
 
 /* ============ SECTION HELPERS ============ */
