@@ -59,20 +59,22 @@ input, textarea, select{ font-family: inherit; }
   *, *::before, *::after{ animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
 
-/* ============ ИНТРО-ЗАСТАВКА v2 (боке + свечение + пол) ============
+/* ============ ИНТРО-ЗАСТАВКА (fireball) ============
+   Огненный шар летит к центру, взрыв искрами, наплыв логотипа и тэглайна.
    Один раз за сессию, автостарт, ~3.2 сек, потом полностью удаляется из DOM
    (см. inline-скрипт в index.html сразу после разметки #intro-overlay). */
 :root{
   --intro-bg: var(--night);
-  --particle-color: var(--cream-text);
-  --accent-color: var(--red);
+  --fire-core: #fff4d6;
+  --fire-mid: var(--cream-text);
+  --fire-outer: var(--red);
   --text-color: var(--cream-text);
   --intro-duration: 3.2s;
 }
 
 #intro-overlay{
   position: fixed; inset: 0; z-index: 9999;
-  background: radial-gradient(ellipse at 50% 60%, var(--night-soft) 0%, var(--intro-bg) 70%);
+  background: var(--intro-bg);
   overflow: hidden;
   transition: opacity .7s ease;
 }
@@ -80,50 +82,22 @@ input, textarea, select{ font-family: inherit; }
 
 #intro-canvas{ position: absolute; inset: 0; width: 100%; height: 100%; }
 
-/* световая полоса-горизонт + отражение-"пол" под ней */
-#intro-horizon{
-  position: absolute; left: 0; right: 0; bottom: 22%; height: 2px;
-  background: linear-gradient(90deg,
-    transparent, var(--accent-color), var(--particle-color), var(--accent-color), transparent);
-  transform: scaleX(0);
-  opacity: 0;
-  animation: horizon-in 1.3s ease-out .3s forwards;
-  box-shadow: 0 0 30px 4px var(--particle-color), 0 0 60px 10px var(--accent-color);
-}
-@keyframes horizon-in{
-  to{ transform: scaleX(1); opacity: 1; }
-}
-
-#intro-floor-glow{
-  position: absolute; left: 0; right: 0; bottom: 0; height: 22%;
-  background: linear-gradient(to bottom, color-mix(in srgb, var(--particle-color) 25%, transparent), transparent);
-  opacity: 0;
-  animation: floor-in 1.6s ease-out .4s forwards;
-  filter: blur(6px);
-}
-@keyframes floor-in{
-  to{ opacity: .5; }
-}
-
 #intro-content{
   position: relative; z-index: 2; height: 100%;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   text-align: center; padding: 24px;
 }
 
-#intro-logo-wrap{
-  position: relative;
-  display: flex; align-items: center; justify-content: center;
-}
+#intro-logo-wrap{ position: relative; display: flex; align-items: center; justify-content: center; }
 #intro-logo-wrap::before{
   content: '';
   position: absolute;
-  width: 180%; height: 180%;
-  background: radial-gradient(circle, color-mix(in srgb, var(--particle-color) 35%, transparent) 0%, transparent 70%);
+  width: 200%; height: 200%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--fire-outer) 35%, transparent) 0%, transparent 70%);
   opacity: 0;
-  animation: glow-in 1.4s ease-out .5s forwards;
-  filter: blur(4px);
+  filter: blur(6px);
 }
+#intro-logo-wrap.show::before{ animation: glow-in 1s ease-out forwards; }
 @keyframes glow-in{
   to{ opacity: 1; }
 }
@@ -134,11 +108,13 @@ input, textarea, select{ font-family: inherit; }
   height: clamp(64px, 14vw, 88px);
   border-radius: 50%;
   opacity: 0;
-  transform: scale(1.25);
-  animation: logo-in 1.1s cubic-bezier(.2,.8,.2,1) .5s forwards;
-  box-shadow: 0 0 20px 2px color-mix(in srgb, var(--particle-color) 40%, transparent);
+  transform: scale(0.4);
+  box-shadow: 0 0 24px 4px color-mix(in srgb, var(--fire-outer) 50%, transparent);
 }
-@keyframes logo-in{
+#intro-logo.show{
+  animation: logo-pop .7s cubic-bezier(.2,.9,.3,1.2) forwards;
+}
+@keyframes logo-pop{
   to{ opacity: 1; transform: scale(1); }
 }
 
@@ -151,16 +127,16 @@ input, textarea, select{ font-family: inherit; }
   color: var(--text-color);
   opacity: 0;
   transform: translateY(10px);
-  animation: tag-in .8s ease-out 1.3s forwards;
-  text-shadow: 0 0 12px color-mix(in srgb, var(--particle-color) 50%, transparent);
+  text-shadow: 0 0 12px color-mix(in srgb, var(--fire-outer) 50%, transparent);
 }
+#intro-tagline.show{ animation: tag-in .8s ease-out forwards; }
 @keyframes tag-in{
   to{ opacity: .9; transform: translateY(0); }
 }
 
 @media (prefers-reduced-motion: reduce){
-  #intro-canvas, #intro-floor-glow{ display: none; }
-  #intro-horizon, #intro-logo, #intro-tagline, #intro-logo-wrap::before{
+  #intro-canvas{ display: none; }
+  #intro-logo-wrap::before, #intro-logo, #intro-tagline{
     animation: none !important; opacity: 1 !important; transform: none !important;
   }
 }

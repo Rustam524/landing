@@ -56,15 +56,14 @@
 </head>
 <body>
 
-<!-- ===== ИНТРО-ЗАСТАВКА v2: боке + свечение + отражение на полу =====
+<!-- ===== ИНТРО-ЗАСТАВКА (fireball): огненный шар летит к центру, взрыв искрами,
+     затем наплыв логотипа и тэглайна =====
      Показывается один раз за сессию (sessionStorage), автостарт без клика,
      ~3.2 сек, затем полностью удаляется из DOM. Логика — в inline-скрипте
      сразу после разметки, чтобы стартовать как можно раньше (до основного
      script.js, который подключается в самом низу страницы). -->
 <div id="intro-overlay">
   <canvas id="intro-canvas"></canvas>
-  <div id="intro-floor-glow"></div>
-  <div id="intro-horizon"></div>
   <div id="intro-content">
     <div id="intro-logo-wrap">
       <img id="intro-logo" src="assets/img/logo.png" alt="ALGORITM">
@@ -74,10 +73,13 @@
 </div>
 <script>
 (function () {
-  var overlay = document.getElementById('intro-overlay');
+  var overlay  = document.getElementById('intro-overlay');
   if (!overlay) return;
-  var canvas  = document.getElementById('intro-canvas');
-  var ctx     = canvas.getContext('2d');
+  var canvas   = document.getElementById('intro-canvas');
+  var ctx      = canvas.getContext('2d');
+  var logoWrap = document.getElementById('intro-logo-wrap');
+  var logo     = document.getElementById('intro-logo');
+  var tagline  = document.getElementById('intro-tagline');
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   if (sessionStorage.getItem('algoritm_introShown')) {
@@ -85,79 +87,166 @@
     return;
   }
 
-  var particleColor = getComputedStyle(document.documentElement)
-    .getPropertyValue('--particle-color').trim() || '#f4ede2';
+  var fireCore  = getComputedStyle(document.documentElement).getPropertyValue('--fire-core').trim()  || '#fff4d6';
+  var fireMid   = getComputedStyle(document.documentElement).getPropertyValue('--fire-mid').trim()   || '#f4ede2';
+  var fireOuter = getComputedStyle(document.documentElement).getPropertyValue('--fire-outer').trim() || '#b91c1c';
 
   function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
   resize();
   window.addEventListener('resize', resize);
 
-  // Два слоя: крупные размытые "боке"-круги на фоне + мелкие резкие искры сверху
-  var bokeh = [];
-  var sparks = [];
-  var bokehCount  = window.innerWidth < 600 ? 22 : 40;
-  var sparkCount  = window.innerWidth < 600 ? 70 : 150;
-
-  for (var i = 0; i < bokehCount; i++) {
-    bokeh.push({
-      x: Math.random() * canvas.width,
-      y: canvas.height + Math.random() * canvas.height,
-      r: Math.random() * 14 + 6,
-      speed: Math.random() * 0.25 + 0.08,
-      drift: (Math.random() - 0.5) * 0.2,
-      alpha: Math.random() * 0.15 + 0.05
-    });
-  }
-  for (var j = 0; j < sparkCount; j++) {
-    sparks.push({
-      x: Math.random() * canvas.width,
-      y: canvas.height + Math.random() * canvas.height,
-      r: Math.random() * 1.6 + 0.4,
-      speed: Math.random() * 0.7 + 0.25,
-      drift: (Math.random() - 0.5) * 0.4,
-      twinkle: Math.random() * Math.PI * 2
-    });
+  if (reducedMotion) {
+    logoWrap.classList.add('show');
+    logo.classList.add('show');
+    tagline.classList.add('show');
+    setTimeout(finish, 700);
+    return;
   }
 
+  // ---- Путь огненного шара: летит с нижнего левого угла к центру экрана ----
+  var startX = -canvas.width * 0.1, startY = canvas.height * 1.05;
+  var endX   = canvas.width * 0.5,  endY   = canvas.height * 0.46;
+  var ctrlX  = canvas.width * 0.15, ctrlY  = canvas.height * 0.15; // изгиб траектории
+
+  var FLIGHT_MS = 850;   // время полёта шара
+  var BURST_MS  = 1500;  // сколько живут частицы взрыва
+  var trail = [];        // след шара
+  var burstParticles = [];
+  var ambient = [];       // фоновые тлеющие угольки после взрыва
+  var startTime = null;
+  var burstSpawned = false;
   var raf;
-  function draw() {
+
+  function bezier(t) {
+    var x = (1 - t) * (1 - t) * startX + 2 * (1 - t) * t * ctrlX + t * t * endX;
+    var y = (1 - t) * (1 - t) * startY + 2 * (1 - t) * t * ctrlY + t * t * endY;
+    return { x: x, y: y };
+  }
+
+  function spawnBurst(x, y) {
+    var count = window.innerWidth < 600 ? 45 : 90;
+    for (var i = 0; i < count; i++) {
+      var angle = Math.random() * Math.PI * 2;
+      var speed = Math.random() * 4 + 1.5;
+      burstParticles.push({
+        x: x, y: y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        r: Math.random() * 2.4 + 0.8,
+        life: 1
+      });
+    }
+    // фоновые угольки, плавно поднимающиеся вверх после взрыва
+    var ambCount = window.innerWidth < 600 ? 30 : 60;
+    for (var j = 0; j < ambCount; j++) {
+      ambient.push({
+        x: x + (Math.random() - 0.5) * canvas.width * 0.6,
+        y: y + Math.random() * canvas.height * 0.4,
+        r: Math.random() * 1.6 + 0.4,
+        speed: Math.random() * 0.5 + 0.15,
+        drift: (Math.random() - 0.5) * 0.3,
+        twinkle: Math.random() * Math.PI * 2
+      });
+    }
+  }
+
+  function draw(ts) {
+    if (!startTime) startTime = ts;
+    var elapsed = ts - startTime;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // слой 1: крупное мягкое свечение (боке)
-    for (var i = 0; i < bokeh.length; i++) {
-      var b = bokeh[i];
-      b.y -= b.speed; b.x += b.drift;
-      if (b.y < -30) { b.y = canvas.height + 30; b.x = Math.random() * canvas.width; }
-      ctx.save();
-      ctx.globalAlpha = b.alpha;
-      ctx.filter = 'blur(3px)';
-      ctx.fillStyle = particleColor;
-      ctx.beginPath();
-      ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-    }
+    if (elapsed < FLIGHT_MS) {
+      // --- фаза полёта шара ---
+      var t = elapsed / FLIGHT_MS;
+      var eased = 1 - Math.pow(1 - t, 3); // ease-out cubic
+      var pos = bezier(eased);
 
-    // слой 2: мелкие резкие мерцающие искры со свечением
-    ctx.fillStyle = particleColor;
-    for (var k = 0; k < sparks.length; k++) {
-      var p = sparks[k];
-      p.y -= p.speed; p.x += p.drift; p.twinkle += 0.06;
-      if (p.y < -10) { p.y = canvas.height + 10; p.x = Math.random() * canvas.width; }
-      ctx.save();
-      ctx.globalAlpha = 0.4 + Math.sin(p.twinkle) * 0.35;
-      ctx.shadowBlur = p.r * 5;
-      ctx.shadowColor = particleColor;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
+      trail.push({ x: pos.x, y: pos.y });
+      if (trail.length > 18) trail.shift();
+
+      for (var i = 0; i < trail.length; i++) {
+        var pt = trail[i];
+        var a = i / trail.length;
+        var r = 3 + a * 12;
+        var grad = ctx.createRadialGradient(pt.x, pt.y, 0, pt.x, pt.y, r);
+        grad.addColorStop(0, fireCore);
+        grad.addColorStop(0.4, fireMid);
+        grad.addColorStop(1, 'transparent');
+        ctx.save();
+        ctx.globalAlpha = a * 0.8;
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // яркое ядро шара
+      var head = trail[trail.length - 1];
+      if (head) {
+        var coreGrad = ctx.createRadialGradient(head.x, head.y, 0, head.x, head.y, 18);
+        coreGrad.addColorStop(0, fireCore);
+        coreGrad.addColorStop(0.5, fireOuter);
+        coreGrad.addColorStop(1, 'transparent');
+        ctx.save();
+        ctx.shadowBlur = 30;
+        ctx.shadowColor = fireOuter;
+        ctx.fillStyle = coreGrad;
+        ctx.beginPath();
+        ctx.arc(head.x, head.y, 14, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+    } else {
+
+      if (!burstSpawned) {
+        burstSpawned = true;
+        var landing = bezier(1);
+        spawnBurst(landing.x, landing.y);
+        logoWrap.classList.add('show');
+        logo.classList.add('show');
+        setTimeout(function () { tagline.classList.add('show'); }, 300);
+      }
+
+      // --- фаза взрыва: разлетающиеся искры ---
+      for (var b = burstParticles.length - 1; b >= 0; b--) {
+        var p = burstParticles[b];
+        p.x += p.vx; p.y += p.vy;
+        p.vx *= 0.96; p.vy *= 0.96;
+        p.life -= 1 / (BURST_MS / 16.6);
+        if (p.life <= 0) { burstParticles.splice(b, 1); continue; }
+        ctx.save();
+        ctx.globalAlpha = Math.max(p.life, 0);
+        ctx.shadowBlur = p.r * 4;
+        ctx.shadowColor = fireOuter;
+        ctx.fillStyle = p.life > 0.5 ? fireCore : fireOuter;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // --- фоновые тлеющие угольки ---
+      ctx.fillStyle = fireMid;
+      for (var k = 0; k < ambient.length; k++) {
+        var am = ambient[k];
+        am.y -= am.speed; am.x += am.drift; am.twinkle += 0.05;
+        ctx.save();
+        ctx.globalAlpha = 0.25 + Math.sin(am.twinkle) * 0.2;
+        ctx.shadowBlur = am.r * 4;
+        ctx.shadowColor = fireOuter;
+        ctx.beginPath();
+        ctx.arc(am.x, am.y, am.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
     }
 
     raf = requestAnimationFrame(draw);
   }
 
-  function hideIntro() {
+  function finish() {
     if (raf) cancelAnimationFrame(raf);
     overlay.classList.add('hide');
     sessionStorage.setItem('algoritm_introShown', '1');
@@ -167,12 +256,11 @@
     }, 700);
   }
 
-  if (!reducedMotion) draw();
+  raf = requestAnimationFrame(draw);
 
-  var durationMs = reducedMotion ? 600 :
-    parseFloat(getComputedStyle(document.documentElement)
-      .getPropertyValue('--intro-duration')) * 1000;
-  setTimeout(hideIntro, durationMs);
+  var durationMs = parseFloat(getComputedStyle(document.documentElement)
+    .getPropertyValue('--intro-duration')) * 1000;
+  setTimeout(finish, durationMs);
 })();
 </script>
 
