@@ -59,9 +59,10 @@ input, textarea, select{ font-family: inherit; }
   *, *::before, *::after{ animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
 
-/* ============ ИНТРО-ЗАСТАВКА (fireball) ============
-   Огненный шар летит к центру, взрыв искрами, наплыв логотипа и тэглайна.
-   Один раз за сессию, автостарт, ~3.2 сек, потом полностью удаляется из DOM
+/* ============ ИНТРО-ЗАСТАВКА (igniting reveal) ============
+   Метеор летит на зрителя, удар-вспышка, тёплая дымка рассеивается и
+   открывает логотип (без кольца/ореола — чистое появление) и тэглайн.
+   Один раз за сессию, автостарт, ~3.4 сек, потом полностью удаляется из DOM
    (см. inline-скрипт в index.html сразу после разметки #intro-overlay). */
 :root{
   --intro-bg: var(--night);
@@ -69,7 +70,7 @@ input, textarea, select{ font-family: inherit; }
   --fire-mid: var(--cream-text);
   --fire-outer: var(--red);
   --text-color: var(--cream-text);
-  --intro-duration: 3.2s;
+  --intro-duration: 3.4s;
 }
 
 #intro-overlay{
@@ -88,28 +89,12 @@ input, textarea, select{ font-family: inherit; }
   text-align: center; padding: 24px;
 }
 
-#intro-logo-wrap{ position: relative; display: flex; align-items: center; justify-content: center; }
-#intro-logo-wrap::before{
-  content: '';
-  position: absolute;
-  width: 200%; height: 200%;
-  background: radial-gradient(circle, color-mix(in srgb, var(--fire-outer) 35%, transparent) 0%, transparent 70%);
-  opacity: 0;
-  filter: blur(6px);
-}
-#intro-logo-wrap.show::before{ animation: glow-in 1s ease-out forwards; }
-@keyframes glow-in{
-  to{ opacity: 1; }
-}
-
 #intro-logo{
-  position: relative;
   width: clamp(64px, 14vw, 88px);
   height: clamp(64px, 14vw, 88px);
   border-radius: 50%;
   opacity: 0;
   transform: scale(0.4);
-  box-shadow: 0 0 24px 4px color-mix(in srgb, var(--fire-outer) 50%, transparent);
 }
 #intro-logo.show{
   animation: logo-pop .7s cubic-bezier(.2,.9,.3,1.2) forwards;
@@ -136,7 +121,7 @@ input, textarea, select{ font-family: inherit; }
 
 @media (prefers-reduced-motion: reduce){
   #intro-canvas{ display: none; }
-  #intro-logo-wrap::before, #intro-logo, #intro-tagline{
+  #intro-logo, #intro-tagline{
     animation: none !important; opacity: 1 !important; transform: none !important;
   }
 }

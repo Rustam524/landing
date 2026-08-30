@@ -56,18 +56,16 @@
 </head>
 <body>
 
-<!-- ===== ИНТРО-ЗАСТАВКА (fireball): огненный шар летит к центру, взрыв искрами,
-     затем наплыв логотипа и тэглайна =====
+<!-- ===== ИНТРО-ЗАСТАВКА (igniting reveal): метеор летит на зрителя, удар,
+     тёплая дымка рассеивается и открывает логотип (без кольца) + тэглайн =====
      Показывается один раз за сессию (sessionStorage), автостарт без клика,
-     ~3.2 сек, затем полностью удаляется из DOM. Логика — в inline-скрипте
+     ~3.4 сек, затем полностью удаляется из DOM. Логика — в inline-скрипте
      сразу после разметки, чтобы стартовать как можно раньше (до основного
      script.js, который подключается в самом низу страницы). -->
 <div id="intro-overlay">
   <canvas id="intro-canvas"></canvas>
   <div id="intro-content">
-    <div id="intro-logo-wrap">
-      <img id="intro-logo" src="assets/img/logo.png" alt="ALGORITM">
-    </div>
+    <img id="intro-logo" src="assets/img/logo.png" alt="ALGORITM">
     <div id="intro-tagline">Маркетинговое агентство</div>
   </div>
 </div>
@@ -77,7 +75,6 @@
   if (!overlay) return;
   var canvas   = document.getElementById('intro-canvas');
   var ctx      = canvas.getContext('2d');
-  var logoWrap = document.getElementById('intro-logo-wrap');
   var logo     = document.getElementById('intro-logo');
   var tagline  = document.getElementById('intro-tagline');
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -90,154 +87,152 @@
   var fireCore  = getComputedStyle(document.documentElement).getPropertyValue('--fire-core').trim()  || '#fff4d6';
   var fireMid   = getComputedStyle(document.documentElement).getPropertyValue('--fire-mid').trim()   || '#f4ede2';
   var fireOuter = getComputedStyle(document.documentElement).getPropertyValue('--fire-outer').trim() || '#b91c1c';
+  var smokeColor = fireMid; // дымка — тёплая, в тон бренду (не холодно-серая, как в референсном видео)
 
+  var timers = [];
   function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
   resize();
   window.addEventListener('resize', resize);
 
+  function finish() {
+    if (raf) cancelAnimationFrame(raf);
+    overlay.classList.add('hide');
+    sessionStorage.setItem('algoritm_introShown', '1');
+    var t = setTimeout(function () {
+      overlay.remove();
+      window.removeEventListener('resize', resize);
+    }, 700);
+    timers.push(t);
+  }
+
   if (reducedMotion) {
-    logoWrap.classList.add('show');
     logo.classList.add('show');
     tagline.classList.add('show');
-    setTimeout(finish, 700);
+    timers.push(setTimeout(finish, 700));
     return;
   }
 
-  // ---- Путь огненного шара: летит с нижнего левого угла к центру экрана ----
-  var startX = -canvas.width * 0.1, startY = canvas.height * 1.05;
-  var endX   = canvas.width * 0.5,  endY   = canvas.height * 0.46;
-  var ctrlX  = canvas.width * 0.15, ctrlY  = canvas.height * 0.15; // изгиб траектории
-
-  var FLIGHT_MS = 850;   // время полёта шара
-  var BURST_MS  = 1500;  // сколько живут частицы взрыва
-  var trail = [];        // след шара
-  var burstParticles = [];
-  var ambient = [];       // фоновые тлеющие угольки после взрыва
-  var startTime = null;
-  var burstSpawned = false;
+  // ---- Тайминг сцены, мс ----
+  var APPROACH_MS = 1100; // метеор растёт и летит на зрителя
+  var FLASH_MS    = 140;  // вспышка в момент "удара"
+  var SMOKE_MS    = 1000; // дымка рассеивается
+  var LOGO_AT     = APPROACH_MS + FLASH_MS + 260;   // лого проступает сквозь дымку
+  var TAGLINE_AT  = LOGO_AT + 300;
   var raf;
 
-  function bezier(t) {
-    var x = (1 - t) * (1 - t) * startX + 2 * (1 - t) * t * ctrlX + t * t * endX;
-    var y = (1 - t) * (1 - t) * startY + 2 * (1 - t) * t * ctrlY + t * t * endY;
-    return { x: x, y: y };
+  var cx, cy, minDim;
+  function updateCenter() { cx = canvas.width / 2; cy = canvas.height / 2; minDim = Math.min(canvas.width, canvas.height); }
+  updateCenter();
+  window.addEventListener('resize', updateCenter);
+
+  // ---- Слой 1: искры-стрики, "проносящиеся" мимо камеры при приближении метеора ----
+  var streaks = [];
+  function spawnStreak() {
+    var angle = Math.random() * Math.PI * 2;
+    var dist = Math.random() * minDim * 0.12;
+    streaks.push({
+      x: cx + Math.cos(angle) * dist,
+      y: cy + Math.sin(angle) * dist,
+      angle: angle,
+      speed: Math.random() * 6 + 4,
+      len: Math.random() * 26 + 10,
+      life: 1,
+      r: Math.random() * 1.4 + 0.5
+    });
   }
 
-  function spawnBurst(x, y) {
-    var count = window.innerWidth < 600 ? 45 : 90;
+  // ---- Слой 2: дымные "клубы" после удара — крупные размытые тёплые пятна ----
+  var smokePuffs = [];
+  function spawnSmoke() {
+    var count = window.innerWidth < 600 ? 10 : 18;
     for (var i = 0; i < count; i++) {
       var angle = Math.random() * Math.PI * 2;
-      var speed = Math.random() * 4 + 1.5;
-      burstParticles.push({
-        x: x, y: y,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed,
-        r: Math.random() * 2.4 + 0.8,
-        life: 1
-      });
-    }
-    // фоновые угольки, плавно поднимающиеся вверх после взрыва
-    var ambCount = window.innerWidth < 600 ? 30 : 60;
-    for (var j = 0; j < ambCount; j++) {
-      ambient.push({
-        x: x + (Math.random() - 0.5) * canvas.width * 0.6,
-        y: y + Math.random() * canvas.height * 0.4,
-        r: Math.random() * 1.6 + 0.4,
-        speed: Math.random() * 0.5 + 0.15,
-        drift: (Math.random() - 0.5) * 0.3,
-        twinkle: Math.random() * Math.PI * 2
+      var dist = Math.random() * minDim * 0.18;
+      smokePuffs.push({
+        x: cx + Math.cos(angle) * dist,
+        y: cy + Math.sin(angle) * dist,
+        vx: Math.cos(angle) * (Math.random() * 0.6 + 0.2),
+        vy: Math.sin(angle) * (Math.random() * 0.6 + 0.2) - 0.15,
+        r: Math.random() * minDim * 0.16 + minDim * 0.08,
+        alpha: Math.random() * 0.18 + 0.14
       });
     }
   }
+
+  var startTime = null;
+  var flashSpawned = false;
 
   function draw(ts) {
     if (!startTime) startTime = ts;
     var elapsed = ts - startTime;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    if (elapsed < FLIGHT_MS) {
-      // --- фаза полёта шара ---
-      var t = elapsed / FLIGHT_MS;
-      var eased = 1 - Math.pow(1 - t, 3); // ease-out cubic
-      var pos = bezier(eased);
+    if (elapsed < APPROACH_MS) {
+      // --- фаза 1: метеор растёт и летит на зрителя ---
+      var t = elapsed / APPROACH_MS;
+      var eased = t * t; // ease-in — разгоняется к концу, как приближающийся объект
+      var coreR = 3 + eased * minDim * 0.22;
 
-      trail.push({ x: pos.x, y: pos.y });
-      if (trail.length > 18) trail.shift();
+      if (Math.random() < 0.6 + eased * 0.35) spawnStreak();
 
-      for (var i = 0; i < trail.length; i++) {
-        var pt = trail[i];
-        var a = i / trail.length;
-        var r = 3 + a * 12;
-        var grad = ctx.createRadialGradient(pt.x, pt.y, 0, pt.x, pt.y, r);
-        grad.addColorStop(0, fireCore);
-        grad.addColorStop(0.4, fireMid);
-        grad.addColorStop(1, 'transparent');
+      for (var i = streaks.length - 1; i >= 0; i--) {
+        var s = streaks[i];
+        var dx = Math.cos(s.angle) * s.speed * (0.6 + eased * 1.8);
+        var dy = Math.sin(s.angle) * s.speed * (0.6 + eased * 1.8);
+        var x2 = s.x + dx, y2 = s.y + dy;
         ctx.save();
-        ctx.globalAlpha = a * 0.8;
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(pt.x, pt.y, r, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
-
-      // яркое ядро шара
-      var head = trail[trail.length - 1];
-      if (head) {
-        var coreGrad = ctx.createRadialGradient(head.x, head.y, 0, head.x, head.y, 18);
-        coreGrad.addColorStop(0, fireCore);
-        coreGrad.addColorStop(0.5, fireOuter);
-        coreGrad.addColorStop(1, 'transparent');
-        ctx.save();
-        ctx.shadowBlur = 30;
+        ctx.globalAlpha = s.life * 0.7;
+        ctx.strokeStyle = fireMid;
+        ctx.lineWidth = s.r;
+        ctx.shadowBlur = 6;
         ctx.shadowColor = fireOuter;
-        ctx.fillStyle = coreGrad;
         ctx.beginPath();
-        ctx.arc(head.x, head.y, 14, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.moveTo(s.x, s.y);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
         ctx.restore();
+        s.x = x2; s.y = y2;
+        s.life -= 0.03;
+        if (s.life <= 0) streaks.splice(i, 1);
       }
+
+      // ядро метеора — накаляется и растёт
+      var coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR);
+      coreGrad.addColorStop(0, fireCore);
+      coreGrad.addColorStop(0.45, fireOuter);
+      coreGrad.addColorStop(1, 'transparent');
+      ctx.save();
+      ctx.shadowBlur = 40 * eased;
+      ctx.shadowColor = fireOuter;
+      ctx.fillStyle = coreGrad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, coreR, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+    } else if (elapsed < APPROACH_MS + FLASH_MS) {
+      // --- фаза 2: вспышка удара ---
+      if (!flashSpawned) { flashSpawned = true; spawnSmoke(); }
+      var ft = (elapsed - APPROACH_MS) / FLASH_MS;
+      ctx.save();
+      ctx.globalAlpha = 1 - ft;
+      ctx.fillStyle = fireCore;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.restore();
 
     } else {
-
-      if (!burstSpawned) {
-        burstSpawned = true;
-        var landing = bezier(1);
-        spawnBurst(landing.x, landing.y);
-        logoWrap.classList.add('show');
-        logo.classList.add('show');
-        setTimeout(function () { tagline.classList.add('show'); }, 300);
-      }
-
-      // --- фаза взрыва: разлетающиеся искры ---
-      for (var b = burstParticles.length - 1; b >= 0; b--) {
-        var p = burstParticles[b];
+      // --- фаза 3: тёплая дымка рассеивается, открывая контент ---
+      var smokeT = Math.min(1, (elapsed - APPROACH_MS - FLASH_MS) / SMOKE_MS);
+      var fade = 1 - smokeT;
+      for (var k = 0; k < smokePuffs.length; k++) {
+        var p = smokePuffs[k];
         p.x += p.vx; p.y += p.vy;
-        p.vx *= 0.96; p.vy *= 0.96;
-        p.life -= 1 / (BURST_MS / 16.6);
-        if (p.life <= 0) { burstParticles.splice(b, 1); continue; }
         ctx.save();
-        ctx.globalAlpha = Math.max(p.life, 0);
-        ctx.shadowBlur = p.r * 4;
-        ctx.shadowColor = fireOuter;
-        ctx.fillStyle = p.life > 0.5 ? fireCore : fireOuter;
+        ctx.globalAlpha = p.alpha * fade;
+        ctx.filter = 'blur(18px)';
+        ctx.fillStyle = smokeColor;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
-
-      // --- фоновые тлеющие угольки ---
-      ctx.fillStyle = fireMid;
-      for (var k = 0; k < ambient.length; k++) {
-        var am = ambient[k];
-        am.y -= am.speed; am.x += am.drift; am.twinkle += 0.05;
-        ctx.save();
-        ctx.globalAlpha = 0.25 + Math.sin(am.twinkle) * 0.2;
-        ctx.shadowBlur = am.r * 4;
-        ctx.shadowColor = fireOuter;
-        ctx.beginPath();
-        ctx.arc(am.x, am.y, am.r, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       }
@@ -246,21 +241,14 @@
     raf = requestAnimationFrame(draw);
   }
 
-  function finish() {
-    if (raf) cancelAnimationFrame(raf);
-    overlay.classList.add('hide');
-    sessionStorage.setItem('algoritm_introShown', '1');
-    setTimeout(function () {
-      overlay.remove();
-      window.removeEventListener('resize', resize);
-    }, 700);
-  }
-
   raf = requestAnimationFrame(draw);
+
+  timers.push(setTimeout(function () { logo.classList.add('show'); }, LOGO_AT));
+  timers.push(setTimeout(function () { tagline.classList.add('show'); }, TAGLINE_AT));
 
   var durationMs = parseFloat(getComputedStyle(document.documentElement)
     .getPropertyValue('--intro-duration')) * 1000;
-  setTimeout(finish, durationMs);
+  timers.push(setTimeout(finish, durationMs));
 })();
 </script>
 
