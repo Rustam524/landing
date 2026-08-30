@@ -1,0 +1,102 @@
+<header class="site-header">
+  <div class="container site-header__row">
+    <a href="/" class="brand" data-nav-home>
+      <img src="/assets/img/logo-64.png" alt="ALGORITM — маркетинговое агентство" width="38" height="38" />
+      <span>ALGORITM</span>
+    </a>
+
+    <nav class="main-nav" aria-label="Основная навигация">
+      <div class="nav-item">
+        <a class="nav-link" href="/" data-nav="home">Главная</a>
+      </div>
+
+      <div class="nav-item" data-dropdown>
+        <button type="button" class="nav-link" aria-expanded="false" aria-haspopup="true" data-dropdown-trigger>
+          Услуги <span class="caret" aria-hidden="true"></span>
+        </button>
+        <div class="dropdown" role="menu" data-dropdown-menu>
+          <a role="menuitem" href="/uslugi/smm/">SMM-продвижение</a>
+          <a role="menuitem" href="/uslugi/content/">Создание контента</a>
+          <a role="menuitem" href="/uslugi/target/">Таргетированная реклама</a>
+          <a role="menuitem" href="/uslugi/ai-boty/">ИИ-боты</a>
+          <a role="menuitem" href="/uslugi/avtomatizatsiya/">Автоматизация бизнеса</a>
+          <a role="menuitem" href="/uslugi/amocrm/">Внедрение amoCRM</a>
+        </div>
+      </div>
+
+      <div class="nav-item">
+        <a class="nav-link" href="/keysy/" data-nav="cases">Кейсы</a>
+      </div>
+      <div class="nav-item">
+        <a class="nav-link" href="/o-nas/" data-nav="about">О нас</a>
+      </div>
+      <div class="nav-item">
+        <a class="nav-link" href="/blog/" data-nav="blog">Блог</a>
+      </div>
+
+      <div class="nav-item" data-dropdown>
+        <button type="button" class="nav-link" aria-expanded="false" aria-haspopup="true" data-dropdown-trigger>
+          Обучение <span class="caret" aria-hidden="true"></span>
+        </button>
+        <div class="dropdown" role="menu" data-dropdown-menu>
+          <a role="menuitem" href="/obuchenie/">Все программы</a>
+          <a role="menuitem" href="/obuchenie/smm/">Курсы по SMM</a>
+          <a role="menuitem" href="/obuchenie/neuroseti/">Курсы по нейросетям</a>
+        </div>
+      </div>
+
+      <div class="nav-item">
+        <a class="nav-link" href="/kontakty/" data-nav="contacts">Контакты</a>
+      </div>
+    </nav>
+
+    <a class="btn btn-primary header-cta" data-whatsapp-link data-analytics-event="whatsapp_click" data-analytics-source="header">
+      Получить консультацию
+    </a>
+
+    <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="mobile-nav" aria-label="Открыть меню">
+      <span class="bar"></span>
+    </button>
+  </div>
+</header>
+
+<!--
+  Мобильное меню намеренно вынесено ИЗ <header>: у шапки задан
+  backdrop-filter (эффект "матового стекла"), а backdrop-filter/filter на
+  предке превращает его в containing block для потомков с position:fixed —
+  из-за этого меню растягивалось не на весь экран, а только на высоту шапки.
+-->
+<div class="mobile-nav" id="mobile-nav">
+    <a class="mobile-nav-link" href="/">Главная</a>
+
+    <button type="button" class="mobile-nav-link" aria-expanded="false" data-mobile-submenu-trigger="uslugi" style="width:100%; background:none; border:none; text-align:left;">
+      Услуги <span class="caret" aria-hidden="true"></span>
+    </button>
+    <div class="mobile-submenu" data-mobile-submenu="uslugi">
+      <a href="/uslugi/smm/">SMM-продвижение</a>
+      <a href="/uslugi/content/">Создание контента</a>
+      <a href="/uslugi/target/">Таргетированная реклама</a>
+      <a href="/uslugi/ai-boty/">ИИ-боты</a>
+      <a href="/uslugi/avtomatizatsiya/">Автоматизация бизнеса</a>
+      <a href="/uslugi/amocrm/">Внедрение amoCRM</a>
+    </div>
+
+    <a class="mobile-nav-link" href="/keysy/">Кейсы</a>
+    <a class="mobile-nav-link" href="/o-nas/">О нас</a>
+    <a class="mobile-nav-link" href="/blog/">Блог</a>
+
+    <button type="button" class="mobile-nav-link" aria-expanded="false" data-mobile-submenu-trigger="obuchenie" style="width:100%; background:none; border:none; text-align:left;">
+      Обучение <span class="caret" aria-hidden="true"></span>
+    </button>
+    <div class="mobile-submenu" data-mobile-submenu="obuchenie">
+      <a href="/obuchenie/">Все программы</a>
+      <a href="/obuchenie/smm/">Курсы по SMM</a>
+      <a href="/obuchenie/neuroseti/">Курсы по нейросетям</a>
+    </div>
+
+    <a class="mobile-nav-link" href="/kontakty/">Контакты</a>
+
+    <a class="btn btn-primary header-cta" data-whatsapp-link data-analytics-event="whatsapp_click" data-analytics-source="mobile_menu">
+      Получить консультацию
+    </a>
+</div>

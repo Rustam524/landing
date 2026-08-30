@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Внутренние страницы (услуги, обучение, кейсы, о нас, блог, контакты и т.д.)
+  сейчас являются тестовыми заглушками с meta robots "noindex" и намеренно
+  НЕ включены в sitemap. Добавьте их сюда, когда на них появится реальный
+  готовый контент и будет снят noindex.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://algoritm.top/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>

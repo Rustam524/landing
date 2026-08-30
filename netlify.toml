@@ -1,0 +1,15 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+  command = "true"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Тестовые заглушки закрываются от индексации через meta noindex в самих
+# страницах (см. каждую страницу в /uslugi, /obuchenie, /blog и т.д.).
+# На проде noindex не устанавливается — см. index.html.
