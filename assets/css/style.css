@@ -59,45 +59,50 @@ input, textarea, select{ font-family: inherit; }
   *, *::before, *::after{ animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
 
-/* ============ ИНТРО-ЗАСТАВКА ============
-   Один раз за сессию, автостарт, ~3 сек, потом полностью удаляется из DOM
+/* ============ ИНТРО-ЗАСТАВКА v2 (боке + свечение + пол) ============
+   Один раз за сессию, автостарт, ~3.2 сек, потом полностью удаляется из DOM
    (см. inline-скрипт в index.html сразу после разметки #intro-overlay). */
 :root{
   --intro-bg: var(--night);
   --particle-color: var(--cream-text);
   --accent-color: var(--red);
   --text-color: var(--cream-text);
-  --intro-duration: 3s;
+  --intro-duration: 3.2s;
 }
 
 #intro-overlay{
   position: fixed; inset: 0; z-index: 9999;
-  background: var(--intro-bg);
+  background: radial-gradient(ellipse at 50% 60%, var(--night-soft) 0%, var(--intro-bg) 70%);
   overflow: hidden;
   transition: opacity .7s ease;
 }
 #intro-overlay.hide{ opacity: 0; pointer-events: none; }
 
-#intro-canvas{
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-}
+#intro-canvas{ position: absolute; inset: 0; width: 100%; height: 100%; }
 
+/* световая полоса-горизонт + отражение-"пол" под ней */
 #intro-horizon{
-  position: absolute; left: 0; right: 0; bottom: 22%; height: 3px;
+  position: absolute; left: 0; right: 0; bottom: 22%; height: 2px;
   background: linear-gradient(90deg,
-    transparent,
-    var(--accent-color),
-    var(--particle-color),
-    var(--accent-color),
-    transparent);
+    transparent, var(--accent-color), var(--particle-color), var(--accent-color), transparent);
   transform: scaleX(0);
   opacity: 0;
-  animation: horizon-in 1.2s ease-out .3s forwards;
-  box-shadow: 0 0 24px 2px var(--particle-color);
+  animation: horizon-in 1.3s ease-out .3s forwards;
+  box-shadow: 0 0 30px 4px var(--particle-color), 0 0 60px 10px var(--accent-color);
 }
 @keyframes horizon-in{
   to{ transform: scaleX(1); opacity: 1; }
+}
+
+#intro-floor-glow{
+  position: absolute; left: 0; right: 0; bottom: 0; height: 22%;
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--particle-color) 25%, transparent), transparent);
+  opacity: 0;
+  animation: floor-in 1.6s ease-out .4s forwards;
+  filter: blur(6px);
+}
+@keyframes floor-in{
+  to{ opacity: .5; }
 }
 
 #intro-content{
@@ -106,36 +111,56 @@ input, textarea, select{ font-family: inherit; }
   text-align: center; padding: 24px;
 }
 
+#intro-logo-wrap{
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+#intro-logo-wrap::before{
+  content: '';
+  position: absolute;
+  width: 180%; height: 180%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--particle-color) 35%, transparent) 0%, transparent 70%);
+  opacity: 0;
+  animation: glow-in 1.4s ease-out .5s forwards;
+  filter: blur(4px);
+}
+@keyframes glow-in{
+  to{ opacity: 1; }
+}
+
 #intro-logo{
+  position: relative;
   width: clamp(64px, 14vw, 88px);
   height: clamp(64px, 14vw, 88px);
   border-radius: 50%;
   opacity: 0;
-  transform: scale(1.15);
-  animation: logo-in 1s cubic-bezier(.2,.8,.2,1) .5s forwards;
+  transform: scale(1.25);
+  animation: logo-in 1.1s cubic-bezier(.2,.8,.2,1) .5s forwards;
+  box-shadow: 0 0 20px 2px color-mix(in srgb, var(--particle-color) 40%, transparent);
 }
 @keyframes logo-in{
   to{ opacity: 1; transform: scale(1); }
 }
 
 #intro-tagline{
-  margin-top: 14px;
+  margin-top: 18px;
   font-family: var(--font-display);
   font-size: clamp(13px, 2vw, 16px);
-  letter-spacing: .18em;
+  letter-spacing: .22em;
   text-transform: uppercase;
   color: var(--text-color);
   opacity: 0;
   transform: translateY(10px);
-  animation: tag-in .8s ease-out 1.2s forwards;
+  animation: tag-in .8s ease-out 1.3s forwards;
+  text-shadow: 0 0 12px color-mix(in srgb, var(--particle-color) 50%, transparent);
 }
 @keyframes tag-in{
-  to{ opacity: .85; transform: translateY(0); }
+  to{ opacity: .9; transform: translateY(0); }
 }
 
 @media (prefers-reduced-motion: reduce){
-  #intro-canvas{ display: none; }
-  #intro-horizon, #intro-logo, #intro-tagline{
+  #intro-canvas, #intro-floor-glow{ display: none; }
+  #intro-horizon, #intro-logo, #intro-tagline, #intro-logo-wrap::before{
     animation: none !important; opacity: 1 !important; transform: none !important;
   }
 }

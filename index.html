@@ -56,16 +56,19 @@
 </head>
 <body>
 
-<!-- ===== ИНТРО-ЗАСТАВКА: частицы + линия-горизонт + наплыв логотипа =====
+<!-- ===== ИНТРО-ЗАСТАВКА v2: боке + свечение + отражение на полу =====
      Показывается один раз за сессию (sessionStorage), автостарт без клика,
-     ~3 сек, затем полностью удаляется из DOM. Логика — в inline-скрипте
+     ~3.2 сек, затем полностью удаляется из DOM. Логика — в inline-скрипте
      сразу после разметки, чтобы стартовать как можно раньше (до основного
      script.js, который подключается в самом низу страницы). -->
 <div id="intro-overlay">
   <canvas id="intro-canvas"></canvas>
+  <div id="intro-floor-glow"></div>
   <div id="intro-horizon"></div>
   <div id="intro-content">
-    <img id="intro-logo" src="assets/img/logo.png" alt="ALGORITM">
+    <div id="intro-logo-wrap">
+      <img id="intro-logo" src="assets/img/logo.png" alt="ALGORITM">
+    </div>
     <div id="intro-tagline">Маркетинговое агентство</div>
   </div>
 </div>
@@ -73,12 +76,10 @@
 (function () {
   var overlay = document.getElementById('intro-overlay');
   if (!overlay) return;
-
-  var canvas = document.getElementById('intro-canvas');
-  var ctx = canvas.getContext('2d');
+  var canvas  = document.getElementById('intro-canvas');
+  var ctx     = canvas.getContext('2d');
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Показ только 1 раз за сессию — если уже видели, убираем заставку сразу.
   if (sessionStorage.getItem('algoritm_introShown')) {
     overlay.remove();
     return;
@@ -87,21 +88,32 @@
   var particleColor = getComputedStyle(document.documentElement)
     .getPropertyValue('--particle-color').trim() || '#f4ede2';
 
-  function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
   resize();
   window.addEventListener('resize', resize);
 
-  var particles = [];
-  var count = window.innerWidth < 600 ? 60 : 140;
-  for (var i = 0; i < count; i++) {
-    particles.push({
+  // Два слоя: крупные размытые "боке"-круги на фоне + мелкие резкие искры сверху
+  var bokeh = [];
+  var sparks = [];
+  var bokehCount  = window.innerWidth < 600 ? 22 : 40;
+  var sparkCount  = window.innerWidth < 600 ? 70 : 150;
+
+  for (var i = 0; i < bokehCount; i++) {
+    bokeh.push({
       x: Math.random() * canvas.width,
       y: canvas.height + Math.random() * canvas.height,
-      r: Math.random() * 2 + 0.6,
-      speed: Math.random() * 0.6 + 0.2,
+      r: Math.random() * 14 + 6,
+      speed: Math.random() * 0.25 + 0.08,
+      drift: (Math.random() - 0.5) * 0.2,
+      alpha: Math.random() * 0.15 + 0.05
+    });
+  }
+  for (var j = 0; j < sparkCount; j++) {
+    sparks.push({
+      x: Math.random() * canvas.width,
+      y: canvas.height + Math.random() * canvas.height,
+      r: Math.random() * 1.6 + 0.4,
+      speed: Math.random() * 0.7 + 0.25,
       drift: (Math.random() - 0.5) * 0.4,
       twinkle: Math.random() * Math.PI * 2
     });
@@ -110,22 +122,38 @@
   var raf;
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // слой 1: крупное мягкое свечение (боке)
+    for (var i = 0; i < bokeh.length; i++) {
+      var b = bokeh[i];
+      b.y -= b.speed; b.x += b.drift;
+      if (b.y < -30) { b.y = canvas.height + 30; b.x = Math.random() * canvas.width; }
+      ctx.save();
+      ctx.globalAlpha = b.alpha;
+      ctx.filter = 'blur(3px)';
+      ctx.fillStyle = particleColor;
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // слой 2: мелкие резкие мерцающие искры со свечением
     ctx.fillStyle = particleColor;
-    for (var i = 0; i < particles.length; i++) {
-      var p = particles[i];
-      p.y -= p.speed;
-      p.x += p.drift;
-      p.twinkle += 0.05;
-      if (p.y < -10) {
-        p.y = canvas.height + 10;
-        p.x = Math.random() * canvas.width;
-      }
-      ctx.globalAlpha = 0.4 + Math.sin(p.twinkle) * 0.3;
+    for (var k = 0; k < sparks.length; k++) {
+      var p = sparks[k];
+      p.y -= p.speed; p.x += p.drift; p.twinkle += 0.06;
+      if (p.y < -10) { p.y = canvas.height + 10; p.x = Math.random() * canvas.width; }
+      ctx.save();
+      ctx.globalAlpha = 0.4 + Math.sin(p.twinkle) * 0.35;
+      ctx.shadowBlur = p.r * 5;
+      ctx.shadowColor = particleColor;
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
       ctx.fill();
+      ctx.restore();
     }
-    ctx.globalAlpha = 1;
+
     raf = requestAnimationFrame(draw);
   }
 
