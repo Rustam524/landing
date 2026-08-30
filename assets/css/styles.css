@@ -439,28 +439,29 @@ textarea:focus-visible,
 }
 .hero__actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
 
-.hero__heart-wrap {
+.hero__visual-wrap {
   position: relative;
   aspect-ratio: 1 / 1;
   max-width: 480px;
   margin-inline: auto;
   width: 100%;
   border-radius: 32px;
+  overflow: hidden;
   background:
     radial-gradient(60% 60% at 50% 42%, rgba(220,38,38,0.16), transparent 70%),
     var(--color-almost-black);
   box-shadow: var(--shadow-soft);
 }
-#heart-canvas { width: 100%; height: 100%; display: block; }
-.heart-canvas--simple-pulse { animation: heart-simple-pulse 2.6s ease-in-out infinite; }
-@keyframes heart-simple-pulse {
+#hero-network-canvas { width: 100%; height: 100%; display: block; }
+.hero-network-canvas--simple-pulse { animation: hero-network-simple-pulse 2.6s ease-in-out infinite; }
+@keyframes hero-network-simple-pulse {
   0%, 100% { filter: brightness(0.95); }
-  50% { filter: brightness(1.25); }
+  50% { filter: brightness(1.2); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .heart-canvas--simple-pulse { animation: none; }
+  .hero-network-canvas--simple-pulse { animation: none; }
 }
-.heart-brand {
+.hero-visual-brand {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -468,7 +469,7 @@ textarea:focus-visible,
   text-align: center;
   pointer-events: none;
 }
-.heart-brand span {
+.hero-visual-brand span {
   font-family: var(--font-heading);
   font-weight: 700;
   font-size: clamp(20px, 3.4vw, 28px);
@@ -476,7 +477,7 @@ textarea:focus-visible,
   color: var(--color-cream);
   text-shadow: 0 0 24px rgba(220,38,38,0.5);
 }
-.heart-direction {
+.hero-visual-direction {
   position: absolute;
   top: 74%;
   left: 50%;
@@ -497,8 +498,8 @@ textarea:focus-visible,
   pointer-events: none;
   box-shadow: 0 10px 24px -10px rgba(220,38,38,0.7);
 }
-.heart-direction.is-visible { opacity: 1; pointer-events: auto; }
-.heart-direction a { color: inherit; }
+.hero-visual-direction.is-visible { opacity: 1; pointer-events: auto; }
+.hero-visual-direction a { color: inherit; }
 
 /* =========================================================================
    MARQUEE

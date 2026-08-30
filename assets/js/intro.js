@@ -112,8 +112,10 @@
 
   // -----------------------------------------------------------------------
   // 1. Сэмплируем силуэт логотипа: рисуем PNG на скрытом канвасе и находим
-  //    точки фирменного знака по яркости (в пределах вписанной окружности
-  //    значка — так в кадр не попадают белые уголки квадратного PNG).
+  //    точки фирменного знака по яркости. Сэмплируем только полосу со
+  //    знаком и словом ALGORITM (без мелкого подзаголовка "маркетинговое
+  //    агентство" и строки "DIGITAL AI MARKETING") — так название читается
+  //    чётко даже в небольшом размере на экране.
   // -----------------------------------------------------------------------
   function buildLogoPoints() {
     var src = logoSource.naturalWidth ? logoSource : null;
@@ -133,22 +135,19 @@
       return []; // на всякий случай, если браузер не даст прочитать пиксели
     }
 
-    var cx = size / 2;
-    var cy = size / 2;
-    var rLimit = size * 0.485;
-    var rLimitSq = rLimit * rLimit;
-    var step = Math.max(2, Math.round(size / 170)); // ограничиваем число точек
+    // Полоса с знаком + словом ALGORITM (доля от высоты картинки — не зависит
+    // от конкретного разрешения файла).
+    var bandTop = size * 0.4;
+    var bandBottom = size * 0.53;
+    var step = Math.max(1, Math.round(size / 340)); // ограничиваем число точек
     var threshold = 175;
 
     var points = [];
     var minX = size, maxX = 0, minY = size, maxY = 0;
 
-    for (var y = 0; y < size; y += step) {
+    for (var y = bandTop; y < bandBottom; y += step) {
       for (var x = 0; x < size; x += step) {
-        var dx = x - cx;
-        var dy = y - cy;
-        if (dx * dx + dy * dy > rLimitSq) continue;
-        var idx = (y * size + x) * 4;
+        var idx = (Math.round(y) * size + x) * 4;
         var lum = 0.299 * data[idx] + 0.587 * data[idx + 1] + 0.114 * data[idx + 2];
         if (lum > threshold) {
           points.push({ x: x, y: y });
