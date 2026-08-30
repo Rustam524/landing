@@ -61,8 +61,8 @@ input, textarea, select{ font-family: inherit; }
 
 /* ============ ИНТРО-ЗАСТАВКА (igniting reveal) ============
    Метеор летит на зрителя, удар-вспышка, тёплая дымка рассеивается и
-   открывает логотип (без кольца/ореола — чистое появление) и тэглайн.
-   Один раз за сессию, автостарт, ~3.4 сек, потом полностью удаляется из DOM
+   открывает крупный, чёткий логотип (без кольца/ореола) и тэглайн.
+   Один раз за сессию, автостарт, ~4.4 сек, потом полностью удаляется из DOM
    (см. inline-скрипт в index.html сразу после разметки #intro-overlay). */
 :root{
   --intro-bg: var(--night);
@@ -70,7 +70,7 @@ input, textarea, select{ font-family: inherit; }
   --fire-mid: var(--cream-text);
   --fire-outer: var(--red);
   --text-color: var(--cream-text);
-  --intro-duration: 3.4s;
+  --intro-duration: 4.4s;
 }
 
 #intro-overlay{
@@ -90,23 +90,24 @@ input, textarea, select{ font-family: inherit; }
 }
 
 #intro-logo{
-  width: clamp(64px, 14vw, 88px);
-  height: clamp(64px, 14vw, 88px);
+  /* Крупный, на весь экран — не мелкий значок */
+  width: min(58vmin, 380px);
+  height: min(58vmin, 380px);
   border-radius: 50%;
   opacity: 0;
   transform: scale(0.4);
 }
 #intro-logo.show{
-  animation: logo-pop .7s cubic-bezier(.2,.9,.3,1.2) forwards;
+  animation: logo-pop .8s cubic-bezier(.2,.9,.3,1.2) forwards;
 }
 @keyframes logo-pop{
   to{ opacity: 1; transform: scale(1); }
 }
 
 #intro-tagline{
-  margin-top: 18px;
+  margin-top: 26px;
   font-family: var(--font-display);
-  font-size: clamp(13px, 2vw, 16px);
+  font-size: clamp(15px, 2.6vw, 20px);
   letter-spacing: .22em;
   text-transform: uppercase;
   color: var(--text-color);
