@@ -261,16 +261,15 @@ input, textarea, select{ font-family: inherit; }
 }
 .logo__word{
   font-family: var(--font-display);
-  font-size: 1.3rem;
+  font-size: 1.6rem;
   font-weight: 700;
   letter-spacing: .03em;
 }
-.logo__dot{ color: var(--red); }
 
 /* интерактивный логотип: обод крутится при наведении/фокусе/тапе */
 .logo__mark{
   position: relative;
-  width: 46px; height: 46px;
+  width: 58px; height: 58px;
   border-radius: 50%;
   flex-shrink: 0;
 }
