@@ -183,55 +183,77 @@ textarea:focus-visible,
 .btn[disabled] { opacity: 0.6; cursor: not-allowed; transform: none; }
 
 /* =========================================================================
-   INTRO — вступительная анимация цифрового импульса
+   INTRO — вступительная анимация: световой импульс летит "кометой" к
+   логотипу, вспыхивает и собирается в фирменный знак ALGORITM.
    ========================================================================= */
 #intro-screen {
   position: fixed;
   inset: 0;
   z-index: 1000;
   background: var(--color-almost-black);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 22px;
-  transition: opacity 480ms ease, visibility 480ms ease;
+  overflow: hidden;
+  transition: opacity 520ms ease, visibility 520ms ease;
 }
 #intro-screen[hidden] { display: none; }
 #intro-screen.is-leaving { opacity: 0; pointer-events: none; }
 
-.intro-canvas-wrap {
+#intro-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.intro-content {
   position: relative;
-  width: min(90vw, 620px);
-  height: 160px;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+}
+
+.intro-logo-wrap {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-#intro-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-
-.intro-title {
-  position: relative;
-  font-family: var(--font-heading);
-  font-size: clamp(34px, 8vw, 64px);
-  letter-spacing: 0.08em;
-  color: var(--color-cream);
+.intro-logo-wrap::before {
+  content: "";
+  position: absolute;
+  width: 260%;
+  height: 260%;
+  background: radial-gradient(circle, rgba(220, 38, 38, 0.35) 0%, transparent 70%);
   opacity: 0;
-  transform: translateY(6px) scale(0.97);
-  transition: opacity 520ms ease, transform 520ms ease;
+  filter: blur(6px);
 }
-#intro-screen.is-assembled .intro-title { opacity: 1; transform: translateY(0) scale(1); }
+.intro-logo-wrap.is-visible::before { animation: intro-glow-in 900ms ease-out forwards; }
+@keyframes intro-glow-in { to { opacity: 1; } }
+
+.intro-logo {
+  position: relative;
+  width: clamp(64px, 14vw, 92px);
+  height: clamp(64px, 14vw, 92px);
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(0.4);
+  box-shadow: 0 0 26px 4px rgba(220, 38, 38, 0.5);
+}
+.intro-logo.is-visible { animation: intro-logo-pop 620ms cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards; }
+@keyframes intro-logo-pop { to { opacity: 1; transform: scale(1); } }
 
 .intro-tagline {
+  margin-top: 18px;
   font-family: var(--font-body);
   font-size: clamp(13px, 2.6vw, 16px);
-  letter-spacing: 0.05em;
-  color: #cfc8bd;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
+  color: var(--color-cream);
   opacity: 0;
-  transition: opacity 480ms ease;
+  transform: translateY(10px);
+  text-shadow: 0 0 12px rgba(220, 38, 38, 0.5);
 }
-#intro-screen.is-tagline .intro-tagline { opacity: 1; }
+.intro-tagline.is-visible { animation: intro-tag-in 700ms ease-out forwards; }
+@keyframes intro-tag-in { to { opacity: 0.92; transform: translateY(0); } }
 
 .intro-controls {
   position: absolute;
@@ -242,6 +264,7 @@ textarea:focus-visible,
   justify-content: center;
   gap: 14px;
   padding-inline: 20px;
+  z-index: 3;
 }
 .intro-btn {
   background: rgba(244, 240, 235, 0.1);
@@ -256,6 +279,17 @@ textarea:focus-visible,
   gap: 8px;
 }
 .intro-btn:hover { background: rgba(244, 240, 235, 0.2); }
+
+@media (prefers-reduced-motion: reduce) {
+  #intro-canvas { display: none; }
+  .intro-logo-wrap::before,
+  .intro-logo,
+  .intro-tagline {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
 
 /* =========================================================================
    HEADER

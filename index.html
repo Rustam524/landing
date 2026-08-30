@@ -52,13 +52,18 @@
 <body>
   <a class="skip-link" href="#main-content">Перейти к содержимому</a>
 
-  <!-- ============ ВСТУПИТЕЛЬНАЯ АНИМАЦИЯ ============ -->
+  <!-- ============ ВСТУПИТЕЛЬНАЯ АНИМАЦИЯ (световой импульс "кометой" к логотипу) ============ -->
   <div id="intro-screen" role="dialog" aria-modal="true" aria-label="Заставка ALGORITM">
-    <div class="intro-canvas-wrap">
-      <canvas id="intro-canvas" aria-hidden="true"></canvas>
-      <div class="intro-title">ALGORITM</div>
+    <canvas id="intro-canvas" aria-hidden="true"></canvas>
+    <div class="intro-content">
+      <div class="intro-logo-wrap" id="intro-logo-wrap">
+        <picture>
+          <source srcset="/assets/img/logo-256.webp" type="image/webp" />
+          <img class="intro-logo" id="intro-logo" src="/assets/img/logo-256.png" alt="ALGORITM" width="88" height="88" />
+        </picture>
+      </div>
+      <p class="intro-tagline" id="intro-tagline">Продвижение. Автоматизация. Обучение.</p>
     </div>
-    <p class="intro-tagline">Продвижение. Автоматизация. Обучение.</p>
     <audio id="intro-audio" preload="none" data-src=""></audio>
     <div class="intro-controls">
       <button type="button" class="intro-btn" id="intro-sound-toggle" aria-pressed="false">🔈 Звук выкл.</button>
