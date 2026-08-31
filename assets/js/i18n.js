@@ -9,7 +9,7 @@
 const I18N_TRANSLATIONS = {
   ru: {
     'meta.title': 'ALGORITM — SMM-агентство в Шымкенте',
-    'meta.description': 'ALGORITM — SMM-агентство в Шымкенте. Продвигаем бизнес в соцсетях по всему Казахстану: таргет, автоматизация, ИИ-боты, amoCRM.',
+    'meta.description': 'ALGORITM — SMM-агентство. Продвигаем бизнес в соцсетях по всему Казахстану: таргет, автоматизация, ИИ-боты, amoCRM.',
 
     'aria.logoHome': 'ALGORITM — на главную',
     'aria.langSwitch': 'Выбор языка',
