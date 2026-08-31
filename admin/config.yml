@@ -135,10 +135,10 @@ collections:
         label: "Основатель агентства"
         file: "content/founder.json"
         fields:
+          - { label: "Фотография", name: "photo", widget: "image" }
           - { label: "Имя", name: "name", widget: "string" }
           - { label: "Подпись (должность)", name: "role", widget: "string" }
           - { label: "Цитата", name: "quote", widget: "text" }
-          - { label: "Фотография", name: "photo", widget: "image" }
           - { label: "Ссылка кнопки «Об агентстве»", name: "href", widget: "string", default: "/o-nas/" }
 
   # ---------------------------------------------------------------------

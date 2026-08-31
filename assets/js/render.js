@@ -29,22 +29,6 @@
     });
   }
 
-  function renderMarquee() {
-    var track = document.querySelector("[data-marquee-track]");
-    if (!track) return;
-    var itemsHtml = DATA.directions
-      .map(function (d) {
-        return '<a href="' + d.href + '">' + d.title.toUpperCase() + "</a>";
-      })
-      .join('<span class="marquee__dot" aria-hidden="true">·</span>');
-    // Дублируем набор дважды для бесшовной прокрутки.
-    track.innerHTML =
-      itemsHtml +
-      '<span class="marquee__dot" aria-hidden="true">·</span>' +
-      itemsHtml +
-      '<span class="marquee__dot" aria-hidden="true">·</span>';
-  }
-
   function serviceCardNode(item) {
     var card = el("article", "service-card");
     card.setAttribute("data-reveal", "");
@@ -259,7 +243,6 @@
 
   function renderAll() {
     renderStats();
-    renderMarquee();
     renderServices();
     renderLearning();
     renderCases();

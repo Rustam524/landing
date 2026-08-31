@@ -441,45 +441,21 @@ textarea:focus-visible,
 
 .hero__visual-wrap {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  height: clamp(420px, 52vw, 560px);
-  max-width: 480px;
-  margin-inline: auto;
+  height: clamp(460px, 56vw, 620px);
   width: 100%;
-  border-radius: 32px;
-  overflow: hidden;
-  padding: 22px 0 0;
-  background:
-    radial-gradient(60% 60% at 50% 0%, rgba(220,38,38,0.18), transparent 70%),
-    var(--color-almost-black);
-  box-shadow: var(--shadow-soft);
-}
-.hero-visual-brand {
-  flex: 0 0 auto;
-  text-align: center;
-  padding-bottom: 16px;
-}
-.hero-visual-brand span {
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: clamp(18px, 3vw, 24px);
-  letter-spacing: 0.1em;
-  color: var(--color-cream);
-  text-shadow: 0 0 24px rgba(220,38,38,0.5);
 }
 
 /* "Бегущие" квадратики услуг — два столбца, едущие навстречу друг другу
-   (один вверх, другой вниз), внутри тёмной карточки. */
+   (один вверх, другой вниз), без рамки-контейнера — карточки стоят прямо
+   на фоне страницы, как в референсе. */
 .hero-squares-mask {
   position: relative;
-  flex: 1 1 auto;
+  height: 100%;
   display: flex;
-  gap: 12px;
-  padding: 0 16px 16px;
+  gap: 16px;
   overflow: hidden;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 8%, #000 92%, transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0, #000 8%, #000 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 6%, #000 94%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 6%, #000 94%, transparent 100%);
 }
 .hero-squares-col {
   position: relative;
@@ -487,13 +463,14 @@ textarea:focus-visible,
   min-width: 0;
   overflow: hidden;
 }
+.hero-squares-col--offset { margin-top: 64px; }
 .hero-squares-track {
   position: absolute;
   inset: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  animation-duration: 22s;
+  gap: 16px;
+  animation-duration: 26s;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
 }
@@ -517,84 +494,53 @@ textarea:focus-visible,
   align-items: center;
   justify-content: center;
   text-align: center;
-  gap: 10px;
+  gap: 16px;
   flex-shrink: 0;
   aspect-ratio: 1 / 1;
-  padding: 14px 10px;
-  border-radius: 18px;
-  background: rgba(244, 240, 235, 0.05);
-  border: 1px solid rgba(244, 240, 235, 0.1);
+  padding: 18px 14px;
+  border-radius: 22px;
+  background: var(--color-almost-black);
   color: var(--color-cream);
-  transition: background var(--transition-base), border-color var(--transition-base), transform var(--transition-base);
+  transition: transform var(--transition-base);
 }
 .hero-square-tile:hover,
 .hero-square-tile:focus-visible {
-  background: rgba(220, 38, 38, 0.14);
-  border-color: rgba(220, 38, 38, 0.4);
-  transform: scale(1.04);
+  transform: translateY(-4px);
 }
 .hero-square-tile__icon {
+  position: relative;
   flex: 0 0 auto;
-  width: 46px;
-  height: 46px;
-  border-radius: 14px;
+  width: 30%;
+  aspect-ratio: 1 / 1;
+  border-radius: 22%;
   background: linear-gradient(145deg, var(--color-red-bright), var(--color-red));
   color: var(--color-white);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 16px -8px rgba(220, 38, 38, 0.7);
+  box-shadow: 0 10px 20px -8px rgba(220, 38, 38, 0.6);
 }
-.hero-square-tile__icon svg { width: 24px; height: 24px; }
-.hero-square-tile__label { font-size: 12.5px; font-weight: 700; line-height: 1.25; }
+/* "Слоёный" эффект — вторая грань иконки виднеется позади, как в референсе */
+.hero-square-tile__icon::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 22%;
+  background: var(--color-red-bright);
+  opacity: 0.35;
+  transform: translate(6px, 6px);
+  z-index: -1;
+}
+.hero-square-tile__icon svg { width: 46%; height: 46%; }
+.hero-square-tile__label { font-size: 14px; font-weight: 700; line-height: 1.3; }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-squares-track { animation: none; }
   .hero-squares-mask { overflow-y: auto; }
 }
-@media (max-width: 480px) {
-  .hero-square-tile__label { font-size: 11.5px; }
-  .hero-square-tile__icon { width: 40px; height: 40px; }
-}
-
-/* =========================================================================
-   MARQUEE
-   ========================================================================= */
-.marquee {
-  border-top: 1px solid rgba(20,17,15,0.08);
-  border-bottom: 1px solid rgba(20,17,15,0.08);
-  background: var(--color-cream-light);
-  overflow: hidden;
-  padding: 18px 0;
-}
-.marquee__track {
-  display: flex;
-  width: max-content;
-  gap: 48px;
-  animation: marquee-scroll 42s linear infinite;
-}
-.marquee:hover .marquee__track,
-.marquee:focus-within .marquee__track { animation-play-state: paused; }
-.marquee__track a {
-  font-weight: 700;
-  font-size: 14px;
-  letter-spacing: 0.05em;
-  color: var(--color-text);
-  white-space: nowrap;
-  transition: color var(--transition-base);
-}
-.marquee__track a:hover { color: var(--color-red); }
-.marquee__dot { color: var(--color-red-bright); }
-@keyframes marquee-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-@media (pointer: coarse) {
-  .marquee { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .marquee__track { animation: none; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .marquee__track { animation: none; overflow-x: auto; }
+@media (max-width: 620px) {
+  .hero-squares-col--offset { margin-top: 44px; }
+  .hero-square-tile__label { font-size: 12px; }
 }
 
 /* =========================================================================

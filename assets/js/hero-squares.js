@@ -44,7 +44,9 @@
   var ready = window.ALGORITM_CONTENT_READY || Promise.resolve();
   ready.then(function () {
     var ICONS = window.ALGORITM_ICONS || {};
-    var items = [].concat(DATA.services || [], DATA.learningTracks || []);
+    // Только сами услуги — курсы уже отдельно показаны в блоке «Обучение»,
+    // не дублируем их здесь.
+    var items = DATA.services || [];
     if (!items.length) return;
 
     var half = Math.ceil(items.length / 2);
