@@ -1,8 +1,9 @@
 /**
- * Боковая панель первого экрана: два столбца квадратных карточек с нашими
- * услугами, едущих навстречу друг другу — один столбец вверх, другой вниз
- * (по образцу референса, адаптировано под ALGORITM). Останавливается при
- * наведении/фокусе, каждая карточка — активная ссылка.
+ * Боковая панель первого экрана: два столбца с фирменными логотипами
+ * платформ, с которыми мы работаем — Instagram, TikTok, Facebook и amoCRM,
+ * каждый в своём фирменном цвете. Без квадратных подложек/карточек — только
+ * сами значки и подпись, едущие навстречу друг другу (один столбец вверх,
+ * другой вниз), останавливаются при наведении/фокусе.
  */
 (function () {
   "use strict";
@@ -11,46 +12,41 @@
   var colDown = document.getElementById("hero-squares-col-down");
   if (!colUp || !colDown) return;
 
-  var DATA = window.ALGORITM_DATA;
-  if (!DATA) return;
+  var ICONS = window.ALGORITM_BRAND_ICONS || {};
 
-  function tileHtml(item, ICONS) {
+  var PLATFORMS = [
+    { id: "instagram", label: "Instagram", href: "https://www.instagram.com/algoritm_co" },
+    { id: "tiktok", label: "TikTok", href: "/uslugi/smm/" },
+    { id: "facebook", label: "Facebook", href: "/uslugi/smm/" },
+    { id: "amocrm", label: "amoCRM", href: "/uslugi/amocrm/" },
+  ];
+
+  function tileHtml(item) {
     return (
       '<a class="hero-square-tile" href="' +
       item.href +
-      '" data-analytics-event="hero_direction_click" data-analytics-label="' +
+      '" target="' + (item.href.indexOf("http") === 0 ? "_blank" : "_self") + '" rel="noopener" ' +
+      'data-analytics-event="hero_platform_click" data-analytics-label="' +
       item.id +
       '">' +
       '<span class="hero-square-tile__icon">' +
-      (ICONS[item.icon] || "") +
+      (ICONS[item.id] || "") +
       "</span>" +
       '<span class="hero-square-tile__label">' +
-      item.title +
+      item.label +
       "</span>" +
       "</a>"
     );
   }
 
-  function fillColumn(host, items, ICONS) {
-    var html = items
-      .map(function (item) {
-        return tileHtml(item, ICONS);
-      })
-      .join("");
+  function fillColumn(host, items) {
+    var html = items.map(tileHtml).join("");
     // Дублируем — бесшовный вертикальный цикл (translateY 0 ↔ -50%).
     host.innerHTML = html + html;
   }
 
-  var ready = window.ALGORITM_CONTENT_READY || Promise.resolve();
-  ready.then(function () {
-    var ICONS = window.ALGORITM_ICONS || {};
-    // Только сами услуги — курсы уже отдельно показаны в блоке «Обучение»,
-    // не дублируем их здесь.
-    var items = DATA.services || [];
-    if (!items.length) return;
-
-    var half = Math.ceil(items.length / 2);
-    fillColumn(colUp, items.slice(0, half), ICONS);
-    fillColumn(colDown, items.slice(half), ICONS);
-  });
+  // Каждый столбец получает все 4 логотипа (в разном порядке), чтобы
+  // хватало контента на всю высоту панели даже с небольшим набором значков.
+  fillColumn(colUp, [PLATFORMS[0], PLATFORMS[1], PLATFORMS[2], PLATFORMS[3]]);
+  fillColumn(colDown, [PLATFORMS[2], PLATFORMS[3], PLATFORMS[0], PLATFORMS[1]]);
 })();

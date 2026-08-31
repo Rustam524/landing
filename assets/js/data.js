@@ -9,20 +9,9 @@
 window.ALGORITM_DATA = {
   // Подтверждённые показатели агентства — менять только по подтверждению владельца.
   stats: [
-    { value: "5+", label: "лет опыта" },
-    { value: "1000+", label: "реализованных проектов" },
+    { value: "10+", label: "лет опыта" },
+    { value: "500+", label: "реализованных проектов" },
     { value: "10+", label: "специалистов" },
-  ],
-
-  // Направления, которые "летят" вокруг цифрового сердца и в бегущей строке.
-  directions: [
-    { id: "smm", title: "SMM-продвижение", href: "/uslugi/smm/" },
-    { id: "content", title: "Создание контента", href: "/uslugi/content/" },
-    { id: "target", title: "Таргетированная реклама", href: "/uslugi/target/" },
-    { id: "ai-bots", title: "ИИ-боты", href: "/uslugi/ai-boty/" },
-    { id: "automation", title: "Автоматизация бизнеса", href: "/uslugi/avtomatizatsiya/" },
-    { id: "amocrm", title: "Внедрение amoCRM", href: "/uslugi/amocrm/" },
-    { id: "education", title: "Обучение", href: "/obuchenie/" },
   ],
 
   // Карточки услуг + обучения. cta — понятный текст кнопки (не универсальное "Подробнее").
@@ -34,14 +23,6 @@ window.ALGORITM_DATA = {
       href: "/uslugi/smm/",
       cta: "Посмотреть SMM-продвижение",
       icon: "smm",
-    },
-    {
-      id: "content",
-      title: "Создание контента",
-      description: "Снимаем и монтируем фото и видео, которые работают на узнаваемость бренда.",
-      href: "/uslugi/content/",
-      cta: "Посмотреть создание контента",
-      icon: "content",
     },
     {
       id: "target",
@@ -119,8 +100,8 @@ window.ALGORITM_DATA = {
     {
       id: "case-2",
       niche: "Кафе и рестораны",
-      categories: ["content", "target"],
-      service: "Создание контента",
+      categories: ["smm", "target"],
+      service: "SMM-продвижение",
       task: "Задача проекта будет описана после подтверждения деталей клиентом.",
       result: "Результат уточняется у владельца агентства.",
       image: "assets/img/cases/case-placeholder-2.svg",

@@ -52,8 +52,6 @@
   var logoSource = document.getElementById("intro-logo-source");
   var tagline = document.getElementById("intro-tagline");
   var skipBtn = document.getElementById("intro-skip");
-  var soundBtn = document.getElementById("intro-sound-toggle");
-  var soundEnabled = false;
   var finished = false;
   var rafId = null;
 
@@ -81,27 +79,6 @@
   if (skipBtn) {
     skipBtn.addEventListener("click", function () {
       finishIntro(true);
-    });
-  }
-
-  if (soundBtn) {
-    soundBtn.addEventListener("click", function () {
-      soundEnabled = !soundEnabled;
-      soundBtn.setAttribute("aria-pressed", String(soundEnabled));
-      soundBtn.textContent = soundEnabled ? "🔊 Звук вкл." : "🔈 Звук выкл.";
-      track("intro_sound_toggle", { enabled: soundEnabled });
-      // Аудиофайл фирменного импульса пока не предоставлен владельцем.
-      // Звук включается только этим явным действием пользователя и никогда
-      // не запускается автоматически (см. ТЗ, раздел 4).
-      var audioEl = document.getElementById("intro-audio");
-      if (audioEl && audioEl.getAttribute("data-src")) {
-        if (soundEnabled) {
-          audioEl.src = audioEl.getAttribute("data-src");
-          audioEl.play().catch(function () {});
-        } else {
-          audioEl.pause();
-        }
-      }
     });
   }
 
@@ -198,6 +175,31 @@
     var screenCx = window.innerWidth / 2;
     var screenCy = window.innerHeight * 0.42;
 
+    // Чёткая "вырезка" настоящих букв (прозрачный фон, только пиксели
+    // названия) — проявляется поверх пыли в конце анимации, чтобы название
+    // читалось чётко, а не оставалось размытым облаком точек.
+    var cutW = Math.max(1, Math.round(boxW));
+    var cutH = Math.max(1, Math.round(boxH));
+    var cutout = document.createElement("canvas");
+    cutout.width = cutW;
+    cutout.height = cutH;
+    var cutoutCtx = cutout.getContext("2d");
+    var cropData = offCtx.getImageData(Math.round(minX), Math.round(minY), cutW, cutH);
+    var px = cropData.data;
+    for (var i = 0; i < px.length; i += 4) {
+      var l = 0.299 * px[i] + 0.587 * px[i + 1] + 0.114 * px[i + 2];
+      if (l <= threshold) px[i + 3] = 0; // всё, что не буквы/значок — прозрачное
+    }
+    cutoutCtx.putImageData(cropData, 0, 0);
+
+    logoGeometry = {
+      canvas: cutout,
+      destX: screenCx - (cutW * scale) / 2,
+      destY: screenCy - (cutH * scale) / 2,
+      destW: cutW * scale,
+      destH: cutH * scale,
+    };
+
     return points.map(function (p) {
       return {
         x: screenCx + (p.x - boxCx) * scale,
@@ -205,6 +207,10 @@
       };
     });
   }
+
+  // Геометрия чёткой "вырезки" букв — заполняется в buildLogoPoints(),
+  // используется в основном цикле анимации для финального чёткого проявления.
+  var logoGeometry = null;
 
   // -----------------------------------------------------------------------
   // 2. Частицы: каждая стартует рассеянной "звёздной пылью" вокруг своей
@@ -281,11 +287,16 @@
     var w = window.innerWidth;
     var h = window.innerHeight;
     ctx.clearRect(0, 0, w, h);
-    var points = buildLogoPoints();
-    points.forEach(function (p) {
-      ctx.fillStyle = "rgba(220, 38, 38, 0.9)";
-      ctx.fillRect(p.x, p.y, 1.6, 1.6);
-    });
+    buildLogoPoints(); // заполняет logoGeometry чёткой вырезкой букв
+    if (logoGeometry) {
+      ctx.drawImage(
+        logoGeometry.canvas,
+        logoGeometry.destX,
+        logoGeometry.destY,
+        logoGeometry.destW,
+        logoGeometry.destH
+      );
+    }
   }
 
   function runSimplified() {
@@ -314,6 +325,11 @@
 
     var TOTAL_MS = 2500;
     var TAGLINE_AT_MS = 1900;
+    // Частицы к этому моменту уже почти сошлись к своим точкам — поверх них
+    // плавно проявляем настоящую чёткую вырезку букв, чтобы название
+    // читалось резко, а не оставалось "пыльным" облаком точек.
+    var REVEAL_START_MS = 1550;
+    var REVEAL_DURATION_MS = 550;
     var taglineShown = false;
     var startTime = null;
 
@@ -327,6 +343,20 @@
       for (var i = 0; i < particles.length; i++) {
         particles[i].update();
         particles[i].draw(ctx);
+      }
+
+      if (logoGeometry && elapsed > REVEAL_START_MS) {
+        var revealAlpha = Math.min(1, (elapsed - REVEAL_START_MS) / REVEAL_DURATION_MS);
+        ctx.save();
+        ctx.globalAlpha = revealAlpha;
+        ctx.drawImage(
+          logoGeometry.canvas,
+          logoGeometry.destX,
+          logoGeometry.destY,
+          logoGeometry.destW,
+          logoGeometry.destH
+        );
+        ctx.restore();
       }
 
       if (!taglineShown && elapsed >= TAGLINE_AT_MS) {

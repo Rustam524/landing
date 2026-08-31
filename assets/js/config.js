@@ -15,25 +15,22 @@ window.ALGORITM_CONFIG = {
     tagline: "Продвижение. Автоматизация. Обучение.",
   },
 
-  // TODO(owner): указать реальный номер WhatsApp в формате 7XXXXXXXXXX (без +, пробелов и скобок).
   whatsapp: {
-    number: "", // пусто = реальный номер ещё не предоставлен владельцем
+    number: "77058903755",
     defaultMessage:
       "Здравствуйте! Хочу получить консультацию по услугам ALGORITM.",
   },
 
   contacts: {
-    // TODO(owner): подтвердить город/адрес офиса для отображения в подвале и Schema.org.
     city: "Шымкент",
-    address: "", // TODO(owner): точный адрес не предоставлен
-    // TODO(owner): указать контактный телефон, если отличается от WhatsApp.
-    phone: "",
-    email: "", // TODO(owner): рабочая почта агентства
+    address: "г. Шымкент, ул. Карасу 2/1 — услуги оказываем по всему Казахстану удалённо",
+    phone: "+7 705 890 37 55",
+    email: "sayora@algoritm.top",
+    legalName: "ИП «ALGORITM KZ»",
   },
 
   social: {
-    // TODO(owner): подтвердить/указать актуальные ссылки на профили.
-    instagram: "",
+    instagram: "https://www.instagram.com/algoritm_co",
   },
 
   // Идентификаторы аналитики — заполняются владельцем через переменные окружения

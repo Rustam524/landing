@@ -161,12 +161,6 @@ collections:
             fields:
               - { label: "Значение (напр. 5+)", name: "value", widget: "string" }
               - { label: "Подпись", name: "label", widget: "string" }
-          - label: "Блок «Об агентстве»"
-            name: "about"
-            widget: "object"
-            fields:
-              - { label: "Заголовок", name: "title", widget: "string" }
-              - { label: "Текст", name: "text", widget: "text" }
           - label: "Шаги («Начать работу просто»)"
             name: "steps"
             widget: "list"
@@ -185,6 +179,7 @@ collections:
               - { label: "Адрес", name: "address", widget: "string", required: false }
               - { label: "Телефон", name: "phone", widget: "string", required: false }
               - { label: "Email", name: "email", widget: "string", required: false }
+              - { label: "Юридическое название (ИП/ТОО)", name: "legalName", widget: "string", required: false }
           - label: "WhatsApp"
             name: "whatsapp"
             widget: "object"

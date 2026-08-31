@@ -79,7 +79,6 @@ p { margin: 0; }
 .learning-row,
 .case-grid,
 .stats,
-.about-block,
 .founder-block,
 .steps-list,
 .testimonials-grid,
@@ -91,7 +90,6 @@ p { margin: 0; }
 .learning-row > *,
 .case-grid > *,
 .stats > *,
-.about-block > *,
 .founder-block > *,
 .steps-list > *,
 .testimonials-grid > *,
@@ -470,7 +468,7 @@ textarea:focus-visible,
   display: flex;
   flex-direction: column;
   gap: 16px;
-  animation-duration: 26s;
+  animation-duration: 19s;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
 }
@@ -488,19 +486,19 @@ textarea:focus-visible,
   from { transform: translateY(-50%); }
   to { transform: translateY(0); }
 }
+/* Без квадратных подложек/карточек — только сам значок платформы и подпись,
+   ничего прямоугольного вокруг. */
 .hero-square-tile {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  gap: 16px;
+  gap: 14px;
   flex-shrink: 0;
   aspect-ratio: 1 / 1;
   padding: 18px 14px;
-  border-radius: 22px;
-  background: var(--color-almost-black);
-  color: var(--color-cream);
+  color: var(--color-almost-black);
   transition: transform var(--transition-base);
 }
 .hero-square-tile:hover,
@@ -508,30 +506,14 @@ textarea:focus-visible,
   transform: translateY(-4px);
 }
 .hero-square-tile__icon {
-  position: relative;
   flex: 0 0 auto;
-  width: 30%;
+  width: 34%;
   aspect-ratio: 1 / 1;
-  border-radius: 22%;
-  background: linear-gradient(145deg, var(--color-red-bright), var(--color-red));
-  color: var(--color-white);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10px 20px -8px rgba(220, 38, 38, 0.6);
 }
-/* "Слоёный" эффект — вторая грань иконки виднеется позади, как в референсе */
-.hero-square-tile__icon::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 22%;
-  background: var(--color-red-bright);
-  opacity: 0.35;
-  transform: translate(6px, 6px);
-  z-index: -1;
-}
-.hero-square-tile__icon svg { width: 46%; height: 46%; }
+.hero-square-tile__icon svg { width: 100%; height: 100%; }
 .hero-square-tile__label { font-size: 14px; font-weight: 700; line-height: 1.3; }
 
 @media (prefers-reduced-motion: reduce) {
@@ -627,21 +609,8 @@ textarea:focus-visible,
 }
 
 /* =========================================================================
-   ABOUT / FOUNDER / STEPS
+   FOUNDER / STEPS
    ========================================================================= */
-.about-block { display: grid; gap: 40px; align-items: center; }
-@media (min-width: 900px) { .about-block { grid-template-columns: 1fr 1fr; } }
-.about-block p { font-size: 17px; color: #4a4238; margin-top: 16px; }
-.about-visual {
-  border-radius: var(--radius-lg);
-  background: var(--color-almost-black);
-  aspect-ratio: 16/11;
-  position: relative;
-  overflow: hidden;
-  display: flex; align-items: center; justify-content: center;
-}
-.about-visual svg { width: 60%; opacity: 0.9; }
-
 .founder-block {
   display: grid;
   gap: 34px;

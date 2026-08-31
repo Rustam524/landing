@@ -36,9 +36,28 @@
     var yearEl = scope.querySelector("[data-year]");
     if (yearEl) yearEl.textContent = String(new Date().getFullYear());
 
-    var cityEl = scope.querySelector("[data-footer-city]");
-    if (cityEl && cfg.contacts && cfg.contacts.city) {
-      cityEl.textContent = cfg.contacts.city;
+    var addressEl = scope.querySelector("[data-footer-address]");
+    if (addressEl && cfg.contacts) {
+      addressEl.textContent = cfg.contacts.address || cfg.contacts.city || "";
+    }
+
+    var phoneEl = scope.querySelector("[data-footer-phone]");
+    if (phoneEl && cfg.contacts && cfg.contacts.phone) {
+      phoneEl.href = "tel:" + cfg.contacts.phone.replace(/[^\d+]/g, "");
+      phoneEl.textContent = cfg.contacts.phone;
+      phoneEl.hidden = false;
+    }
+
+    var emailEl = scope.querySelector("[data-footer-email]");
+    if (emailEl && cfg.contacts && cfg.contacts.email) {
+      emailEl.href = "mailto:" + cfg.contacts.email;
+      emailEl.textContent = cfg.contacts.email;
+      emailEl.hidden = false;
+    }
+
+    var legalNameEl = scope.querySelector("[data-footer-legal-name]");
+    if (legalNameEl && cfg.contacts && cfg.contacts.legalName) {
+      legalNameEl.textContent = cfg.contacts.legalName;
     }
 
     var igEl = scope.querySelector("[data-footer-instagram]");
@@ -84,6 +103,19 @@
     crm: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 5h16l-6 8v6l-4-2v-4z"/></svg>',
     "learn-smm": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9l9-4 9 4-9 4-9-4z"/><path d="M7 11v4c0 1.5 2.2 3 5 3s5-1.5 5-3v-4"/></svg>',
     "learn-ai": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M6 6l2 2M16 16l2 2M18 6l-2 2M8 16l-2 2"/></svg>',
+  };
+
+  // Логотипы платформ — для боковой панели первого экрана (крутятся только
+  // сами фирменные значки, без квадратных подложек — каждый в своём цвете).
+  window.ALGORITM_BRAND_ICONS = {
+    instagram:
+      '<svg viewBox="0 0 24 24" fill="none"><defs><linearGradient id="ig-grad" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stop-color="#f09433"/><stop offset="35%" stop-color="#e6683c"/><stop offset="60%" stop-color="#dc2743"/><stop offset="80%" stop-color="#cc2366"/><stop offset="100%" stop-color="#bc1888"/></linearGradient></defs><rect x="2.5" y="2.5" width="19" height="19" rx="6" stroke="url(#ig-grad)" stroke-width="2"/><circle cx="12" cy="12" r="4.6" stroke="url(#ig-grad)" stroke-width="2"/><circle cx="17.8" cy="6.2" r="1.2" fill="url(#ig-grad)"/></svg>',
+    facebook:
+      '<svg viewBox="0 0 24 24" fill="#1877F2"><path d="M13.9 21v-7.6h2.6l.4-3h-3V8.4c0-.9.2-1.5 1.6-1.5h1.6V4.3C16.8 4.2 15.8 4 14.6 4c-2.3 0-3.9 1.4-3.9 4v2.4H8v3h2.7V21h3.2z"/></svg>',
+    tiktok:
+      '<svg viewBox="0 0 24 24"><path transform="translate(-0.55,0.55)" fill="#25F4EE" d="M16.6 3c.4 2 1.8 3.4 3.8 3.7v2.6c-1.4 0-2.7-.4-3.8-1.2v6.4c0 3-2.4 5.4-5.4 5.4S5.8 17.5 5.8 14.5c0-2.8 2.1-5.1 4.8-5.4v2.7c-1.2.3-2.1 1.4-2.1 2.7 0 1.5 1.3 2.8 2.8 2.8s2.8-1.3 2.8-2.8V3h2.5z"/><path transform="translate(0.55,-0.55)" fill="#FE2C55" d="M16.6 3c.4 2 1.8 3.4 3.8 3.7v2.6c-1.4 0-2.7-.4-3.8-1.2v6.4c0 3-2.4 5.4-5.4 5.4S5.8 17.5 5.8 14.5c0-2.8 2.1-5.1 4.8-5.4v2.7c-1.2.3-2.1 1.4-2.1 2.7 0 1.5 1.3 2.8 2.8 2.8s2.8-1.3 2.8-2.8V3h2.5z"/><path fill="#14110f" d="M16.6 3c.4 2 1.8 3.4 3.8 3.7v2.6c-1.4 0-2.7-.4-3.8-1.2v6.4c0 3-2.4 5.4-5.4 5.4S5.8 17.5 5.8 14.5c0-2.8 2.1-5.1 4.8-5.4v2.7c-1.2.3-2.1 1.4-2.1 2.7 0 1.5 1.3 2.8 2.8 2.8s2.8-1.3 2.8-2.8V3h2.5z"/></svg>',
+    amocrm:
+      '<svg viewBox="0 0 24 24"><text x="12" y="18" font-family="Manrope, Arial, sans-serif" font-size="17" font-weight="800" fill="#339DC7" text-anchor="middle">a</text></svg>',
   };
 
   var UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
