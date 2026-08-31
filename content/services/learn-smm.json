@@ -1,0 +1,10 @@
+{
+  "id": "learn-smm",
+  "title": "Курсы по SMM",
+  "description": "Обучаем вести соцсети бизнеса и специалистов — от основ до практики с проектами.",
+  "href": "/obuchenie/smm/",
+  "cta": "Смотреть программы по SMM",
+  "icon": "learn-smm",
+  "order": 7,
+  "kind": "learning"
+}

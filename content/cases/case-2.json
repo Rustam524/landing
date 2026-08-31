@@ -1,0 +1,15 @@
+{
+  "id": "case-2",
+  "niche": "Кафе и рестораны",
+  "categories": [
+    "content",
+    "target"
+  ],
+  "service": "Создание контента",
+  "task": "Задача проекта будет описана после подтверждения деталей клиентом.",
+  "result": "Результат уточняется у владельца агентства.",
+  "image": "/assets/img/cases/case-placeholder-2.svg",
+  "href": "/keysy/",
+  "placeholder": true,
+  "order": 2
+}

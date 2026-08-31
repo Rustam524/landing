@@ -36,8 +36,16 @@
   }
 
   var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var isLowEndDevice = window.ALGORITM_isLowEndDevice ? window.ALGORITM_isLowEndDevice() : false;
-  var simplified = reducedMotion || isLowEndDevice;
+  // Заставка — короткая одноразовая анимация (~2.5с), а не постоянный фон,
+  // поэтому для неё узкий экран телефона сам по себе не повод упрощать —
+  // упрощаем только на реально слабом железе (мало памяти/ядер, экономия
+  // трафика), а не по одной лишь ширине экрана.
+  var isWeakHardware = !!(
+    (navigator.deviceMemory && navigator.deviceMemory <= 2) ||
+    (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2) ||
+    (navigator.connection && navigator.connection.saveData)
+  );
+  var simplified = reducedMotion || isWeakHardware;
 
   var canvas = document.getElementById("intro-canvas");
   var ctx = canvas ? canvas.getContext("2d") : null;
@@ -135,19 +143,22 @@
       return []; // на всякий случай, если браузер не даст прочитать пиксели
     }
 
-    // Полоса с знаком + словом ALGORITM (доля от высоты картинки — не зависит
-    // от конкретного разрешения файла).
+    // Полоса с знаком + словом ALGORITM (доля от высоты/ширины картинки —
+    // не зависит от конкретного разрешения файла). По ширине также
+    // отрезаем метallic ободок круглого значка слева/справа.
     var bandTop = size * 0.4;
     var bandBottom = size * 0.53;
-    var step = Math.max(1, Math.round(size / 340)); // ограничиваем число точек
+    var bandLeft = size * 0.12;
+    var bandRight = size * 0.88;
+    var step = 1; // максимальная плотность — больше "звёздной пыли"
     var threshold = 175;
 
     var points = [];
     var minX = size, maxX = 0, minY = size, maxY = 0;
 
     for (var y = bandTop; y < bandBottom; y += step) {
-      for (var x = 0; x < size; x += step) {
-        var idx = (Math.round(y) * size + x) * 4;
+      for (var x = bandLeft; x < bandRight; x += step) {
+        var idx = (Math.round(y) * size + Math.round(x)) * 4;
         var lum = 0.299 * data[idx] + 0.587 * data[idx + 1] + 0.114 * data[idx + 2];
         if (lum > threshold) {
           points.push({ x: x, y: y });
@@ -161,14 +172,26 @@
 
     if (!points.length) return [];
 
-    // Нормализуем к готовому размеру на экране, сохраняя пропорции.
+    // Ограничиваем итоговое число частиц (иначе на слабом GPU/мобильном
+    // браузере анимация начнёт тормозить) — прореживаем случайно, силуэт
+    // от этого не страдает, дыма/пыли всё равно заметно больше, чем раньше.
+    var MAX_PARTICLES = 4500;
+    if (points.length > MAX_PARTICLES) {
+      var keepChance = MAX_PARTICLES / points.length;
+      points = points.filter(function () {
+        return Math.random() < keepChance;
+      });
+    }
+
+    // Нормализуем к готовому размеру на экране: название почти во весь
+    // экран, пропорционально количеству "звёздной пыли".
     var boxW = maxX - minX || 1;
     var boxH = maxY - minY || 1;
-    var targetW = Math.min(window.innerWidth * 0.72, 380);
+    var targetW = Math.min(window.innerWidth * 0.9, 1100);
     var scale = targetW / boxW;
     var targetH = boxH * scale;
-    if (targetH > window.innerHeight * 0.4) {
-      scale = (window.innerHeight * 0.4) / boxH;
+    if (targetH > window.innerHeight * 0.5) {
+      scale = (window.innerHeight * 0.5) / boxH;
     }
     var boxCx = minX + boxW / 2;
     var boxCy = minY + boxH / 2;

@@ -1,0 +1,15 @@
+{
+  "id": "case-4",
+  "niche": "Розничная торговля",
+  "categories": [
+    "ai-bots",
+    "automation"
+  ],
+  "service": "ИИ-боты",
+  "task": "Задача проекта будет описана после подтверждения деталей клиентом.",
+  "result": "Результат уточняется у владельца агентства.",
+  "image": "/assets/img/cases/case-placeholder-4.svg",
+  "href": "/keysy/",
+  "placeholder": true,
+  "order": 4
+}

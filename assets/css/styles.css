@@ -441,65 +441,121 @@ textarea:focus-visible,
 
 .hero__visual-wrap {
   position: relative;
-  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  height: clamp(420px, 52vw, 560px);
   max-width: 480px;
   margin-inline: auto;
   width: 100%;
   border-radius: 32px;
   overflow: hidden;
+  padding: 22px 0 0;
   background:
-    radial-gradient(60% 60% at 50% 42%, rgba(220,38,38,0.16), transparent 70%),
+    radial-gradient(60% 60% at 50% 0%, rgba(220,38,38,0.18), transparent 70%),
     var(--color-almost-black);
   box-shadow: var(--shadow-soft);
 }
-#hero-network-canvas { width: 100%; height: 100%; display: block; }
-.hero-network-canvas--simple-pulse { animation: hero-network-simple-pulse 2.6s ease-in-out infinite; }
-@keyframes hero-network-simple-pulse {
-  0%, 100% { filter: brightness(0.95); }
-  50% { filter: brightness(1.2); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero-network-canvas--simple-pulse { animation: none; }
-}
 .hero-visual-brand {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  flex: 0 0 auto;
   text-align: center;
-  pointer-events: none;
+  padding-bottom: 16px;
 }
 .hero-visual-brand span {
   font-family: var(--font-heading);
   font-weight: 700;
-  font-size: clamp(20px, 3.4vw, 28px);
-  letter-spacing: 0.08em;
+  font-size: clamp(18px, 3vw, 24px);
+  letter-spacing: 0.1em;
   color: var(--color-cream);
   text-shadow: 0 0 24px rgba(220,38,38,0.5);
 }
-.hero-visual-direction {
-  position: absolute;
-  top: 74%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 8px 18px;
-  border-radius: 999px;
-  background: var(--color-red-bright);
-  color: var(--color-white);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  white-space: nowrap;
-  max-width: 90%;
+
+/* "Бегущие" квадратики услуг — два столбца, едущие навстречу друг другу
+   (один вверх, другой вниз), внутри тёмной карточки. */
+.hero-squares-mask {
+  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  gap: 12px;
+  padding: 0 16px 16px;
   overflow: hidden;
-  text-overflow: ellipsis;
-  opacity: 0;
-  transition: opacity 620ms ease;
-  pointer-events: none;
-  box-shadow: 0 10px 24px -10px rgba(220,38,38,0.7);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 8%, #000 92%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 8%, #000 92%, transparent 100%);
 }
-.hero-visual-direction.is-visible { opacity: 1; pointer-events: auto; }
-.hero-visual-direction a { color: inherit; }
+.hero-squares-col {
+  position: relative;
+  flex: 1 1 50%;
+  min-width: 0;
+  overflow: hidden;
+}
+.hero-squares-track {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation-duration: 22s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.hero-squares-track--up { animation-name: hero-squares-up; }
+.hero-squares-track--down { animation-name: hero-squares-down; }
+.hero-squares-mask:hover .hero-squares-track,
+.hero-squares-mask:focus-within .hero-squares-track {
+  animation-play-state: paused;
+}
+@keyframes hero-squares-up {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
+}
+@keyframes hero-squares-down {
+  from { transform: translateY(-50%); }
+  to { transform: translateY(0); }
+}
+.hero-square-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+  flex-shrink: 0;
+  aspect-ratio: 1 / 1;
+  padding: 14px 10px;
+  border-radius: 18px;
+  background: rgba(244, 240, 235, 0.05);
+  border: 1px solid rgba(244, 240, 235, 0.1);
+  color: var(--color-cream);
+  transition: background var(--transition-base), border-color var(--transition-base), transform var(--transition-base);
+}
+.hero-square-tile:hover,
+.hero-square-tile:focus-visible {
+  background: rgba(220, 38, 38, 0.14);
+  border-color: rgba(220, 38, 38, 0.4);
+  transform: scale(1.04);
+}
+.hero-square-tile__icon {
+  flex: 0 0 auto;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: linear-gradient(145deg, var(--color-red-bright), var(--color-red));
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 16px -8px rgba(220, 38, 38, 0.7);
+}
+.hero-square-tile__icon svg { width: 24px; height: 24px; }
+.hero-square-tile__label { font-size: 12.5px; font-weight: 700; line-height: 1.25; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-squares-track { animation: none; }
+  .hero-squares-mask { overflow-y: auto; }
+}
+@media (max-width: 480px) {
+  .hero-square-tile__label { font-size: 11.5px; }
+  .hero-square-tile__icon { width: 40px; height: 40px; }
+}
 
 /* =========================================================================
    MARQUEE

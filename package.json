@@ -1,0 +1,13 @@
+{
+  "name": "algoritm-landing",
+  "version": "1.0.0",
+  "description": "Главная страница ALGORITM: статический сайт + Decap CMS + генератор страниц блога",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build-content.js"
+  },
+  "devDependencies": {
+    "gray-matter": "^4.0.3",
+    "marked": "^18.0.11"
+  }
+}

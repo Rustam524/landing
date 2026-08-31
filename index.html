@@ -60,7 +60,10 @@
     </div>
     <!-- Скрытый источник для сэмплирования пикселей логотипа в частицы (техника из
          github.com/HelloAndersJ/particle-logo, адаптированная под наш логотип и цвета). -->
-    <img id="intro-logo-source" src="/assets/img/logo-512.png" alt="" aria-hidden="true" hidden />
+    <picture hidden aria-hidden="true">
+      <source srcset="/assets/img/logo-1024.webp" type="image/webp" />
+      <img id="intro-logo-source" src="/assets/img/logo-1024.png" alt="" />
+    </picture>
     <audio id="intro-audio" preload="none" data-src=""></audio>
     <div class="intro-controls">
       <button type="button" class="intro-btn" id="intro-sound-toggle" aria-pressed="false">🔈 Звук выкл.</button>
@@ -75,8 +78,8 @@
     <section class="hero">
       <div class="container hero__grid">
         <div data-reveal>
-          <h1>Digital-агентство в Шымкенте для продвижения и автоматизации бизнеса</h1>
-          <p class="hero__subtitle">
+          <h1 data-content="hero.h1">Digital-агентство в Шымкенте для продвижения и автоматизации бизнеса</h1>
+          <p class="hero__subtitle" data-content="hero.subtitle">
             Создаём контент, ведём социальные сети, запускаем таргетированную рекламу,
             внедряем ИИ-решения и обучаем современным digital-профессиям.
           </p>
@@ -90,10 +93,16 @@
           </div>
         </div>
 
-        <div class="hero__visual-wrap" data-reveal>
-          <canvas id="hero-network-canvas" aria-hidden="true"></canvas>
+        <div class="hero__visual-wrap" data-reveal aria-label="Направления работы ALGORITM">
           <div class="hero-visual-brand"><span>ALGORITM</span></div>
-          <div class="hero-visual-direction" id="hero-visual-direction" aria-live="polite"></div>
+          <div class="hero-squares-mask">
+            <div class="hero-squares-col">
+              <div class="hero-squares-track hero-squares-track--up" id="hero-squares-col-up"></div>
+            </div>
+            <div class="hero-squares-col">
+              <div class="hero-squares-track hero-squares-track--down" id="hero-squares-col-down"></div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -146,8 +155,8 @@
       <div class="container about-block">
         <div data-reveal>
           <span class="eyebrow">Об агентстве</span>
-          <h2>ALGORITM объединяет продвижение, технологии и обучение</h2>
-          <p>
+          <h2 data-content="about.title">ALGORITM объединяет продвижение, технологии и обучение</h2>
+          <p data-content="about.text">
             Мы помогаем бизнесу развивать социальные сети, создавать контент, привлекать клиентов
             с помощью рекламы и внедрять решения, которые упрощают ежедневную работу.
           </p>
@@ -235,8 +244,8 @@
     <!-- ============ ФИНАЛЬНЫЙ ПРИЗЫВ ============ -->
     <section class="section">
       <div class="final-cta" data-reveal>
-        <h2>Обсудим задачу вашего бизнеса?</h2>
-        <p>Расскажите, что вы хотите улучшить — продвижение, рекламу, контент, автоматизацию или обучение.</p>
+        <h2 data-content="finalCta.title">Обсудим задачу вашего бизнеса?</h2>
+        <p data-content="finalCta.text">Расскажите, что вы хотите улучшить — продвижение, рекламу, контент, автоматизацию или обучение.</p>
         <div class="final-cta__actions">
           <a class="btn btn-primary" data-whatsapp-link data-analytics-event="whatsapp_click" data-analytics-source="final_cta">
             Написать в WhatsApp
@@ -302,13 +311,14 @@
 
   <script src="/assets/js/config.js"></script>
   <script src="/assets/js/data.js"></script>
+  <script src="/assets/js/content-loader.js"></script>
   <script src="/assets/js/common.js"></script>
   <script src="/assets/js/analytics.js"></script>
   <script src="/assets/js/partials.js"></script>
   <script src="/assets/js/header.js"></script>
   <script src="/assets/js/render.js"></script>
   <script src="/assets/js/reveal.js"></script>
-  <script src="/assets/js/hero-visual.js"></script>
+  <script src="/assets/js/hero-squares.js"></script>
   <script src="/assets/js/modal.js"></script>
   <script src="/assets/js/nextbot.js"></script>
   <script src="/assets/js/intro.js"></script>

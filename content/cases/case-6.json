@@ -1,0 +1,14 @@
+{
+  "id": "case-6",
+  "niche": "Строительная компания",
+  "categories": [
+    "amocrm"
+  ],
+  "service": "Внедрение amoCRM",
+  "task": "Задача проекта будет описана после подтверждения деталей клиентом.",
+  "result": "Результат уточняется у владельца агентства.",
+  "image": "/assets/img/cases/case-placeholder-6.svg",
+  "href": "/keysy/",
+  "placeholder": true,
+  "order": 6
+}

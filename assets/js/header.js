@@ -105,5 +105,13 @@
     }
     window.ALGORITM_applyWhatsAppLinks(document);
     if (footerRoot) window.ALGORITM_applyFooterDynamicData(footerRoot);
+
+    // Номер WhatsApp/соцсети могут ещё подгружаться из /content (CMS) —
+    // как только они придут, обновляем ссылки повторно.
+    var ready = window.ALGORITM_CONTENT_READY || Promise.resolve();
+    ready.then(function () {
+      window.ALGORITM_applyWhatsAppLinks(document);
+      if (footerRoot) window.ALGORITM_applyFooterDynamicData(footerRoot);
+    });
   });
 })();

@@ -1,0 +1,204 @@
+# Конфигурация Decap CMS для сайта ALGORITM.
+# Подробная инструкция по подключению — в admin/index.html и в отчёте
+# по задаче. Коротко: включить Netlify Identity + Git Gateway на сайте,
+# пригласить владельца по e-mail — и /admin заработает.
+
+backend:
+  name: git-gateway
+  branch: main # ветка, которую публикует Netlify — при необходимости поменять
+
+# Для локальной проверки без реального GitHub/Netlify:
+# npx decap-server, затем открыть /admin на localhost — Decap сам
+# переключится на локальный бэкенд (см. local_backend ниже).
+local_backend: true
+
+media_folder: "assets/img/uploads" # куда сохраняются загруженные через CMS изображения
+public_folder: "/assets/img/uploads" # как эти изображения адресуются на сайте
+
+publish_mode: simple # без черновиков-PR — сохранил и сразу ушло в сайт
+
+locale: "ru"
+
+collections:
+  # ---------------------------------------------------------------------
+  - name: "blog"
+    label: "Блог"
+    label_singular: "Статья"
+    folder: "content/blog"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    identifier_field: title
+    summary: "{{title}} — {{status}}"
+    fields:
+      - { label: "Заголовок", name: "title", widget: "string" }
+      - { label: "URL статьи (латиницей, без пробелов)", name: "slug", widget: "string", hint: "Например: kak-vybrat-smm-podryadchika" }
+      - label: "Рубрика"
+        name: "category"
+        widget: "select"
+        options:
+          - { label: "SMM", value: "smm" }
+          - { label: "Таргетированная реклама", value: "target" }
+          - { label: "Контент", value: "content" }
+          - { label: "ИИ и нейросети", value: "ai" }
+          - { label: "Автоматизация", value: "automation" }
+          - { label: "Обучение", value: "education" }
+          - { label: "Новости ALGORITM", value: "news" }
+      - { label: "Обложка", name: "cover", widget: "image", required: false }
+      - { label: "Короткое описание (для превью и SEO по умолчанию)", name: "excerpt", widget: "text" }
+      - { label: "Автор", name: "author", widget: "string", default: "ALGORITM" }
+      - { label: "Дата публикации", name: "date", widget: "datetime" }
+      - { label: "SEO Title (необязательно)", name: "seoTitle", widget: "string", required: false, hint: "Если пусто — используется заголовок статьи" }
+      - { label: "SEO Description (необязательно)", name: "seoDescription", widget: "text", required: false, hint: "Если пусто — используется короткое описание" }
+      - { label: "Видео (ссылка YouTube, Instagram или TikTok)", name: "video", widget: "string", required: false }
+      - label: "Статус"
+        name: "status"
+        widget: "select"
+        options: ["draft", "published"]
+        default: "draft"
+        hint: "Пока стоит draft — статья НЕ появится на сайте"
+      - { label: "Текст статьи", name: "body", widget: "markdown" }
+
+  # ---------------------------------------------------------------------
+  - name: "services"
+    label: "Услуги и обучение"
+    label_singular: "Услуга"
+    folder: "content/services"
+    extension: "json"
+    format: "json"
+    create: true
+    delete: true
+    identifier_field: title
+    summary: "{{title}} ({{kind}})"
+    fields:
+      - { label: "ID (латиницей, без пробелов, не менять после создания)", name: "id", widget: "string" }
+      - { label: "Название", name: "title", widget: "string" }
+      - { label: "Короткое описание (1–2 предложения)", name: "description", widget: "text" }
+      - { label: "Ссылка на страницу услуги", name: "href", widget: "string" }
+      - { label: "Текст кнопки", name: "cta", widget: "string" }
+      - label: "Иконка"
+        name: "icon"
+        widget: "select"
+        options: ["smm", "content", "target", "ai", "automation", "crm", "learn-smm", "learn-ai"]
+      - label: "Тип карточки"
+        name: "kind"
+        widget: "select"
+        options: [{ label: "Услуга", value: "service" }, { label: "Обучение", value: "learning" }]
+        default: "service"
+      - { label: "Цена (необязательно — на главной не показывается)", name: "price", widget: "string", required: false }
+      - { label: "Порядок отображения (меньше = выше)", name: "order", widget: "number", default: 1 }
+
+  # ---------------------------------------------------------------------
+  - name: "cases"
+    label: "Кейсы"
+    label_singular: "Кейс"
+    folder: "content/cases"
+    extension: "json"
+    format: "json"
+    create: true
+    delete: true
+    identifier_field: niche
+    summary: "{{niche}} — {{service}}"
+    fields:
+      - { label: "Ниша / название клиента", name: "niche", widget: "string" }
+      - { label: "Выполненная услуга", name: "service", widget: "string" }
+      - { label: "Категории (для фильтров, id услуг через запятую)", name: "categories", widget: "list", required: false }
+      - { label: "Задача", name: "task", widget: "text" }
+      - { label: "Результат", name: "result", widget: "text" }
+      - { label: "Изображение", name: "image", widget: "image" }
+      - { label: "Ссылка на подробности", name: "href", widget: "string", default: "/keysy/" }
+      - { label: "Это заглушка (реальных данных ещё нет)?", name: "placeholder", widget: "boolean", default: false }
+      - { label: "Порядок отображения", name: "order", widget: "number", default: 1 }
+
+  # ---------------------------------------------------------------------
+  - name: "testimonials"
+    label: "Отзывы"
+    label_singular: "Отзыв"
+    folder: "content/testimonials"
+    extension: "json"
+    format: "json"
+    create: true
+    delete: true
+    identifier_field: author
+    fields:
+      - { label: "Имя клиента / компания", name: "author", widget: "string" }
+      - { label: "Направление работы", name: "serviceLabel", widget: "string" }
+      - { label: "Текст отзыва", name: "text", widget: "text" }
+      - { label: "Фото / логотип", name: "photo", widget: "image", required: false }
+      - { label: "Ссылка на источник отзыва", name: "sourceUrl", widget: "string", required: false }
+
+  # ---------------------------------------------------------------------
+  - name: "founder_settings"
+    label: "Основатель"
+    files:
+      - name: "founder"
+        label: "Основатель агентства"
+        file: "content/founder.json"
+        fields:
+          - { label: "Имя", name: "name", widget: "string" }
+          - { label: "Подпись (должность)", name: "role", widget: "string" }
+          - { label: "Цитата", name: "quote", widget: "text" }
+          - { label: "Фотография", name: "photo", widget: "image" }
+          - { label: "Ссылка кнопки «Об агентстве»", name: "href", widget: "string", default: "/o-nas/" }
+
+  # ---------------------------------------------------------------------
+  - name: "site_settings"
+    label: "Настройки сайта"
+    files:
+      - name: "site"
+        label: "Главная страница и контакты"
+        file: "content/site.json"
+        fields:
+          - label: "Первый экран (Hero)"
+            name: "hero"
+            widget: "object"
+            fields:
+              - { label: "Заголовок H1", name: "h1", widget: "string" }
+              - { label: "Подзаголовок", name: "subtitle", widget: "text" }
+          - label: "Показатели агентства"
+            name: "stats"
+            widget: "list"
+            fields:
+              - { label: "Значение (напр. 5+)", name: "value", widget: "string" }
+              - { label: "Подпись", name: "label", widget: "string" }
+          - label: "Блок «Об агентстве»"
+            name: "about"
+            widget: "object"
+            fields:
+              - { label: "Заголовок", name: "title", widget: "string" }
+              - { label: "Текст", name: "text", widget: "text" }
+          - label: "Шаги («Начать работу просто»)"
+            name: "steps"
+            widget: "list"
+            hint: "Каждая строка — один шаг"
+          - label: "Финальный призыв (перед подвалом)"
+            name: "finalCta"
+            widget: "object"
+            fields:
+              - { label: "Заголовок", name: "title", widget: "string" }
+              - { label: "Текст", name: "text", widget: "text" }
+          - label: "Контакты"
+            name: "contacts"
+            widget: "object"
+            fields:
+              - { label: "Город", name: "city", widget: "string" }
+              - { label: "Адрес", name: "address", widget: "string", required: false }
+              - { label: "Телефон", name: "phone", widget: "string", required: false }
+              - { label: "Email", name: "email", widget: "string", required: false }
+          - label: "WhatsApp"
+            name: "whatsapp"
+            widget: "object"
+            fields:
+              - { label: "Номер (формат 7XXXXXXXXXX, без +/пробелов)", name: "number", widget: "string", required: false }
+              - { label: "Текст сообщения по умолчанию", name: "defaultMessage", widget: "string" }
+          - label: "Соцсети"
+            name: "social"
+            widget: "object"
+            fields:
+              - { label: "Instagram (ссылка)", name: "instagram", widget: "string", required: false }
+          - label: "Аналитика"
+            name: "analytics"
+            widget: "object"
+            fields:
+              - { label: "GA4 Measurement ID", name: "ga4MeasurementId", widget: "string", required: false }
+              - { label: "GTM Container ID", name: "gtmContainerId", widget: "string", required: false }
