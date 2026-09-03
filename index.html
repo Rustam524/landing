@@ -433,12 +433,11 @@
     grid-template-columns: 1fr !important;
     gap: 28px !important;
   }
-  div[style*="grid-template-columns: 1fr 1.25fr"] {
-    grid-template-columns: 1fr !important;
-    gap: 22px !important;
+  div[style*="background: #17130f; border-radius: 26px"] {
     padding: 26px 24px !important;
+    gap: 18px !important;
   }
-  div[style*="grid-template-columns: 1fr 1.25fr"] > div,
+  div[style*="background: #17130f; border-radius: 26px"] > *,
   div[style*="grid-template-columns: 1.5fr 1fr"] > div,
   div[style*="gap: 18px; margin-top: 18px"] > div,
   div[style*="gap: 40px; margin-top: 38px"] > div {
@@ -720,7 +719,7 @@
     </div>
   </div>
 
-  <div style="margin-top: 34px; background: #17130f; border-radius: 26px; padding: 32px 34px; display: grid; grid-template-columns: 1fr 1.25fr; gap: 34px; align-items: center;">
+  <div style="margin-top: 34px; background: #17130f; border-radius: 26px; padding: 32px 34px; display: flex; flex-direction: column; gap: 22px; box-sizing: border-box;">
     <div>
       <p style="font-size: 13px; font-weight: 700; letter-spacing: 0.1em; color: #a89e93;">СТОИМОСТЬ КУРСА</p>
       <p style="font-family: 'Playfair Display', serif; font-size: 52px; line-height: 1; font-weight: 600; margin-top: 10px; color: #ffdd00;">400 000 ₸</p>
@@ -728,6 +727,7 @@
     </div>
     <div style="display: flex; flex-direction: column; gap: 14px;">
       <p style="font-size: 15px; line-height: 1.55; color: #cfc7bd;">В стоимость входит вся основная программа и практические занятия, работа над собственным проектом с преподавателем, обучающие материалы и шаблоны, бонусное занятие и поддержка после курса.</p>
+      <p style="font-size: 12.5px; line-height: 1.6; color: #8f867d; margin: 0;">Оплачивая курс, вы принимаете условия публичной оферты.<br>Полные условия оказания услуг и порядок возврата денежных средств — в договоре оферты.<br><a href="oferta.html" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 12px 4px; margin: -12px -4px; color: #b7ad9f; text-decoration: underline; text-underline-offset: 2px;">Договор оферты</a> · <a href="oferta.html#vozvrat" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 12px 4px; margin: -12px -4px; color: #b7ad9f; text-decoration: underline; text-underline-offset: 2px;">Условия возврата</a></p>
       <a href="https://wa.me/77058903755?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%B7%D0%B0%D0%BF%D0%B8%D1%81%D0%B0%D1%82%D1%8C%D1%81%D1%8F%20%D0%BD%D0%B0%20%D0%BA%D1%83%D1%80%D1%81%20%C2%AB%D0%98%D0%98-%D0%B1%D0%BE%D1%82%D1%8B%20%D0%B4%D0%BB%D1%8F%20%D0%B1%D0%B8%D0%B7%D0%BD%D0%B5%D1%81%D0%B0%C2%BB." target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; justify-content: center; gap: 10px; background: #25D366; color: #0b1a10; font-size: 17px; font-weight: 700; padding: 16px 30px; border-radius: 100px; text-decoration: none; width: fit-content; min-height: 24px;">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"></path><path d="M12.004 2.003c-5.514 0-9.997 4.483-9.997 9.997 0 1.762.462 3.484 1.34 5.001L2 22l5.117-1.341a9.958 9.958 0 0 0 4.887 1.246h.004c5.514 0 9.997-4.483 9.997-9.997 0-2.67-1.04-5.182-2.929-7.071a9.935 9.935 0 0 0-7.072-2.834zm5.845 15.842c-.712.712-2.335 1.352-3.16 1.474-.808.12-1.767.171-2.843-.181a19.986 19.986 0 0 1-2.017-.744c-3.55-1.53-5.87-5.09-6.05-5.328-.18-.238-1.449-1.928-1.449-3.678 0-1.75.917-2.61 1.242-2.966.325-.357.71-.446.947-.446.238 0 .476.002.683.013.22.011.514-.083.804.613.297.712.01 1 1.66 3.13 3.66.31.42.62.472.917.298.297-.174 1.267-1.484 1.607-1.995.34-.51.68-.425 1.146-.255.466.17 2.96 1.397 3.467 1.65.507.255.845.382.968.595.124.213.124 1.238-.588 1.95z"></path></svg>
         Оставить заявку
