@@ -349,12 +349,17 @@ input, textarea, select{ font-family: inherit; }
 .lang-switch__btn:hover{ color: var(--ink); }
 .lang-switch__btn.is-active{ background: var(--red); color: var(--white); }
 
+/* дубль переключателя внутри мобильного меню — на десктопе не нужен,
+   там уже виден .lang-switch--header в шапке */
+.lang-switch--mobile{ display:none; }
+
 .burger{
   display:none;
   flex-direction: column;
   justify-content: center;
   gap: 5px;
   width: 40px; height: 40px;
+  flex-shrink: 0;
   z-index: 600;
 }
 .burger span{
@@ -997,6 +1002,16 @@ input, textarea, select{ font-family: inherit; }
   .nav__link{ font-size: 1.1rem; color: var(--cream-text); }
   .header__cta{ display:none; }
   .burger{ display:flex; }
+
+  /* Логотип+переключатель языка+бутерброд в одну строку шапки не влезают
+     на узких экранах (< ~410px) — переключатель уходит в мобильное меню,
+     а логотип и отступы шапки чуть уменьшаются, чтобы гарантированно
+     хватало места на самых узких телефонах (320px). */
+  .header__inner{ gap: 14px; }
+  .logo__mark{ width: 46px; height: 46px; }
+  .logo__word{ font-size: 1.3rem; }
+  .lang-switch--header{ display:none; }
+  .lang-switch--mobile{ display:flex; margin-top: 8px; }
 
   .hero{ padding-top: 120px; }
   .hero__stats{ gap: 26px; }

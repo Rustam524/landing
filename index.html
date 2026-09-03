@@ -265,9 +265,18 @@
       <a href="#services" class="nav__link" data-i18n="nav.services">Услуги</a>
       <a href="#pricing" class="nav__link" data-i18n="nav.pricing">Тарифы</a>
       <a href="#contact" class="nav__link" data-i18n="nav.contact">Контакты</a>
+
+      <!-- Дубль переключателя языка — только для выезжающего мобильного меню
+           (на мобильном оригинал в шапке скрыт, см. .lang-switch--header).
+           JS в i18n.js работает по классу .lang-switch__btn, а не по id,
+           поэтому переключатель автоматически синхронизируется в обоих местах. -->
+      <div class="lang-switch lang-switch--mobile" id="langSwitchMobile" role="group" data-i18n-aria-label="aria.langSwitch" aria-label="Выбор языка">
+        <button type="button" class="lang-switch__btn is-active" data-lang="ru">RU</button>
+        <button type="button" class="lang-switch__btn" data-lang="kz">KZ</button>
+      </div>
     </nav>
 
-    <div class="lang-switch" id="langSwitch" role="group" data-i18n-aria-label="aria.langSwitch" aria-label="Выбор языка">
+    <div class="lang-switch lang-switch--header" id="langSwitch" role="group" data-i18n-aria-label="aria.langSwitch" aria-label="Выбор языка">
       <button type="button" class="lang-switch__btn is-active" data-lang="ru">RU</button>
       <button type="button" class="lang-switch__btn" data-lang="kz">KZ</button>
     </div>
