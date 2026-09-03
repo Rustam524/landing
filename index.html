@@ -7,6 +7,8 @@
 <meta property="og:title" content="Курс «ИИ-боты для бизнеса» — ALGORITM">
 <meta property="og:description" content="4 недели, 12 занятий, группа до 5 человек. От первых шагов в ИИ до собственного работающего проекта.">
 <meta property="og:type" content="website">
+</head>
+<body>
 <style>/* cyrillic-ext */
 @font-face {
   font-family: 'Manrope';
@@ -421,18 +423,6 @@
   div[style*="border-radius: 22px; padding: 24px 26px 22px"] {
     padding: 20px 20px 18px !important;
   }
-  div[style*="width: 820px; height: 470px"] {
-    width: 100% !important;
-    height: auto !important;
-    padding: 34px 22px !important;
-    transform: none !important;
-    clip-path: none !important;
-    border-radius: 24px !important;
-    margin: 30px auto 0 !important;
-  }
-  div[style*="transform: rotate(9deg)"] {
-    transform: none !important;
-  }
   h3[style*="font-size: 40px"] {
     font-size: 27px !important;
   }
@@ -447,6 +437,18 @@
     grid-template-columns: 1fr !important;
     gap: 22px !important;
     padding: 26px 24px !important;
+  }
+  div[style*="grid-template-columns: 1fr 1.25fr"] > div,
+  div[style*="grid-template-columns: 1.5fr 1fr"] > div,
+  div[style*="gap: 18px; margin-top: 18px"] > div,
+  div[style*="gap: 40px; margin-top: 38px"] > div {
+    min-width: 0 !important;
+  }
+  span[style*="font-size: 13px; color: #a89e93"] {
+    min-width: 0;
+  }
+  div[style*="padding-top: 14px; border-top: 1px solid rgba(244,240,235,0.15)"] {
+    flex-wrap: wrap !important;
   }
   p[style*="font-size: 52px"] {
     font-size: 40px !important;
@@ -497,7 +499,7 @@
     grid-template-columns: 1fr !important;
   }
   p[style*="font-size: 52px"] {
-    font-size: 32px !important;
+    font-size: 26px !important;
   }
   a[href*="wa.me"] {
     font-size: 16px !important;
@@ -508,9 +510,22 @@
     height: 48px !important;
   }
 }
+@media (min-width: 1000px) {
+  div[data-bonus-outer] {
+    width: 820px;
+    height: 470px;
+    max-width: none;
+    padding: 84px 150px;
+    transform: rotate(-9deg);
+    border-radius: 0;
+    clip-path: polygon(100% 52%, 82% 60%, 96% 78%, 74% 73%, 78% 97%, 58% 83%, 52% 100%, 41% 86%, 22% 96%, 26% 74%, 3% 79%, 16% 58%, 0% 48%, 17% 42%, 4% 21%, 26% 27%, 21% 3%, 42% 17%, 48% 0%, 60% 16%, 79% 2%, 74% 26%, 97% 22%, 83% 42%);
+  }
+  div[data-bonus-inner] {
+    transform: rotate(9deg);
+  }
+}
 </style>
-</head>
-<body>
+<div style="max-width: 1100px; width: 100%; margin: 0 auto; background: #f4f0eb; color: #17130f; font-family: Manrope, system-ui, sans-serif; padding: 44px 56px 40px; box-sizing: border-box; overflow-wrap: break-word;">
 
   
 
@@ -651,8 +666,8 @@
 
   </div>
 
-  <div style="margin: 34px auto 0; width: 820px; height: 470px; background: #ffdd00; color: #17130f; display: flex; align-items: center; justify-content: center; padding: 84px 150px; transform: rotate(-9deg); clip-path: polygon(100% 52%, 82% 60%, 96% 78%, 74% 73%, 78% 97%, 58% 83%, 52% 100%, 41% 86%, 22% 96%, 26% 74%, 3% 79%, 16% 58%, 0% 48%, 17% 42%, 4% 21%, 26% 27%, 21% 3%, 42% 17%, 48% 0%, 60% 16%, 79% 2%, 74% 26%, 97% 22%, 83% 42%);">
-    <div style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 9px; transform: rotate(9deg);">
+  <div data-bonus-outer style="margin: 34px auto 0; max-width: 820px; width: 100%; box-sizing: border-box; background: #ffdd00; color: #17130f; display: flex; align-items: center; justify-content: center; padding: 34px 24px; border-radius: 24px;">
+    <div data-bonus-inner style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 9px;">
       <h3 style="font-family: 'Playfair Display', serif; font-size: 40px; line-height: 1; font-weight: 700; letter-spacing: -0.01em; color: #c2181b;">БОНУСНЫЙ УРОК</h3>
       <p style="font-size: 18px; font-weight: 700; line-height: 1.2;">Креативы и баннеры с помощью ИИ</p>
       <p style="font-size: 11.5px; font-weight: 700; letter-spacing: 0.14em; color: #17130f; opacity: 0.6;">С ПРИГЛАШЁННЫМ СПЕЦИАЛИСТОМ</p>
