@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title id="pageTitle">ALGORITM — SMM-агентство в Шымкенте</title>
+<meta id="pageDescription" name="description" content="ALGORITM — SMM-агентство. Продвигаем бизнес в соцсетях по всему Казахстану: таргет, автоматизация, ИИ-боты, amoCRM.">
+<link rel="canonical" href="https://algoritm.top/">
+<link rel="icon" type="image/png" href="assets/img/favicon.png">
+<meta name="theme-color" content="#f4f0eb">
+
+<!-- Open Graph / превью при отправке ссылки в мессенджерах и соцсетях -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="ALGORITM">
+<meta id="ogTitle" property="og:title" content="ALGORITM — SMM-агентство в Шымкенте">
+<meta id="ogDescription" property="og:description" content="ALGORITM — SMM-агентство. Продвигаем бизнес в соцсетях по всему Казахстану: таргет, автоматизация, ИИ-боты, amoCRM.">
+<meta property="og:url" content="https://algoritm.top/">
+<meta property="og:image" content="https://algoritm.top/assets/img/logo.png">
+
+<meta name="twitter:card" content="summary">
+<meta id="twTitle" name="twitter:title" content="ALGORITM — SMM-агентство в Шымкенте">
+<meta id="twDescription" name="twitter:description" content="ALGORITM — SMM-агентство. Продвигаем бизнес в соцсетях по всему Казахстану: таргет, автоматизация, ИИ-боты, amoCRM.">
+<meta name="twitter:image" content="https://algoritm.top/assets/img/logo.png">
+
+<!-- Структурированные данные: помогают Google показывать адрес/телефон прямо в поиске -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "ALGORITM",
+  "legalName": "ИП «ALGORITM KZ»",
+  "url": "https://algoritm.top/",
+  "logo": "https://algoritm.top/assets/img/logo.png",
+  "image": "https://algoritm.top/assets/img/logo.png",
+  "description": "SMM-агентство. Продвигаем бизнес в соцсетях по всему Казахстану: таргет, автоматизация, ИИ-боты, amoCRM.",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "ул. Карасу 2/1",
+    "addressLocality": "Шымкент",
+    "addressCountry": "KZ"
+  },
+  "areaServed": "KZ",
+  "telephone": "+77058903755",
+  "email": "sayora@algoritm.top",
+  "sameAs": [
+    "https://www.instagram.com/algoritm_co"
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<!-- ===== ИНТРО-ЗАСТАВКА (igniting reveal): метеор летит на зрителя, удар,
+     тёплая дымка рассеивается и открывает логотип (без кольца) + тэглайн =====
+     Показывается один раз за сессию (sessionStorage), автостарт без клика,
+     ~4.4 сек, затем полностью удаляется из DOM. Логика — в inline-скрипте
+     сразу после разметки, чтобы стартовать как можно раньше (до основного
+     script.js, который подключается в самом низу страницы). -->
+<div id="intro-overlay">
+  <canvas id="intro-canvas"></canvas>
+  <div id="intro-content">
+    <img id="intro-logo" src="assets/img/logo.png" alt="ALGORITM">
+    <div id="intro-tagline">SMM-агентство в Шымкенте</div>
+  </div>
+</div>
+<script>
+(function () {
+  var overlay  = document.getElementById('intro-overlay');
+  if (!overlay) return;
+  var canvas   = document.getElementById('intro-canvas');
+  var ctx      = canvas.getContext('2d');
+  var logo     = document.getElementById('intro-logo');
+  var tagline  = document.getElementById('intro-tagline');
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (sessionStorage.getItem('algoritm_introShown')) {
+    overlay.remove();
+    return;
+  }
+
+  var fireCore  = getComputedStyle(document.documentElement).getPropertyValue('--fire-core').trim()  || '#fff4d6';
+  var fireMid   = getComputedStyle(document.documentElement).getPropertyValue('--fire-mid').trim()   || '#f4ede2';
+  var fireOuter = getComputedStyle(document.documentElement).getPropertyValue('--fire-outer').trim() || '#b91c1c';
+  var smokeColor = fireMid; // дымка — тёплая, в тон бренду (не холодно-серая, как в референсном видео)
+
+  var timers = [];
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function finish() {
+    if (raf) cancelAnimationFrame(raf);
+    overlay.classList.add('hide');
+    sessionStorage.setItem('algoritm_introShown', '1');
+    var t = setTimeout(function () {
+      overlay.remove();
+      window.removeEventListener('resize', resize);
+    }, 700);
+    timers.push(t);
+  }
+
+  if (reducedMotion) {
+    logo.classList.add('show');
+    tagline.classList.add('show');
+    timers.push(setTimeout(finish, 700));
+    return;
+  }
+
+  // ---- Тайминг сцены, мс ----
+  var APPROACH_MS = 1300; // метеор растёт и летит на зрителя
+  var FLASH_MS    = 140;  // вспышка в момент "удара"
+  var SMOKE_MS    = 1300; // дымка рассеивается
+  var LOGO_AT     = APPROACH_MS + FLASH_MS + 260;   // лого проступает сквозь дымку
+  var TAGLINE_AT  = LOGO_AT + 300;
+  var raf;
+
+  var cx, cy, minDim;
+  function updateCenter() { cx = canvas.width / 2; cy = canvas.height / 2; minDim = Math.min(canvas.width, canvas.height); }
+  updateCenter();
+  window.addEventListener('resize', updateCenter);
+
+  // ---- Слой 1: искры-стрики, "проносящиеся" мимо камеры при приближении метеора ----
+  var streaks = [];
+  function spawnStreak() {
+    var angle = Math.random() * Math.PI * 2;
+    var dist = Math.random() * minDim * 0.12;
+    streaks.push({
+      x: cx + Math.cos(angle) * dist,
+      y: cy + Math.sin(angle) * dist,
+      angle: angle,
+      speed: Math.random() * 6 + 4,
+      len: Math.random() * 26 + 10,
+      life: 1,
+      r: Math.random() * 1.4 + 0.5
+    });
+  }
+
+  // ---- Слой 2: дымные "клубы" после удара — крупные размытые тёплые пятна ----
+  var smokePuffs = [];
+  function spawnSmoke() {
+    var count = window.innerWidth < 600 ? 10 : 18;
+    for (var i = 0; i < count; i++) {
+      var angle = Math.random() * Math.PI * 2;
+      var dist = Math.random() * minDim * 0.18;
+      smokePuffs.push({
+        x: cx + Math.cos(angle) * dist,
+        y: cy + Math.sin(angle) * dist,
+        vx: Math.cos(angle) * (Math.random() * 0.6 + 0.2),
+        vy: Math.sin(angle) * (Math.random() * 0.6 + 0.2) - 0.15,
+        r: Math.random() * minDim * 0.16 + minDim * 0.08,
+        alpha: Math.random() * 0.18 + 0.14
+      });
+    }
+  }
+
+  var startTime = null;
+  var flashSpawned = false;
+
+  function draw(ts) {
+    if (!startTime) startTime = ts;
+    var elapsed = ts - startTime;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (elapsed < APPROACH_MS) {
+      // --- фаза 1: метеор растёт и летит на зрителя ---
+      var t = elapsed / APPROACH_MS;
+      var eased = t * t; // ease-in — разгоняется к концу, как приближающийся объект
+      var coreR = 3 + eased * minDim * 0.22;
+
+      if (Math.random() < 0.6 + eased * 0.35) spawnStreak();
+
+      for (var i = streaks.length - 1; i >= 0; i--) {
+        var s = streaks[i];
+        var dx = Math.cos(s.angle) * s.speed * (0.6 + eased * 1.8);
+        var dy = Math.sin(s.angle) * s.speed * (0.6 + eased * 1.8);
+        var x2 = s.x + dx, y2 = s.y + dy;
+        ctx.save();
+        ctx.globalAlpha = s.life * 0.7;
+        ctx.strokeStyle = fireMid;
+        ctx.lineWidth = s.r;
+        ctx.shadowBlur = 6;
+        ctx.shadowColor = fireOuter;
+        ctx.beginPath();
+        ctx.moveTo(s.x, s.y);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+        ctx.restore();
+        s.x = x2; s.y = y2;
+        s.life -= 0.03;
+        if (s.life <= 0) streaks.splice(i, 1);
+      }
+
+      // ядро метеора — накаляется и растёт
+      var coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR);
+      coreGrad.addColorStop(0, fireCore);
+      coreGrad.addColorStop(0.45, fireOuter);
+      coreGrad.addColorStop(1, 'transparent');
+      ctx.save();
+      ctx.shadowBlur = 40 * eased;
+      ctx.shadowColor = fireOuter;
+      ctx.fillStyle = coreGrad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, coreR, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+    } else if (elapsed < APPROACH_MS + FLASH_MS) {
+      // --- фаза 2: вспышка удара ---
+      if (!flashSpawned) { flashSpawned = true; spawnSmoke(); }
+      var ft = (elapsed - APPROACH_MS) / FLASH_MS;
+      ctx.save();
+      ctx.globalAlpha = 1 - ft;
+      ctx.fillStyle = fireCore;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.restore();
+
+    } else {
+      // --- фаза 3: тёплая дымка рассеивается, открывая контент ---
+      var smokeT = Math.min(1, (elapsed - APPROACH_MS - FLASH_MS) / SMOKE_MS);
+      var fade = 1 - smokeT;
+      for (var k = 0; k < smokePuffs.length; k++) {
+        var p = smokePuffs[k];
+        p.x += p.vx; p.y += p.vy;
+        ctx.save();
+        ctx.globalAlpha = p.alpha * fade;
+        ctx.filter = 'blur(18px)';
+        ctx.fillStyle = smokeColor;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  raf = requestAnimationFrame(draw);
+
+  timers.push(setTimeout(function () { logo.classList.add('show'); }, LOGO_AT));
+  timers.push(setTimeout(function () { tagline.classList.add('show'); }, TAGLINE_AT));
+
+  var durationMs = parseFloat(getComputedStyle(document.documentElement)
+    .getPropertyValue('--intro-duration')) * 1000;
+  timers.push(setTimeout(finish, durationMs));
+})();
+</script>
+
+<!-- ===== ШАПКА ===== -->
+<header class="header" id="header">
+  <div class="container header__inner">
+    <a href="#hero" class="logo" data-i18n-aria-label="aria.logoHome" aria-label="ALGORITM — на главную">
+      <span class="logo__mark"><img src="assets/img/logo.png" alt="" class="logo__img"></span>
+      <span class="logo__word">ALGORITM</span>
+    </a>
+
+    <nav class="nav" id="nav">
+      <a href="#about" class="nav__link" data-i18n="nav.about">О нас</a>
+      <a href="#services" class="nav__link" data-i18n="nav.services">Услуги</a>
+      <a href="#pricing" class="nav__link" data-i18n="nav.pricing">Тарифы</a>
+      <a href="#contact" class="nav__link" data-i18n="nav.contact">Контакты</a>
+
+      <!-- Дубль переключателя языка — только для выезжающего мобильного меню
+           (на мобильном оригинал в шапке скрыт, см. .lang-switch--header).
+           JS в i18n.js работает по классу .lang-switch__btn, а не по id,
+           поэтому переключатель автоматически синхронизируется в обоих местах. -->
+      <div class="lang-switch lang-switch--mobile" id="langSwitchMobile" role="group" data-i18n-aria-label="aria.langSwitch" aria-label="Выбор языка">
+        <button type="button" class="lang-switch__btn is-active" data-lang="ru">RU</button>
+        <button type="button" class="lang-switch__btn" data-lang="kz">KZ</button>
+      </div>
+    </nav>
+
+    <div class="lang-switch lang-switch--header" id="langSwitch" role="group" data-i18n-aria-label="aria.langSwitch" aria-label="Выбор языка">
+      <button type="button" class="lang-switch__btn is-active" data-lang="ru">RU</button>
+      <button type="button" class="lang-switch__btn" data-lang="kz">KZ</button>
+    </div>
+
+    <a href="#contact" class="btn btn--outline header__cta" data-i18n="nav.consult">Консультация</a>
+
+    <button class="burger" id="burger" data-i18n-aria-label="aria.burger" aria-label="Открыть меню">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- ===== ГЕРОЙ ===== -->
+<section class="hero" id="hero">
+  <div class="container hero__inner">
+    <div class="hero__col">
+      <div class="hero__badge" data-i18n="hero.badge">SMM-агентство ALGORITM в Шымкенте</div>
+      <h1 class="hero__title">
+        <span data-i18n="hero.title.main">SMM-агентство полного цикла в Шымкенте, </span><span class="text-accent" data-i18n="hero.title.accent">которому доверяют бизнесы по всему Казахстану</span>
+      </h1>
+      <p class="hero__subtitle" data-i18n="hero.subtitle">
+        Более 5 лет помогаем бизнесу расти: свыше 1000 реализованных проектов и команда
+        из 10+ специалистов по SMM, таргету, автоматизации и ИИ. Работаем удалённо —
+        с клиентами из любого города Казахстана.
+      </p>
+      <div class="hero__actions">
+        <a href="https://wa.me/77058903755" data-wa-link class="btn btn--primary btn--hover-panel">
+          <span class="btn__icon">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.5-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5C10 9 9.5 7.8 9.3 7.3c-.2-.5-.4-.4-.5-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.1s.9 2.4 1.1 2.6c.1.2 1.8 2.8 4.4 3.9.6.3 1.1.4 1.5.5.6.2 1.2.2 1.6.1.5-.1 1.7-.7 1.9-1.3.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.6-.3z"/><path d="M12 2C6.5 2 2 6.5 2 12c0 1.9.5 3.7 1.5 5.3L2 22l4.8-1.5c1.5.9 3.3 1.4 5.2 1.4 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18.3c-1.7 0-3.4-.5-4.8-1.3l-.3-.2-3.2 1 1-3.1-.2-.3C3.6 15 3 13.5 3 12c0-5 4-9 9-9s9 4 9 9-4 9-9 9z"/></svg>
+          </span>
+          <span data-i18n="btn.whatsapp">Написать в WhatsApp</span>
+        </a>
+        <a href="https://www.instagram.com/algoritm_co" target="_blank" rel="noopener" class="btn btn--outline btn--hover-panel">
+          <span class="btn__icon">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 2 .3 2.4.5.6.2 1 .5 1.5 1 .4.4.7.8 1 1.5.2.5.4 1.2.5 2.4.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.3 2-.5 2.4-.2.6-.5 1-1 1.5-.4.4-.8.7-1.5 1-.5.2-1.2.4-2.4.5-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-2-.3-2.4-.5-.6-.2-1-.5-1.5-1-.4-.4-.7-.8-1-1.5-.2-.5-.4-1.2-.5-2.4C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.3-2 .5-2.4.2-.6.5-1 1-1.5.4-.4.8-.7 1.5-1 .5-.2 1.2-.4 2.4-.5C8.4 2.2 8.8 2.2 12 2.2zM12 0C8.7 0 8.3 0 7 .1 5.7.1 4.8.3 4 .6c-.8.3-1.5.7-2.2 1.4C1.1 2.7.7 3.4.4 4.2.1 5 0 5.9 0 7.2 0 8.5 0 8.9 0 12s0 3.5.1 4.8c.1 1.3.2 2.2.5 3 .3.8.7 1.5 1.4 2.2.7.7 1.4 1.1 2.2 1.4.8.3 1.7.4 3 .5 1.3.1 1.7.1 4.8.1s3.5 0 4.8-.1c1.3-.1 2.2-.2 3-.5.8-.3 1.5-.7 2.2-1.4.7-.7 1.1-1.4 1.4-2.2.3-.8.4-1.7.5-3 .1-1.3.1-1.7.1-4.8s0-3.5-.1-4.8c-.1-1.3-.2-2.2-.5-3-.3-.8-.7-1.5-1.4-2.2C21.3 1.1 20.6.7 19.8.4c-.8-.3-1.7-.4-3-.5C15.5 0 15.1 0 12 0z"/><path d="M12 5.8A6.2 6.2 0 1 0 12 18.2 6.2 6.2 0 0 0 12 5.8zm0 10.2a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/><circle cx="18.4" cy="5.6" r="1.4"/></svg>
+          </span>
+          <span data-i18n="btn.instagram">Написать в Instagram</span>
+        </a>
+      </div>
+
+      <div class="hero__stats">
+        <div class="stat">
+          <span class="stat__num" data-count-to="2015">0</span>
+          <span class="stat__label" data-i18n="hero.stat.years">год основания</span>
+        </div>
+        <div class="stat">
+          <span class="stat__num" data-count-to="1000" data-suffix="+">0</span>
+          <span class="stat__label" data-i18n="hero.stat.projects">проектов реализовано</span>
+        </div>
+        <div class="stat">
+          <span class="stat__num" data-count-to="10" data-suffix="+">0</span>
+          <span class="stat__label" data-i18n="hero.stat.team">специалистов в команде</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero__col hero__col--phone">
+      <div class="phone" id="phone">
+        <div class="phone__notch"></div>
+        <div class="phone__statusbar">
+          <span>21:14</span>
+          <span class="phone__statusicons">
+            <svg viewBox="0 0 20 12" width="20" height="12" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="0.5"/><rect x="4.5" y="4.5" width="3" height="7.5" rx="0.5"/><rect x="9" y="2" width="3" height="10" rx="0.5"/><rect x="13.5" y="0" width="3" height="12" rx="0.5"/></svg>
+          </span>
+        </div>
+        <div class="phone__chatbar">
+          <span class="phone__avatar"><img src="assets/img/logo.png" alt=""></span>
+          <div class="phone__who">
+            <b>ALGORITM</b>
+            <span id="phoneStatus" data-i18n="phone.online">онлайн</span>
+          </div>
+        </div>
+        <div class="phone__chat" id="phoneChat"></div>
+      </div>
+      <div class="hero__phone-glow" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== О КОМПАНИИ ===== -->
+<section class="about" id="about">
+  <div class="container about__inner">
+    <div class="about__text">
+      <div class="section-tag" data-i18n="about.tag">01 — О компании</div>
+      <h2 class="section-title"><span data-i18n="about.title.main">Соединяем классический SMM </span><span class="text-accent" data-i18n="about.title.accent">с ИИ и автоматизацией</span></h2>
+      <p data-i18n="about.p1">
+        <strong>ALGORITM</strong> (ИП «ALGORITM KZ») — SMM-агентство полного цикла в Шымкенте. Более
+        5 лет мы помогаем бизнесу расти: свыше 1000 реализованных проектов и команда из
+        10+ специалистов. Мы объединяем классический SMM с современными технологиями — таргетом,
+        ИИ-автоматизацией бизнес-процессов, ИИ-ботами и amoCRM — и выстраиваем бизнесу цельный
+        алгоритм роста от первого касания с клиентом до сделки.
+      </p>
+      <p data-i18n="about.p2">
+        Мы работаем удалённо с клиентами по всей территории Казахстана — из Алматы, Астаны,
+        Шымкента, Караганды и любого другого города. Формат съёмок и выездов гибкий, а всё
+        остальное — стратегия, реклама, боты, отчётность — ведётся онлайн, без привязки к офису
+        и часовому поясу заказчика.
+      </p>
+      <p data-i18n="about.p3">
+        Наша миссия — избавить бизнес от рутины и хаоса в продвижении. Мы верим, что реклама,
+        боты и CRM должны работать без постоянного ручного участия человека, а команда клиента —
+        заниматься делом, а не разбираться в настройках рекламных кабинетов. Именно такой
+        алгоритм роста мы строим для каждого партнёра.
+      </p>
+    </div>
+
+    <div class="about__card">
+      <div class="about__photo">
+        <img src="assets/img/saera.jpg" data-i18n-alt="about.photoAlt" alt="Саера Абдуллаева, директор ALGORITM">
+      </div>
+      <div class="about__caption">
+        <b>Саера Абдуллаева</b>
+        <span data-i18n="about.role">директор ALGORITM</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== УСЛУГИ ===== -->
+<section class="services" id="services">
+  <div class="container">
+    <div class="section-tag" data-i18n="services.tag">02 — Услуги</div>
+    <h2 class="section-title" data-i18n="services.title">Что мы делаем</h2>
+    <p class="section-subtitle" data-i18n="services.subtitle">Шесть направлений, которые складываются в единую систему роста вашего бизнеса</p>
+
+    <div class="services__grid">
+
+      <div class="service-card">
+        <div class="service-card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+        </div>
+        <h3 data-i18n="service1.title">Ведение Instagram и TikTok</h3>
+        <p data-i18n="service1.desc">Контент-стратегия, съёмки, монтаж, публикации и работа с комьюнити. Растим охваты и превращаем подписчиков в клиентов.</p>
+      </div>
+
+      <div class="service-card">
+        <div class="service-card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg>
+        </div>
+        <h3 data-i18n="service2.title">Таргетированная реклама</h3>
+        <p data-i18n="service2.desc">Meta Ads и TikTok Ads: настройка, тесты креативов, оптимизация бюджета и снижение стоимости заявки.</p>
+      </div>
+
+      <div class="service-card service-card--strong">
+        <span class="service-card__badge" data-i18n="service.badge">наша сила</span>
+        <div class="service-card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4z"/><path d="M14 17h6M17 14v6"/></svg>
+        </div>
+        <h3 data-i18n="service3.title">ИИ-автоматизация бизнес-процессов</h3>
+        <p data-i18n="service3.desc">Внедряем ИИ в рутинные процессы: обработку заявок, ответы клиентам, аналитику — бизнес работает быстрее и без лишних рук.</p>
+      </div>
+
+      <div class="service-card service-card--strong">
+        <span class="service-card__badge" data-i18n="service.badge">наша сила</span>
+        <div class="service-card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="7" width="16" height="12" rx="3"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/><circle cx="9" cy="13" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="13" r="1" fill="currentColor" stroke="none"/></svg>
+        </div>
+        <h3 data-i18n="service4.title">Внедрение ИИ-ботов</h3>
+        <p data-i18n="service4.desc">Чат-боты для WhatsApp, Instagram и Telegram, которые отвечают клиентам, консультируют и доводят до заявки 24/7.</p>
+      </div>
+
+      <div class="service-card">
+        <div class="service-card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg>
+        </div>
+        <h3 data-i18n="service5.title">Генерация ИИ-контента</h3>
+        <p data-i18n="service5.desc">Тексты, изображения и видео с помощью нейросетей — быстрее и дешевле классического производства контента.</p>
+      </div>
+
+      <div class="service-card service-card--strong">
+        <span class="service-card__badge" data-i18n="service.badge">наша сила</span>
+        <div class="service-card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="12" r="3"/><circle cx="17" cy="6" r="3"/><circle cx="17" cy="18" r="3"/><path d="M9.5 10.5 14.5 7.5M9.5 13.5 14.5 16.5"/></svg>
+        </div>
+        <h3 data-i18n="service6.title">Внедрение amoCRM</h3>
+        <p data-i18n="service6.desc">Настройка воронок, автоматических задач и интеграций amoCRM, чтобы ни одна заявка не терялась.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== СИЛЬНЫЕ СТОРОНЫ (тёмный блок) ===== -->
+<section class="strengths" id="strengths">
+  <div class="container">
+    <div class="section-tag section-tag--night" data-i18n="strengths.tag">Наша специализация</div>
+    <h2 class="section-title section-title--night">
+      <span data-i18n="strengths.title.main">Автоматизация, ИИ и amoCRM — то, </span><span class="text-accent" data-i18n="strengths.title.accent">в чём мы сильнее всего</span>
+    </h2>
+    <p class="section-subtitle section-subtitle--night" data-i18n="strengths.subtitle">
+      Пока другие агентства только предлагают SMM и таргет, мы строим бизнесу систему,
+      которая работает и без постоянного участия человека.
+    </p>
+
+    <div class="strengths__grid">
+      <div class="strength-card">
+        <div class="strength-card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4z"/><path d="M14 17h6M17 14v6"/></svg>
+        </div>
+        <h3 data-i18n="strength1.title">ИИ-автоматизация</h3>
+        <ul>
+          <li data-i18n="strength1.li1">Рутинные задачи — без участия человека</li>
+          <li data-i18n="strength1.li2">Заявки обрабатываются в разы быстрее</li>
+          <li data-i18n="strength1.li3">Меньше ошибок и человеческого фактора</li>
+          <li data-i18n="strength1.li4">Бизнес растёт без расширения штата</li>
+          <li data-i18n="strength1.li5">Связка сайта, мессенджеров, таблиц и CRM в одну систему</li>
+        </ul>
+      </div>
+
+      <div class="strength-card">
+        <div class="strength-card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="7" width="16" height="12" rx="3"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/><circle cx="9" cy="13" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="13" r="1" fill="currentColor" stroke="none"/></svg>
+        </div>
+        <h3 data-i18n="strength2.title">ИИ-боты</h3>
+        <ul>
+          <li data-i18n="strength2.li1">Отвечают клиентам 24/7 без выходных</li>
+          <li data-i18n="strength2.li2">Консультируют по услугам и ценам</li>
+          <li data-i18n="strength2.li3">Квалифицируют заявку и передают менеджеру</li>
+        </ul>
+      </div>
+
+      <div class="strength-card">
+        <div class="strength-card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="12" r="3"/><circle cx="17" cy="6" r="3"/><circle cx="17" cy="18" r="3"/><path d="M9.5 10.5 14.5 7.5M9.5 13.5 14.5 16.5"/></svg>
+        </div>
+        <h3 data-i18n="strength3.title">amoCRM</h3>
+        <ul>
+          <li data-i18n="strength3.li1">Воронки продаж под ваш бизнес-процесс</li>
+          <li data-i18n="strength3.li2">Автозадачи для менеджеров</li>
+          <li data-i18n="strength3.li3">Ни одна заявка не теряется</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ТАРИФЫ ===== -->
+<section class="pricing" id="pricing">
+  <div class="container">
+    <div class="section-tag" data-i18n="pricing.tag">03 — Тарифы</div>
+    <h2 class="section-title" data-i18n="pricing.title">Сколько это стоит</h2>
+    <p class="section-subtitle" data-i18n="pricing.subtitle">Прозрачные пакеты услуг — выбирайте то, что нужно бизнесу именно сейчас</p>
+
+    <!-- SMM -->
+    <h3 class="pricing__group-title" data-i18n="pricing.group.smm">SMM-тарифы</h3>
+    <div class="pricing__grid pricing__grid--3">
+      <div class="price-card">
+        <div class="price-card__head">
+          <h4 data-i18n="price.light.title">SMM Light</h4>
+          <div class="price-card__price">120 000 <span data-i18n="price.perMonth">₸/мес</span></div>
+        </div>
+        <ul class="price-card__list">
+          <li data-i18n="price.audit">Аудит аккаунта</li>
+          <li data-i18n="price.plan">План работ и контент-план</li>
+          <li data-i18n="price.light.reels">8 Reels в месяц</li>
+          <li data-i18n="price.light.stories">2 Stories в день (кроме воскресенья)</li>
+          <li data-i18n="price.light.shoots">2 съёмочных выезда в месяц</li>
+          <li data-i18n="price.light.publish">Публикация и базовая аналитика</li>
+        </ul>
+        <a href="#contact" class="btn btn--outline btn--hover-panel price-card__btn" data-i18n="btn.leaveRequest">Оставить заявку</a>
+      </div>
+
+      <div class="price-card price-card--popular">
+        <span class="price-card__ribbon" data-i18n="price.popular">популярный</span>
+        <div class="price-card__head">
+          <h4 data-i18n="price.standard.title">SMM Стандарт</h4>
+          <div class="price-card__price">200 000 <span data-i18n="price.perMonth">₸/мес</span></div>
+        </div>
+        <ul class="price-card__list">
+          <li data-i18n="price.audit">Аудит аккаунта</li>
+          <li data-i18n="price.plan">План работ и контент-план</li>
+          <li data-i18n="price.standard.reels">16 Reels в месяц</li>
+          <li data-i18n="price.standard.stories">3 Stories ежедневно (кроме воскресенья)</li>
+          <li data-i18n="price.standard.shoots">4 съёмочных выезда в месяц</li>
+          <li data-i18n="price.standard.design">Оформление профиля</li>
+          <li data-i18n="price.standard.publish">Публикация</li>
+          <li data-i18n="price.standard.report">Отчёт и аналитика</li>
+        </ul>
+        <a href="#contact" class="btn btn--primary btn--hover-panel price-card__btn" data-i18n="btn.leaveRequest">Оставить заявку</a>
+      </div>
+
+      <div class="price-card">
+        <div class="price-card__head">
+          <h4 data-i18n="price.pro.title">SMM Pro</h4>
+          <div class="price-card__price">300 000 <span data-i18n="price.perMonth">₸/мес</span></div>
+        </div>
+        <ul class="price-card__list">
+          <li data-i18n="price.pro.all">Всё из тарифа «Стандарт»</li>
+          <li data-i18n="price.pro.reels">20 Reels в месяц</li>
+          <li data-i18n="price.pro.camera">Съёмка на профессиональную камеру</li>
+          <li data-i18n="price.standard.stories">3 Stories ежедневно (кроме воскресенья)</li>
+          <li data-i18n="price.standard.shoots">4 съёмочных выезда в месяц</li>
+          <li data-i18n="price.standard.report">Отчёт и аналитика</li>
+        </ul>
+        <a href="#contact" class="btn btn--outline btn--hover-panel price-card__btn" data-i18n="btn.leaveRequest">Оставить заявку</a>
+      </div>
+    </div>
+
+    <!-- SMM + Target -->
+    <h3 class="pricing__group-title" data-i18n="pricing.group.smmTarget">SMM + Таргет</h3>
+    <div class="pricing__grid pricing__grid--2">
+      <div class="price-card">
+        <div class="price-card__head">
+          <h4 data-i18n="price.standardTarget.title">Стандарт + Таргет</h4>
+          <div class="price-card__price">300 000 <span data-i18n="price.perMonth">₸/мес</span></div>
+        </div>
+        <ul class="price-card__list">
+          <li data-i18n="price.standardTarget.all">Всё из тарифа SMM «Стандарт»</li>
+          <li data-i18n="price.meta">Настройка Meta Ads</li>
+          <li data-i18n="price.creatives">Рекламные креативы</li>
+          <li data-i18n="price.testOpt">Тестирование и оптимизация</li>
+          <li data-i18n="price.adsAnalytics">Аналитика рекламы</li>
+          <li class="price-card__bonus" data-i18n="price.bonus">🎁 Бонус: дублирование Reels в TikTok</li>
+        </ul>
+        <p class="price-card__note" data-i18n="price.budgetNote">Рекламный бюджет оплачивается отдельно</p>
+        <a href="#contact" class="btn btn--outline btn--hover-panel price-card__btn" data-i18n="btn.leaveRequest">Оставить заявку</a>
+      </div>
+
+      <div class="price-card">
+        <div class="price-card__head">
+          <h4 data-i18n="price.proTarget.title">Pro + Таргет</h4>
+          <div class="price-card__price">400 000 <span data-i18n="price.perMonth">₸/мес</span></div>
+        </div>
+        <ul class="price-card__list">
+          <li data-i18n="price.proTarget.all">Всё из тарифа SMM «Pro»</li>
+          <li data-i18n="price.proTarget.reels">20 Reels на профессиональную камеру</li>
+          <li data-i18n="price.proTarget.meta">Meta Ads</li>
+          <li data-i18n="price.proTarget.creatives">Подготовка и тестирование креативов</li>
+          <li data-i18n="price.optAnalytics">Оптимизация и аналитика</li>
+          <li class="price-card__bonus" data-i18n="price.bonus">🎁 Бонус: дублирование Reels в TikTok</li>
+        </ul>
+        <p class="price-card__note" data-i18n="price.budgetNote">Рекламный бюджет оплачивается отдельно</p>
+        <a href="#contact" class="btn btn--outline btn--hover-panel price-card__btn" data-i18n="btn.leaveRequest">Оставить заявку</a>
+      </div>
+    </div>
+
+    <!-- Target alone -->
+    <h3 class="pricing__group-title" data-i18n="pricing.group.targetAlone">Таргет отдельно</h3>
+    <div class="pricing__grid pricing__grid--2">
+      <div class="price-card">
+        <div class="price-card__head">
+          <h4 data-i18n="price.target.title">Таргет</h4>
+          <div class="price-card__price">150 000 <span data-i18n="price.perMonth">₸/мес</span></div>
+        </div>
+        <ul class="price-card__list">
+          <li data-i18n="price.target.platform">Одна площадка на выбор: Meta Ads или TikTok Ads</li>
+          <li data-i18n="price.target.setup">Настройка кампаний и аудиторий</li>
+          <li data-i18n="price.target.creatives">Создание рекламных креативов</li>
+          <li data-i18n="price.target.testScale">Тестирование, оптимизация, масштабирование</li>
+          <li data-i18n="price.target.weekly">Еженедельная аналитика</li>
+        </ul>
+        <p class="price-card__note" data-i18n="price.budgetNote">Рекламный бюджет оплачивается отдельно</p>
+        <a href="#contact" class="btn btn--outline btn--hover-panel price-card__btn" data-i18n="btn.leaveRequest">Оставить заявку</a>
+      </div>
+
+      <div class="price-card price-card--callout">
+        <div class="price-card__callout-icon">%</div>
+        <h4 data-i18n="price.callout.title">Выгода комплексного пакета</h4>
+        <p data-i18n="price.callout.text">
+          При подключении таргета вместе с SMM-тарифом стоимость рекламного блока —
+          <b>+100 000 ₸</b> вместо 150 000 ₸ отдельно.
+        </p>
+        <p class="price-card__note" data-i18n="price.callout.note">Экономия — когда SMM и таргет ведёт одна команда</p>
+      </div>
+    </div>
+
+    <!-- AI bots -->
+    <h3 class="pricing__group-title" data-i18n="pricing.group.aiBots">ИИ-боты</h3>
+    <div class="pricing__grid pricing__grid--1">
+      <div class="price-card price-card--wide">
+        <div class="price-card__head">
+          <h4 data-i18n="price.bot.title">Внедрение ИИ-бота</h4>
+          <div class="price-card__price"><span data-i18n="price.from">от</span> 250 000 <span data-i18n="price.currency">₸</span></div>
+        </div>
+        <ul class="price-card__list price-card__list--2col">
+          <li data-i18n="price.bot.li1">Анализ задач и сценариев</li>
+          <li data-i18n="price.bot.li2">Разработка логики бота</li>
+          <li data-i18n="price.bot.li3">Создание базы знаний</li>
+          <li data-i18n="price.bot.li4">Ответы клиентам 24/7</li>
+          <li data-i18n="price.bot.li5">Консультации по услугам и товарам</li>
+          <li data-i18n="price.bot.li6">Сбор и квалификация заявок</li>
+          <li data-i18n="price.bot.li7">Интеграция ИИ со сторонними сервисами (CRM, календари, платёжные системы, API)</li>
+          <li data-i18n="price.bot.li8">Передача диалога сотруднику</li>
+          <li data-i18n="price.bot.li9">Тестирование и запуск</li>
+        </ul>
+        <p class="price-card__note" data-i18n="price.bot.note">Сложные индивидуальные интеграции и кастомные API рассчитываются отдельно</p>
+        <a href="#contact" class="btn btn--primary btn--hover-panel price-card__btn" data-i18n="btn.discussBot">Обсудить бота</a>
+      </div>
+    </div>
+
+    <!-- Automation & amoCRM CTA -->
+    <h3 class="pricing__group-title" data-i18n="pricing.group.automation">Автоматизация и amoCRM</h3>
+    <div class="pricing__cta">
+      <div class="pricing__cta-text">
+        <h4 data-i18n="pricing.cta.title">Стоимость — по проекту</h4>
+        <p data-i18n="pricing.cta.text">Каждая автоматизация и настройка amoCRM индивидуальны: зависят от количества
+          процессов, интеграций и глубины внедрения. Обсудим задачи и посчитаем точную стоимость.</p>
+      </div>
+      <div class="pricing__cta-actions">
+        <a href="https://wa.me/77058903755" data-wa-link class="btn btn--primary btn--hover-panel" data-i18n="btn.discussProject">Обсудить проект</a>
+        <a href="#contact" class="btn btn--outline btn--hover-panel" data-i18n="btn.leaveRequest">Оставить заявку</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA БАННЕР (красный) ===== -->
+<section class="cta-banner">
+  <div class="container cta-banner__inner">
+    <h2 data-i18n="ctaBanner.title">Один подрядчик — вместо пяти. Один результат — вместо хаоса.</h2>
+    <p data-i18n="ctaBanner.subtitle">SMM, реклама, автоматизация, ИИ и CRM — всё в одной команде, по всему Казахстану, удалённо.</p>
+    <a href="https://wa.me/77058903755" data-wa-link class="btn btn--light btn--hover-panel" data-i18n="ctaBanner.btn">Обсудить проект в WhatsApp</a>
+  </div>
+</section>
+
+<!-- ===== ФОРМА ЗАЯВКИ ===== -->
+<section class="contact" id="contact">
+  <div class="container contact__inner">
+    <div class="contact__left">
+      <div class="section-tag" data-i18n="contact.tag">04 — Контакты</div>
+      <h2 class="section-title" data-i18n="contact.title">Готовы обсудить проект?</h2>
+      <p class="section-subtitle" data-i18n="contact.subtitle">
+        Напишите нам в WhatsApp — ответим в течение рабочего дня. Работаем по всему
+        Казахстану удалённо: город и часовой пояс значения не имеют.
+      </p>
+
+      <ul class="contact__list">
+        <li>
+          <span class="contact__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 22s7-7.1 7-12a7 7 0 1 0-14 0c0 4.9 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          </span>
+          <span data-i18n="contact.address">Офис: г. Шымкент, ул. Карасу 2/1 — услуги оказываем по всему Казахстану удалённо</span>
+        </li>
+        <li>
+          <span class="contact__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L8 9.7a16 16 0 0 0 6.3 6.3l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.7 2.1z"/></svg>
+          </span>
+          <a href="tel:+77058903755">+7 705 890 37 55</a>
+        </li>
+        <li>
+          <span class="contact__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m3 6 9 7 9-7"/></svg>
+          </span>
+          <a href="mailto:sayora@algoritm.top">sayora@algoritm.top</a>
+        </li>
+      </ul>
+
+      <div class="contact__socials">
+        <a href="https://wa.me/77058903755" data-wa-link class="btn btn--primary btn--hover-panel" data-i18n="btn.whatsapp">Написать в WhatsApp</a>
+        <a href="https://www.instagram.com/algoritm_co" target="_blank" rel="noopener" class="btn btn--outline btn--hover-panel" data-i18n="btn.instagram">Написать в Instagram</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ: модальное окно =====
+     Ссылки в футере и в чекбоксе согласия только открывают текст — на
+     странице остаётся просто ссылка, ничего не разворачивается в ленте. -->
+<div class="modal" id="privacyModal" aria-hidden="true">
+  <div class="modal__backdrop" data-modal-close></div>
+  <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="privacyModalTitle">
+    <button type="button" class="modal__close" data-modal-close data-i18n-aria-label="aria.modalClose" aria-label="Закрыть">✕</button>
+    <div class="modal__body">
+      <div class="section-tag" data-i18n="privacy.updated">Дата публикации: 20 августа 2026 г.</div>
+      <h2 class="section-title" id="privacyModalTitle" data-i18n="privacy.title">Политика конфиденциальности</h2>
+      <p class="section-subtitle privacy__intro" data-i18n="privacy.intro">
+        Данная Политика конфиденциальности объясняет, как ИП «ALGORITM KZ» собирает, использует и
+        защищает персональные данные посетителей сайта в соответствии с Законом Республики Казахстан
+        «О персональных данных и их защите» № 94-V от 21.05.2013.
+      </p>
+
+      <div class="privacy__sections">
+        <div class="privacy__section">
+          <h3 data-i18n="privacy.s1.title">1. Кто собирает и обрабатывает ваши данные</h3>
+          <p data-i18n="privacy.s1.text">Оператором персональных данных является ИП «ALGORITM KZ» (г. Шымкент, ул. Карасу 2/1, Республика Казахстан). Именно мы принимаем и обрабатываем данные, которые вы оставляете на этом сайте.</p>
+        </div>
+
+        <div class="privacy__section">
+          <h3 data-i18n="privacy.s2.title">2. Какие данные мы собираем</h3>
+          <p data-i18n="privacy.s2.text">Через форму заявки на сайте мы собираем: имя, номер телефона (WhatsApp) и, при необходимости, адрес электронной почты. Мы не запрашиваем и не храним данные банковских карт, документов, удостоверяющих личность, и другую специальную категорию персональных данных.</p>
+        </div>
+
+        <div class="privacy__section">
+          <h3 data-i18n="privacy.s3.title">3. Цель сбора данных</h3>
+          <p data-i18n="privacy.s3.text">Указанные данные используются исключительно для: обработки вашей заявки на услуги ALGORITM, обратной связи по интересующему вас вопросу, подготовки коммерческого предложения и договора (при необходимости).</p>
+        </div>
+
+        <div class="privacy__section">
+          <h3 data-i18n="privacy.s4.title">4. Согласие на обработку данных</h3>
+          <p data-i18n="privacy.s4.text">Отправляя форму заявки, вы подтверждаете чекбоксом согласие на сбор и обработку персональных данных на условиях настоящей Политики. Согласие даётся добровольно и может быть отозвано в любой момент.</p>
+        </div>
+
+        <div class="privacy__section">
+          <h3 data-i18n="privacy.s5.title">5. Срок и способ хранения данных</h3>
+          <p data-i18n="privacy.s5.text">Ваши данные хранятся в защищённом виде и используются только внутри компании ALGORITM — для связи с вами и учёта заявок. Мы не передаём и не продаём ваши данные третьим лицам. Данные хранятся до момента отзыва согласия или до достижения цели обработки, после чего удаляются.</p>
+        </div>
+
+        <div class="privacy__section">
+          <h3 data-i18n="privacy.s6.title">6. Ваше право на отзыв согласия</h3>
+          <p data-i18n="privacy.s6.text">Вы можете в любой момент отозвать согласие на обработку персональных данных и потребовать их удаления, направив письмо на адрес sayora@algoritm.top с темой «Отзыв согласия на обработку персональных данных». Мы обработаем обращение и удалим данные в разумный срок.</p>
+        </div>
+
+        <div class="privacy__section">
+          <h3 data-i18n="privacy.s7.title">7. Правовая основа</h3>
+          <p data-i18n="privacy.s7.text">Настоящая Политика составлена в соответствии с Законом Республики Казахстан «О персональных данных и их защите» № 94-V от 21.05.2013 и применяется ко всем данным, полученным через этот сайт.</p>
+        </div>
+      </div>
+
+      <p class="privacy__contact-line">
+        <span data-i18n="privacy.contact.text">Свяжитесь с нами по email sayora@algoritm.top или в WhatsApp — ответим на любые вопросы о том, как мы обрабатываем ваши данные.</span>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ФУТЕР ===== -->
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <a href="#hero" class="logo" data-i18n-aria-label="aria.logoHome" aria-label="ALGORITM — на главную">
+        <span class="logo__mark"><img src="assets/img/logo.png" alt="" class="logo__img"></span>
+        <span class="logo__word">ALGORITM</span>
+      </a>
+      <p data-i18n="footer.tagline">SMM-агентство полного цикла в Шымкенте. Автоматизация и ИИ — работаем по всему Казахстану удалённо.</p>
+    </div>
+
+    <div class="footer__col">
+      <h4 data-i18n="footer.nav.title">Навигация</h4>
+      <a href="#about" data-i18n="nav.about">О нас</a>
+      <a href="#services" data-i18n="nav.services">Услуги</a>
+      <a href="#pricing" data-i18n="nav.pricing">Тарифы</a>
+      <a href="#contact" data-i18n="nav.contact">Контакты</a>
+    </div>
+
+    <div class="footer__col">
+      <h4 data-i18n="footer.contacts.title">Контакты</h4>
+      <span data-i18n="footer.addressShort">г. Шымкент, ул. Карасу 2/1</span>
+      <a href="tel:+77058903755">+7 705 890 37 55</a>
+      <a href="mailto:sayora@algoritm.top">sayora@algoritm.top</a>
+      <a href="#privacy" data-modal-open="privacyModal" data-i18n="footer.privacy">Политика конфиденциальности</a>
+    </div>
+
+    <div class="footer__col">
+      <h4 data-i18n="footer.social.title">Мы в сети</h4>
+      <a href="https://wa.me/77058903755" data-wa-link>WhatsApp</a>
+      <a href="https://www.instagram.com/algoritm_co" target="_blank" rel="noopener">Instagram</a>
+    </div>
+  </div>
+
+  <div class="footer__bottom">
+    <div class="container footer__bottom-inner">
+      <span>© <span id="year"></span> <span data-i18n="footer.copyright">ИП «ALGORITM KZ». Все права защищены.</span></span>
+      <span data-i18n="footer.location">Казахстан — работаем удалённо</span>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/77058903755" data-wa-link class="fab-whatsapp" data-i18n-aria-label="btn.whatsapp" aria-label="Написать в WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.5-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5C10 9 9.5 7.8 9.3 7.3c-.2-.5-.4-.4-.5-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.1s.9 2.4 1.1 2.6c.1.2 1.8 2.8 4.4 3.9.6.3 1.1.4 1.5.5.6.2 1.2.2 1.6.1.5-.1 1.7-.7 1.9-1.3.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.6-.3z"/><path d="M12 2C6.5 2 2 6.5 2 12c0 1.9.5 3.7 1.5 5.3L2 22l4.8-1.5c1.5.9 3.3 1.4 5.2 1.4 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18.3c-1.7 0-3.4-.5-4.8-1.3l-.3-.2-3.2 1 1-3.1-.2-.3C3.6 15 3 13.5 3 12c0-5 4-9 9-9s9 4 9 9-4 9-9 9z"/></svg>
+</a>
+
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/script.js"></script>
+</body>
+</html>
