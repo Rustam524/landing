@@ -2,6 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* Интро-заставка (#intro-overlay) живёт в своём inline-скрипте в index.html —
+     запускается раньше этого файла, стартует сама и сама себя убирает. */
+
   /* ===== ШАПКА: фон при скролле ===== */
   const header = document.getElementById('header');
   if (header) {
