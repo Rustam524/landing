@@ -53,6 +53,15 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
+
+<!-- Sentry: отлавливает JS-ошибки и медленные загрузки прямо на боевом сайте -->
+<script src="https://browser.sentry-cdn.com/10.73.0/bundle.tracing.min.js" crossorigin="anonymous"></script>
+<script>
+  Sentry.init({
+    dsn: "https://4bf6976ffc0a2b1b5421f419a56a077d@o4512038551158784.ingest.de.sentry.io/4512038734200912",
+    tracesSampleRate: 1.0,
+  });
+</script>
 </head>
 <body>
 
