@@ -191,17 +191,30 @@ textarea:focus-visible,
   inset: 0;
   z-index: 1000;
   background: var(--color-almost-black);
+  background: radial-gradient(ellipse at 50% 46%, #371821 0%, #25131b 38%, var(--color-almost-black) 82%);
   overflow: hidden;
   transition: opacity 550ms ease, visibility 550ms ease;
 }
 #intro-screen[hidden] { display: none; }
 #intro-screen.is-leaving { opacity: 0; pointer-events: none; }
 
-#intro-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+#intro-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
+
+/* Чёткая вырезка букв логотипа — накладывается поверх WebGL-пыли отдельным
+   канвасом (2D-рисование поверх активного WebGL-канваса недоступно), плавно
+   проявляется в конце сборки. */
+.intro-logo-reveal {
+  position: absolute;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 600ms ease;
+}
+.intro-logo-reveal.is-visible { opacity: 1; }
 
 .intro-content {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -234,7 +247,7 @@ textarea:focus-visible,
   justify-content: center;
   gap: 14px;
   padding-inline: 20px;
-  z-index: 3;
+  z-index: 4;
 }
 .intro-btn {
   background: rgba(244, 240, 235, 0.1);
@@ -256,6 +269,7 @@ textarea:focus-visible,
     opacity: 1 !important;
     transform: none !important;
   }
+  .intro-logo-reveal { transition: none !important; }
 }
 
 /* =========================================================================
