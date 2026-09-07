@@ -262,21 +262,22 @@
     "  float kind = aGoal.w;\n" +
     "  float phase = aBirth.z * 6.28318;\n" +
     "  float tone = aBirth.w;\n" +
+    "  float minDim = min(uResX, uResY);\n" + // единый масштаб — одна и та же формула для любого экрана
     "  float x; float y; float alpha;\n" +
     "  if (kind > 0.5) {\n" +
     "    float birth = 0.05 + (aGoal.x / uResX) * 0.62;\n" + // волна: собираются слева направо
     "    float age = max(0.0, uTime - birth);\n" +
     "    float assemble = smoothstep(0.0, 1.5, age);\n" +
     "    float rise = 1.0 - assemble;\n" +
-    "    x = aGoal.x + sin(age*2.1+phase)*(1.0-assemble)*16.0 + sin(phase*3.0)*assemble*2.5;\n" +
-    "    y = aGoal.y + rise*aBirth.y + sin(age*3.0+phase)*(1.0-assemble)*11.0;\n" +
+    "    x = aGoal.x + sin(age*2.1+phase)*(1.0-assemble)*minDim*0.0229 + sin(phase*3.0)*assemble*minDim*0.0036;\n" +
+    "    y = aGoal.y + rise*aBirth.y + sin(age*3.0+phase)*(1.0-assemble)*minDim*0.0157;\n" +
     "    alpha = smoothstep(0.0,0.25,age) * (0.82 + 0.18*sin(uTime*3.0+phase));\n" +
     "  } else {\n" +
     "    float birth = aBirth.z * 0.65;\n" +
     "    float age = max(0.0, uTime - birth);\n" +
     "    float drift = age * 0.16;\n" +
-    "    x = aBirth.x + sin(age*0.8+phase) * 26.0;\n" +
-    "    y = uResY*1.06 - drift*uResY*0.62 + sin(age*1.7+phase)*15.0;\n" +
+    "    x = aBirth.x + sin(age*0.8+phase) * minDim*0.0371;\n" +
+    "    y = uResY*1.06 - drift*uResY*0.62 + sin(age*1.7+phase)*minDim*0.0214;\n" +
     "    alpha = smoothstep(0.0,0.3,age) * (0.28+0.34*tone) * smoothstep(4.4,1.7,age);\n" +
     "  }\n" +
     "  vAlpha = clamp(alpha, 0.0, 1.0);\n" +
@@ -328,7 +329,10 @@
       // ограничения на слабых мобильных: уже не 2D-канвас, GPU справится
       // с бóльшим числом точек — но всё же ограничим сверху ради телефонов).
       var logoPoints = buildLogoPoints(9000);
-      var AMBIENT_COUNT = window.innerWidth < 640 ? 900 : 1700;
+      // единая формула для всех размеров экрана (без разделения на «телефон/десктоп»):
+      // количество фоновых частиц растёт с площадью экрана и упирается в потолок ради GPU.
+      var screenArea = window.innerWidth * window.innerHeight;
+      var AMBIENT_COUNT = Math.max(700, Math.min(1900, Math.round(screenArea * 0.0036)));
       var total = logoPoints.length + AMBIENT_COUNT;
       particleCount = total;
 
