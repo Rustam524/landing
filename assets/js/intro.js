@@ -118,113 +118,87 @@
   }
 
   // -----------------------------------------------------------------------
-  // 1. Сэмплируем силуэт логотипа: рисуем PNG на скрытом канвасе и находим
-  //    точки фирменного знака по яркости (тот же логотип, что и на сайте),
-  //    затем переводим их в виртуальные единицы сцены (не в пиксели экрана).
+  // 1. Собираем "brand"-канвас 1200×675 — ровно как в присланном коде:
+  //    рисуем картинку (значок + слово ALGORITM, тот самый файл, что был
+  //    зашит в присланном коде base64-строкой) на позиции (132,210) шириной
+  //    936, значок оставляем как есть, а буквы перекрашиваем в светлый цвет
+  //    (source-atop), плюс подпись под названием — теми же координатами и
+  //    константами, что и в исходнике (там пространство тоже было 1200×675,
+  //    поэтому переводить ничего не нужно). Затем сэмплируем яркие пиксели
+  //    этого канваса в облако целевых точек для сборки пыли.
   // -----------------------------------------------------------------------
   var LUM_THRESHOLD = 175;
-  var logoGeometry = null; // чёткая "вырезка" букв, в виртуальных координатах сцены
+  var LOGO_DRAW_X = 132;
+  var LOGO_DRAW_Y = 210;
+  var LOGO_DRAW_W = 936;
+  var LOGO_TEXT_START_PX = 288; // граница "значок / буквы" в пикселях исходного файла — из присланного кода
+  var LOGO_TAGLINE_Y = 419;
+  var LOGO_TAGLINE_TEXT = "Маркетинговое агентство";
+  var logoGeometry = null; // { canvas } — весь brand-канвас, рисуется целиком в виртуальных координатах сцены
+
+  function buildBrand() {
+    var src = logoSource.naturalWidth ? logoSource : null;
+    if (!src) return null;
+
+    var c = document.createElement("canvas");
+    c.width = VIRTUAL_W;
+    c.height = VIRTUAL_H;
+    var b = c.getContext("2d");
+
+    var w = LOGO_DRAW_W;
+    var h = (w * src.naturalHeight) / src.naturalWidth;
+    b.drawImage(src, LOGO_DRAW_X, LOGO_DRAW_Y, w, h);
+
+    // Сохраняем значок как есть, а буквам названия даём светлый (кремовый)
+    // оттенок — чтобы читались на тёмной сцене, как в присланном коде.
+    b.save();
+    b.globalCompositeOperation = "source-atop";
+    b.fillStyle = "#f5e9d8";
+    var textStart = LOGO_DRAW_X + (LOGO_TEXT_START_PX / src.naturalWidth) * w;
+    b.fillRect(textStart, LOGO_DRAW_Y, LOGO_DRAW_X + w - textStart, h);
+    b.restore();
+
+    b.fillStyle = "#f5e9d8";
+    b.font = "24px Arial, sans-serif";
+    b.textAlign = "center";
+    b.fillText(LOGO_TAGLINE_TEXT, (textStart + LOGO_DRAW_X + w) / 2, LOGO_TAGLINE_Y);
+
+    return c;
+  }
 
   function buildLogoPoints() {
-    var src = logoSource.naturalWidth ? logoSource : null;
-    if (!src) return [];
+    var brand = buildBrand();
+    if (!brand) {
+      logoGeometry = null;
+      return [];
+    }
+    logoGeometry = { canvas: brand };
 
-    var size = src.naturalWidth;
-    var off = document.createElement("canvas");
-    off.width = size;
-    off.height = size;
-    var offCtx = off.getContext("2d");
-    offCtx.drawImage(src, 0, 0, size, size);
-
-    var data;
+    var bc = brand.getContext("2d");
+    var pixels;
     try {
-      data = offCtx.getImageData(0, 0, size, size).data;
+      pixels = bc.getImageData(0, 0, VIRTUAL_W, VIRTUAL_H).data;
     } catch (e) {
       return []; // на всякий случай, если браузер не даст прочитать пиксели
     }
 
-    var bandTop = size * 0.4;
-    var bandBottom = size * 0.548;
-    var bandLeft = size * 0.12;
-    var bandRight = size * 0.88;
-
     var points = [];
-    var minX = size, maxX = 0, minY = size, maxY = 0;
-
-    for (var y = bandTop; y < bandBottom; y += 1) {
-      for (var x = bandLeft; x < bandRight; x += 1) {
-        var idx = (Math.round(y) * size + Math.round(x)) * 4;
-        var lum = 0.299 * data[idx] + 0.587 * data[idx + 1] + 0.114 * data[idx + 2];
-        if (lum > LUM_THRESHOLD) {
-          points.push({ x: x, y: y });
-          if (x < minX) minX = x;
-          if (x > maxX) maxX = x;
-          if (y < minY) minY = y;
-          if (y > maxY) maxY = y;
-        }
+    for (var y = 0; y < VIRTUAL_H; y++) {
+      for (var x = 0; x < VIRTUAL_W; x++) {
+        var idx = (y * VIRTUAL_W + x) * 4;
+        if (pixels[idx + 3] < 40) continue;
+        var lum = 0.299 * pixels[idx] + 0.587 * pixels[idx + 1] + 0.114 * pixels[idx + 2];
+        if (lum > LUM_THRESHOLD) points.push({ x: x, y: y });
       }
     }
-
-    if (!points.length) return [];
-
-    // Масштаб — доля виртуальной сцены (1200×675), а не доля экрана: логотип
-    // всегда занимает одну и ту же долю кадра, независимо от устройства.
-    var boxW = maxX - minX || 1;
-    var boxH = maxY - minY || 1;
-    var targetW = VIRTUAL_W * 0.78;
-    var scale = targetW / boxW;
-    var targetH = boxH * scale;
-    if (targetH > VIRTUAL_H * 0.5) {
-      scale = (VIRTUAL_H * 0.5) / boxH;
-    }
-    var boxCx = minX + boxW / 2;
-    var boxCy = minY + boxH / 2;
-    var sceneCx = VIRTUAL_W / 2;
-    var sceneCy = VIRTUAL_H / 2;
-
-    // Чёткая "вырезка" настоящих букв (прозрачный фон, только пиксели
-    // названия) — проявляется поверх пыли в конце анимации.
-    var cutW = Math.max(1, Math.round(boxW));
-    var cutH = Math.max(1, Math.round(boxH));
-    var cutout = document.createElement("canvas");
-    cutout.width = cutW;
-    cutout.height = cutH;
-    var cutoutCtx = cutout.getContext("2d");
-    var cropData = offCtx.getImageData(Math.round(minX), Math.round(minY), cutW, cutH);
-    var px = cropData.data;
-    for (var i = 0; i < px.length; i += 4) {
-      var l = 0.299 * px[i] + 0.587 * px[i + 1] + 0.114 * px[i + 2];
-      if (l <= LUM_THRESHOLD) px[i + 3] = 0;
-    }
-    cutoutCtx.putImageData(cropData, 0, 0);
-
-    logoGeometry = {
-      canvas: cutout,
-      destX: sceneCx - (cutW * scale) / 2,
-      destY: sceneCy - (cutH * scale) / 2,
-      destW: cutW * scale,
-      destH: cutH * scale,
-    };
-
-    return points.map(function (p) {
-      return {
-        x: sceneCx + (p.x - boxCx) * scale,
-        y: sceneCy + (p.y - boxCy) * scale,
-      };
-    });
+    return points;
   }
 
   function drawCrispLogo(ctx2d, alpha) {
     if (!logoGeometry) return;
     ctx2d.save();
     ctx2d.globalAlpha = alpha;
-    ctx2d.drawImage(
-      logoGeometry.canvas,
-      logoGeometry.destX,
-      logoGeometry.destY,
-      logoGeometry.destW,
-      logoGeometry.destH
-    );
+    ctx2d.drawImage(logoGeometry.canvas, 0, 0, VIRTUAL_W, VIRTUAL_H);
     ctx2d.restore();
   }
 
@@ -463,7 +437,7 @@
         if (revealCtx && logoGeometry) {
           revealCtx.setTransform(w / VIRTUAL_W, 0, 0, h / VIRTUAL_H, 0, 0);
           revealCtx.clearRect(0, 0, VIRTUAL_W, VIRTUAL_H);
-          revealCtx.drawImage(logoGeometry.canvas, logoGeometry.destX, logoGeometry.destY, logoGeometry.destW, logoGeometry.destH);
+          revealCtx.drawImage(logoGeometry.canvas, 0, 0, VIRTUAL_W, VIRTUAL_H);
         }
       }
     }
