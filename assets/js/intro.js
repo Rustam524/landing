@@ -1,14 +1,20 @@
 /**
- * Вступительная анимация ALGORITM: волна светящейся пыли (красная, золотая,
- * кремовая) поднимается снизу экрана слева направо и собирается в фирменный
- * логотип, затем поверх нею проявляется чёткая вырезка букв, плавно
- * появляется теглайн, и через ~3.5 секунды экран открывает главную страницу.
+ * Вступительная анимация ALGORITM — прямой перенос ролика, присланного
+ * заказчиком (три вида частиц: фоновая пыль, поднимающаяся волна и частицы,
+ * собирающиеся в логотип; в конце — растворение пыли и чёткая вырезка
+ * названия). Формулы шейдера и распределение частиц оставлены как в
+ * исходнике, без переосмысления.
  *
- * Само движение частиц — на WebGL (органичная волна + сборка), рендер
- * ведётся шейдером. Сэмплирование пикселей логотипа в облако целевых точек
- * (по яркости, канвас 2D) — техника, адаптированная из открытого проекта
- * github.com/HelloAndersJ/particle-logo под наш логотип и палитру; сама
- * "волна подъёма и сборки" дописана здесь на GLSL.
+ * Ключевое: вся сцена рисуется в фиксированных "виртуальных" единицах
+ * 1200×675 (соотношение 16:9 — как в исходном ролике), а сама сцена
+ * вписана в экран как видео "letterbox" (см. .intro-scene в styles.css).
+ * Поэтому анимация выглядит ОДИНАКОВО на телефоне и на десктопе — она не
+ * пересчитывается под пропорции конкретного экрана, а просто масштабируется
+ * целиком, как один и тот же ролик на разных мониторах.
+ *
+ * Сэмплирование пикселей логотипа в облако целевых точек (по яркости,
+ * канвас 2D) — техника, адаптированная из открытого проекта
+ * github.com/HelloAndersJ/particle-logo под наш логотип.
  *
  * Показывается один раз за сессию (sessionStorage), учитывает
  * prefers-reduced-motion и слабые устройства (в т.ч. отсутствие WebGL) —
@@ -36,7 +42,7 @@
   }
 
   var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  // Заставка — короткая одноразовая анимация (~3.5с), а не постоянный фон,
+  // Заставка — короткая одноразовая анимация (~4.5с), а не постоянный фон,
   // поэтому для неё узкий экран телефона сам по себе не повод упрощать —
   // упрощаем только на реально слабом железе (мало памяти/ядер, экономия
   // трафика), а не по одной лишь ширине экрана.
@@ -47,7 +53,9 @@
   );
   var simplified = reducedMotion || isWeakHardware;
 
+  var sceneEl = overlay.querySelector(".intro-scene");
   var canvas = document.getElementById("intro-canvas");
+  var reveal = document.getElementById("intro-logo-reveal");
   var logoSource = document.getElementById("intro-logo-source");
   var tagline = document.getElementById("intro-tagline");
   var skipBtn = document.getElementById("intro-skip");
@@ -85,7 +93,7 @@
     if (tagline) tagline.classList.add("is-visible");
   }
 
-  if (!canvas || !logoSource) {
+  if (!canvas || !logoSource || !sceneEl) {
     // На случай отсутствия canvas/логотипа — не блокируем сайт.
     showTagline();
     window.setTimeout(function () {
@@ -95,14 +103,29 @@
   }
 
   // -----------------------------------------------------------------------
+  // Виртуальное пространство сцены — фиксированное 1200×675 (16:9), как в
+  // исходном ролике. Все координаты частиц и логотипа считаются в этих
+  // единицах, а не в пикселях экрана; на экран сцена лишь масштабируется
+  // целиком (см. .intro-scene в CSS) — отсюда и одинаковый вид на любом
+  // устройстве.
+  // -----------------------------------------------------------------------
+  var VIRTUAL_W = 1200;
+  var VIRTUAL_H = 675;
+
+  function smooth(x) {
+    x = Math.max(0, Math.min(1, x));
+    return x * x * (3 - 2 * x);
+  }
+
+  // -----------------------------------------------------------------------
   // 1. Сэмплируем силуэт логотипа: рисуем PNG на скрытом канвасе и находим
-  //    точки фирменного знака по яркости (тот же логотип, что и на сайте).
-  //    Сэмплируем только полосу со знаком и словом ALGORITM.
+  //    точки фирменного знака по яркости (тот же логотип, что и на сайте),
+  //    затем переводим их в виртуальные единицы сцены (не в пиксели экрана).
   // -----------------------------------------------------------------------
   var LUM_THRESHOLD = 175;
-  var logoGeometry = null; // чёткая "вырезка" букв — заполняется здесь, рисуется в конце сборки
+  var logoGeometry = null; // чёткая "вырезка" букв, в виртуальных координатах сцены
 
-  function buildLogoPoints(maxParticles) {
+  function buildLogoPoints() {
     var src = logoSource.naturalWidth ? logoSource : null;
     if (!src) return [];
 
@@ -124,13 +147,12 @@
     var bandBottom = size * 0.548;
     var bandLeft = size * 0.12;
     var bandRight = size * 0.88;
-    var step = 1;
 
     var points = [];
     var minX = size, maxX = 0, minY = size, maxY = 0;
 
-    for (var y = bandTop; y < bandBottom; y += step) {
-      for (var x = bandLeft; x < bandRight; x += step) {
+    for (var y = bandTop; y < bandBottom; y += 1) {
+      for (var x = bandLeft; x < bandRight; x += 1) {
         var idx = (Math.round(y) * size + Math.round(x)) * 4;
         var lum = 0.299 * data[idx] + 0.587 * data[idx + 1] + 0.114 * data[idx + 2];
         if (lum > LUM_THRESHOLD) {
@@ -145,25 +167,20 @@
 
     if (!points.length) return [];
 
-    if (points.length > maxParticles) {
-      var keepChance = maxParticles / points.length;
-      points = points.filter(function () {
-        return Math.random() < keepChance;
-      });
-    }
-
+    // Масштаб — доля виртуальной сцены (1200×675), а не доля экрана: логотип
+    // всегда занимает одну и ту же долю кадра, независимо от устройства.
     var boxW = maxX - minX || 1;
     var boxH = maxY - minY || 1;
-    var targetW = Math.min(window.innerWidth * 0.9, 1100);
+    var targetW = VIRTUAL_W * 0.78;
     var scale = targetW / boxW;
     var targetH = boxH * scale;
-    if (targetH > window.innerHeight * 0.5) {
-      scale = (window.innerHeight * 0.5) / boxH;
+    if (targetH > VIRTUAL_H * 0.5) {
+      scale = (VIRTUAL_H * 0.5) / boxH;
     }
     var boxCx = minX + boxW / 2;
     var boxCy = minY + boxH / 2;
-    var screenCx = window.innerWidth / 2;
-    var screenCy = window.innerHeight * 0.42;
+    var sceneCx = VIRTUAL_W / 2;
+    var sceneCy = VIRTUAL_H / 2;
 
     // Чёткая "вырезка" настоящих букв (прозрачный фон, только пиксели
     // названия) — проявляется поверх пыли в конце анимации.
@@ -183,16 +200,16 @@
 
     logoGeometry = {
       canvas: cutout,
-      destX: screenCx - (cutW * scale) / 2,
-      destY: screenCy - (cutH * scale) / 2,
+      destX: sceneCx - (cutW * scale) / 2,
+      destY: sceneCy - (cutH * scale) / 2,
       destW: cutW * scale,
       destH: cutH * scale,
     };
 
     return points.map(function (p) {
       return {
-        x: screenCx + (p.x - boxCx) * scale,
-        y: screenCy + (p.y - boxCy) * scale,
+        x: sceneCx + (p.x - boxCx) * scale,
+        y: sceneCy + (p.y - boxCy) * scale,
       };
     });
   }
@@ -213,7 +230,9 @@
 
   // -----------------------------------------------------------------------
   // 2. Упрощённый путь (reduced motion / слабое железо / нет WebGL):
-  //    логотип сразу собран, без покадровой анимации.
+  //    логотип сразу собран, без покадровой анимации. Рисуется в той же
+  //    вписанной 16:9-сцене, чтобы размер/положение логотипа совпадали с
+  //    анимированной версией.
   // -----------------------------------------------------------------------
   function runSimplified() {
     var ctx2d = canvas.getContext("2d");
@@ -224,16 +243,15 @@
       }, 900);
       return;
     }
+    var rect = sceneEl.getBoundingClientRect();
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
-    var w = window.innerWidth;
-    var h = window.innerHeight;
-    canvas.width = w * dpr;
-    canvas.height = h * dpr;
-    canvas.style.width = w + "px";
-    canvas.style.height = h + "px";
-    ctx2d.setTransform(dpr, 0, 0, dpr, 0, 0);
-    buildLogoPoints(4500);
-    ctx2d.clearRect(0, 0, w, h);
+    var w = Math.max(1, Math.round(rect.width * dpr));
+    var h = Math.max(1, Math.round(rect.height * dpr));
+    canvas.width = w;
+    canvas.height = h;
+    ctx2d.setTransform(w / VIRTUAL_W, 0, 0, h / VIRTUAL_H, 0, 0);
+    buildLogoPoints();
+    ctx2d.clearRect(0, 0, VIRTUAL_W, VIRTUAL_H);
     drawCrispLogo(ctx2d, 1);
     showTagline();
     window.setTimeout(function () {
@@ -242,48 +260,60 @@
   }
 
   // -----------------------------------------------------------------------
-  // 3. Основной путь: WebGL-волна пыли, поднимающаяся слева направо и
-  //    собирающаяся в силуэт логотипа, плюс фоновые дрейфующие искры для
-  //    атмосферы. Дальше поверх проявляется чёткая вырезка букв (2D canvas
-  //    поверх WebGL-канваса нельзя — рисуем её в конце тем же <canvas>,
-  //    переключив контекст 2D после остановки WebGL-цикла).
+  // 3. Основной путь — прямой перенос присланной анимации: фоновая пыль
+  //    (kind 0), большая поднимающаяся и опадающая волна (kind 1) и частицы,
+  //    собирающиеся в силуэт логотипа и затем растворяющиеся (kind 2).
+  //    Формулы и константы — как в исходном шейдере, без изменений.
   // -----------------------------------------------------------------------
   var VERTEX_SRC =
     "precision highp float;\n" +
-    "attribute vec4 aBirth;\n" + // x: birthX(px), y: rise height(px), z: phase seed 0..1, w: tone 0..1
-    "attribute vec4 aGoal;\n" + // x: goalX(px), y: goalY(px), z: point size(px), w: kind (0=ambient,1=logo)
+    "attribute vec4 aWave;\n" + // x: birthX, y: высота волны, z: фаза(s), w: тон(r) — виртуальные единицы 1200×675
+    "attribute vec4 aGoal;\n" + // x/y: цель сборки, z: размер точки, w: вид частицы (0=пыль,1=волна,2=логотип)
     "uniform float uTime;\n" +
-    "uniform float uResX;\n" +
-    "uniform float uResY;\n" +
-    "uniform float uDpr;\n" +
+    "uniform float uScale;\n" + // пикселей канваса на виртуальную единицу — влияет только на размер точки
     "varying float vAlpha;\n" +
     "varying float vTone;\n" +
     "void main(){\n" +
+    "  float t = uTime;\n" +
+    "  float x = aWave.x, height = aWave.y, s = aWave.z, r = aWave.w;\n" +
     "  float kind = aGoal.w;\n" +
-    "  float phase = aBirth.z * 6.28318;\n" +
-    "  float tone = aBirth.w;\n" +
-    "  float minDim = min(uResX, uResY);\n" + // единый масштаб — одна и та же формула для любого экрана
-    "  float x; float y; float alpha;\n" +
-    "  if (kind > 0.5) {\n" +
-    "    float birth = 0.05 + (aGoal.x / uResX) * 0.62;\n" + // волна: собираются слева направо
-    "    float age = max(0.0, uTime - birth);\n" +
-    "    float assemble = smoothstep(0.0, 1.5, age);\n" +
-    "    float rise = 1.0 - assemble;\n" +
-    "    x = aGoal.x + sin(age*2.1+phase)*(1.0-assemble)*minDim*0.0229 + sin(phase*3.0)*assemble*minDim*0.0036;\n" +
-    "    y = aGoal.y + rise*aBirth.y + sin(age*3.0+phase)*(1.0-assemble)*minDim*0.0157;\n" +
-    "    alpha = smoothstep(0.0,0.25,age) * (0.82 + 0.18*sin(uTime*3.0+phase));\n" +
-    "  } else {\n" +
-    "    float birth = aBirth.z * 0.65;\n" +
-    "    float age = max(0.0, uTime - birth);\n" +
-    "    float drift = age * 0.16;\n" +
-    "    x = aBirth.x + sin(age*0.8+phase) * minDim*0.0371;\n" +
-    "    y = uResY*1.06 - drift*uResY*0.62 + sin(age*1.7+phase)*minDim*0.0214;\n" +
-    "    alpha = smoothstep(0.0,0.3,age) * (0.28+0.34*tone) * smoothstep(4.4,1.7,age);\n" +
+    "  float birth = x / 1200.0 * 0.90 - 0.08;\n" +
+    "  float age = max(0.0, t - birth);\n" +
+    "  float grow = smoothstep(0.10, 0.85, t);\n" +
+    "  float rise = sin(clamp(age / 2.6, 0.0, 1.0) * 2.28);\n" +
+    "  float phase = s * 6.28318;\n" +
+    "  float amp = (0.47 + 0.53 * sin(x * 0.010 + 1.1) * sin(x * 0.010 + 1.1));\n" +
+    "  float y = 520.0 - rise * height * amp * grow;\n" +
+    "  x += sin(age * 1.9 + phase) * age * 13.0 * grow;\n" +
+    "  y += sin(age * 3.0 + x * 0.018 + phase) * 18.0 * grow;\n" +
+    "  x += sin(phase * 2.7) * age * 7.0;\n" +
+    "  if (kind < 0.5) {\n" + // kind 0 — фоновая пыль у "пола" сцены, почти неподвижная
+    "    x = aWave.x + sin(t * 1.8 + phase) * 7.0;\n" +
+    "    y = 520.0 - (height / 540.0) * 15.0 * (0.3 + grow) + sin(phase + t * 4.0) * 2.2;\n" +
     "  }\n" +
+    "  float assemble = smoothstep(2.0 + s * 0.45, 4.4 + s * 0.4, t);\n" +
+    "  if (kind > 1.5) {\n" + // kind 2 — собирается в силуэт логотипа
+    "    float curve = sin(assemble * 3.14159);\n" +
+    "    x = mix(x, aGoal.x, assemble) + sin(phase) * curve * 90.0;\n" +
+    "    y = mix(y, aGoal.y, assemble) - curve * (30.0 + r * 90.0);\n" +
+    "  } else if (kind > 0.5) {\n" + // kind 1 — большая волна, после сборки логотипа опадает
+    "    float fall = max(0.0, t - 4.2);\n" +
+    "    x += sin(phase) * fall * 36.0;\n" +
+    "    y += fall * fall * (18.0 + 35.0 * r);\n" +
+    "  }\n" +
+    "  float dissolve = smoothstep(4.6 + s * 0.4, 6.8 + s * 0.4, t);\n" +
+    "  if (kind > 1.5) {\n" +
+    "    x += sin(phase) * dissolve * 75.0;\n" +
+    "    y += dissolve * dissolve * (180.0 + 110.0 * r);\n" +
+    "  }\n" +
+    "  float fade = kind > 1.5 ? 1.0 - smoothstep(4.5 + s * 0.4, 6.9 + s * 0.3, t) : 1.0 - smoothstep(4.4 + s, 7.4, t);\n" +
+    "  float alpha = smoothstep(0.0, 0.20, t - birth) * fade;\n" +
+    "  if (kind < 0.5) alpha *= 1.0 - smoothstep(4.7, 7.0, t);\n" +
+    "  alpha *= 0.48 + 0.52 * pow(abs(sin(t * (2.0 + 5.0 * r) + phase)), 5.0);\n" +
     "  vAlpha = clamp(alpha, 0.0, 1.0);\n" +
-    "  vTone = tone;\n" +
-    "  gl_Position = vec4(x/uResX*2.0-1.0, 1.0 - y/uResY*2.0, 0.0, 1.0);\n" +
-    "  gl_PointSize = max(1.0, aGoal.z * uDpr);\n" +
+    "  vTone = r;\n" +
+    "  gl_Position = vec4(x / 600.0 - 1.0, 1.0 - y / 337.5, 0.0, 1.0);\n" +
+    "  gl_PointSize = max(1.1, aGoal.z * uScale);\n" +
     "}\n";
 
   var FRAGMENT_SRC =
@@ -293,11 +323,11 @@
     "void main(){\n" +
     "  vec2 uv = gl_PointCoord - 0.5;\n" +
     "  float d = length(uv) * 2.0;\n" +
-    "  if (d > 1.0 || vAlpha < 0.01) discard;\n" +
+    "  if (d > 1.0 || vAlpha < 0.005) discard;\n" +
     "  float core = exp(-d*d*13.0);\n" +
-    "  float halo = exp(-d*d*3.2) * 0.22;\n" +
-    "  vec3 warm = mix(vec3(0.73,0.20,0.16), vec3(0.90,0.72,0.36), vTone);\n" + // фирменный красный -> золотой
-    "  vec3 color = mix(warm, vec3(1.0,0.97,0.90), core*0.7);\n" +
+    "  float halo = exp(-d*d*3.4) * 0.21;\n" +
+    "  vec3 warm = mix(vec3(0.72,0.39,0.19), vec3(0.97,0.84,0.63), vTone);\n" + // фирменный красно-золотой переход
+    "  vec3 color = mix(warm, vec3(1.0,0.98,0.91), core*0.76);\n" +
     "  gl_FragColor = vec4(color, (core+halo) * vAlpha);\n" +
     "}\n";
 
@@ -322,49 +352,63 @@
       return;
     }
 
-    var program, buffer, locTime, locResX, locResY, locDpr, particleCount;
+    var program, buffer, locTime, locScale, particleCount;
+
+    // Ровно то же распределение частиц, что и в присланном ролике: 9000
+    // фоновой пыли, 34000 в большой волне, 17000 собираются в логотип
+    // (с повторным использованием точек логотипа — целей больше, чем точек).
+    var AMBIENT_COUNT = 9000;
+    var WAVE_COUNT = 34000;
+    var LOGO_COUNT = 17000;
+
+    function randomSize() {
+      return Math.random() < 0.025 ? 9 + Math.random() * 5 : 1.5 + Math.random() * 3.8;
+    }
 
     function buildParticles() {
-      // Плотность частиц-сборки — по числу найденных точек логотипа (без
-      // ограничения на слабых мобильных: уже не 2D-канвас, GPU справится
-      // с бóльшим числом точек — но всё же ограничим сверху ради телефонов).
-      var logoPoints = buildLogoPoints(9000);
-      // единая формула для всех размеров экрана (без разделения на «телефон/десктоп»):
-      // количество фоновых частиц растёт с площадью экрана и упирается в потолок ради GPU.
-      var screenArea = window.innerWidth * window.innerHeight;
-      var AMBIENT_COUNT = Math.max(700, Math.min(1900, Math.round(screenArea * 0.0036)));
-      var total = logoPoints.length + AMBIENT_COUNT;
+      var logoPoints = buildLogoPoints();
+      var total = AMBIENT_COUNT + WAVE_COUNT + LOGO_COUNT;
       particleCount = total;
 
       var data = new Float32Array(total * 8);
       var i = 0;
 
-      for (var li = 0; li < logoPoints.length; li++, i++) {
-        var p = logoPoints[li];
-        var seed = Math.random();
-        var height = 60 + Math.random() * window.innerHeight * 0.55;
-        var size = Math.random() < 0.05 ? 4.5 + Math.random() * 2.5 : 1.3 + Math.random() * 2.2;
-        var off = i * 8;
-        data[off] = p.x; // aBirth.x (не используется для kind=1, но пусть будет)
-        data[off + 1] = height; // aBirth.y — высота подъёма
-        data[off + 2] = seed; // aBirth.z — фаза
-        data[off + 3] = Math.random(); // aBirth.w — тон (красный↔золотой)
-        data[off + 4] = p.x; // aGoal.x
-        data[off + 5] = p.y; // aGoal.y
-        data[off + 6] = size; // aGoal.z — размер точки
-        data[off + 7] = 1.0; // aGoal.w — kind: логотип
+      for (var a = 0; a < AMBIENT_COUNT; a++, i++) {
+        var offA = i * 8;
+        data[offA] = Math.random() * 1240 - 20;
+        data[offA + 1] = Math.random() * 540;
+        data[offA + 2] = Math.random();
+        data[offA + 3] = Math.random();
+        data[offA + 4] = 0;
+        data[offA + 5] = 0;
+        data[offA + 6] = randomSize();
+        data[offA + 7] = 0.0; // kind: фоновая пыль
       }
 
-      for (var ai = 0; ai < AMBIENT_COUNT; ai++, i++) {
-        var off2 = i * 8;
-        data[off2] = Math.random() * window.innerWidth;
-        data[off2 + 1] = 0;
-        data[off2 + 2] = Math.random();
-        data[off2 + 3] = Math.random();
-        data[off2 + 4] = 0;
-        data[off2 + 5] = 0;
-        data[off2 + 6] = 1.1 + Math.random() * 2.2;
-        data[off2 + 7] = 0.0; // kind: амбиентная пыль
+      for (var w = 0; w < WAVE_COUNT; w++, i++) {
+        var offW = i * 8;
+        data[offW] = Math.random() * 1240 - 20;
+        data[offW + 1] = 540 * Math.pow(Math.random(), 1.55);
+        data[offW + 2] = Math.random();
+        data[offW + 3] = Math.random();
+        data[offW + 4] = 0;
+        data[offW + 5] = 0;
+        data[offW + 6] = randomSize();
+        data[offW + 7] = 1.0; // kind: большая волна
+      }
+
+      var hasTargets = logoPoints.length > 0;
+      for (var l = 0; l < LOGO_COUNT; l++, i++) {
+        var offL = i * 8;
+        var goal = hasTargets ? logoPoints[Math.floor(Math.random() * logoPoints.length)] : { x: 600, y: 337.5 };
+        data[offL] = Math.random() * 1240 - 20;
+        data[offL + 1] = 540 * Math.pow(Math.random(), 1.55);
+        data[offL + 2] = Math.random();
+        data[offL + 3] = Math.random();
+        data[offL + 4] = goal.x;
+        data[offL + 5] = goal.y;
+        data[offL + 6] = randomSize();
+        data[offL + 7] = 2.0; // kind: собирается в логотип
       }
 
       if (!buffer) buffer = gl.createBuffer();
@@ -384,17 +428,15 @@
 
       buildParticles();
 
-      var aBirthLoc = gl.getAttribLocation(program, "aBirth");
+      var aWaveLoc = gl.getAttribLocation(program, "aWave");
       var aGoalLoc = gl.getAttribLocation(program, "aGoal");
-      gl.enableVertexAttribArray(aBirthLoc);
-      gl.vertexAttribPointer(aBirthLoc, 4, gl.FLOAT, false, 32, 0);
+      gl.enableVertexAttribArray(aWaveLoc);
+      gl.vertexAttribPointer(aWaveLoc, 4, gl.FLOAT, false, 32, 0);
       gl.enableVertexAttribArray(aGoalLoc);
       gl.vertexAttribPointer(aGoalLoc, 4, gl.FLOAT, false, 32, 16);
 
       locTime = gl.getUniformLocation(program, "uTime");
-      locResX = gl.getUniformLocation(program, "uResX");
-      locResY = gl.getUniformLocation(program, "uResY");
-      locDpr = gl.getUniformLocation(program, "uDpr");
+      locScale = gl.getUniformLocation(program, "uScale");
 
       gl.enable(gl.BLEND);
       gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
@@ -405,15 +447,25 @@
     }
 
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var revealCtx = reveal ? reveal.getContext("2d") : null;
 
     function resize() {
-      var w = window.innerWidth;
-      var h = window.innerHeight;
-      canvas.width = Math.round(w * dpr);
-      canvas.height = Math.round(h * dpr);
-      canvas.style.width = w + "px";
-      canvas.style.height = h + "px";
-      gl.viewport(0, 0, canvas.width, canvas.height);
+      var rect = sceneEl.getBoundingClientRect();
+      var w = Math.max(1, Math.round(rect.width * dpr));
+      var h = Math.max(1, Math.round(rect.height * dpr));
+      canvas.width = w;
+      canvas.height = h;
+      gl.viewport(0, 0, w, h);
+
+      if (reveal) {
+        reveal.width = w;
+        reveal.height = h;
+        if (revealCtx && logoGeometry) {
+          revealCtx.setTransform(w / VIRTUAL_W, 0, 0, h / VIRTUAL_H, 0, 0);
+          revealCtx.clearRect(0, 0, VIRTUAL_W, VIRTUAL_H);
+          revealCtx.drawImage(logoGeometry.canvas, logoGeometry.destX, logoGeometry.destY, logoGeometry.destW, logoGeometry.destH);
+        }
+      }
     }
     resize();
     window.addEventListener("resize", resize);
@@ -430,61 +482,43 @@
       { once: true }
     );
 
-    var TOTAL_MS = 3500;
-    var TAGLINE_AT_MS = 2650;
-    var REVEAL_START_MS = 2050;
-    var REVEAL_DURATION_MS = 600;
+    // Виртуальное время сцены — как в исходнике: 8 условных секунд,
+    // проигрываемых с ускорением ×1.8 (итого ~4.4с реального времени).
+    var DURATION = 8;
+    var PLAYBACK_RATE = 1.8;
+    var time = 0;
+    var last = 0;
     var taglineShown = false;
-    var startTime = null;
-    var glActive = true;
 
-    function loop(ts) {
-      if (startTime === null) startTime = ts;
-      var elapsedMs = ts - startTime;
-      var t = elapsedMs / 1000;
+    function loop(now) {
+      if (!last) last = now;
+      var dt = Math.min((now - last) / 1000, 0.1) * PLAYBACK_RATE;
+      time += dt;
+      last = now;
 
       gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.uniform1f(locTime, t);
-      gl.uniform1f(locResX, window.innerWidth);
-      gl.uniform1f(locResY, window.innerHeight);
-      gl.uniform1f(locDpr, dpr);
+      gl.uniform1f(locTime, time);
+      gl.uniform1f(locScale, canvas.width / VIRTUAL_W);
       gl.drawArrays(gl.POINTS, 0, particleCount);
 
-      if (!taglineShown && elapsedMs >= TAGLINE_AT_MS) {
+      if (reveal) {
+        reveal.style.opacity = String(smooth((time - 4.1) / 1.4));
+      }
+
+      if (!taglineShown && time >= 5.5) {
         taglineShown = true;
         showTagline();
       }
 
-      if (!finished) rafId = requestAnimationFrame(loop);
+      if (finished) return;
+      if (time < DURATION) {
+        rafId = requestAnimationFrame(loop);
+      } else {
+        finishIntro(false);
+      }
     }
 
     rafId = requestAnimationFrame(loop);
-
-    // Чёткая вырезка букв: не пытаемся рисовать 2D поверх активного WebGL-
-    // канваса — вместо этого накладываем реальный логотип отдельным <img>,
-    // синхронизированным по времени с REVEAL_*, поверх канваса.
-    var reveal = document.getElementById("intro-logo-reveal");
-    if (reveal && logoGeometry) {
-      var revealCtx = reveal.getContext("2d");
-      var revealDpr = Math.min(window.devicePixelRatio || 1, 2);
-      reveal.width = Math.max(1, Math.round(logoGeometry.destW * revealDpr));
-      reveal.height = Math.max(1, Math.round(logoGeometry.destH * revealDpr));
-      reveal.style.left = logoGeometry.destX + "px";
-      reveal.style.top = logoGeometry.destY + "px";
-      reveal.style.width = logoGeometry.destW + "px";
-      reveal.style.height = logoGeometry.destH + "px";
-      if (revealCtx) {
-        revealCtx.setTransform(revealDpr, 0, 0, revealDpr, 0, 0);
-        revealCtx.drawImage(logoGeometry.canvas, 0, 0, logoGeometry.destW, logoGeometry.destH);
-      }
-      window.setTimeout(function () {
-        if (!finished) reveal.classList.add("is-visible");
-      }, REVEAL_START_MS);
-    }
-
-    window.setTimeout(function () {
-      finishIntro(false);
-    }, TOTAL_MS);
   }
 
   var started = false;
@@ -515,9 +549,5 @@
       },
       { once: true }
     );
-    // Подстраховка: если логотип почему-то не загрузится вовремя.
-    window.setTimeout(function () {
-      if (!finished && !started) proceedWhenReady();
-    }, 1200);
   }
 })();
