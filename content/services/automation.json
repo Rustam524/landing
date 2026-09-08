@@ -1,0 +1,11 @@
+{
+  "id": "automation",
+  "title": "Автоматизация бизнеса",
+  "description": "Упрощаем повторяющиеся процессы и связываем сервисы бизнеса между собой.",
+  "href": "/uslugi/avtomatizatsiya/",
+  "cta": "Посмотреть автоматизацию",
+  "icon": "automation",
+  "price": "",
+  "order": 5,
+  "kind": "service"
+}

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://algoritm.top/sitemap.xml

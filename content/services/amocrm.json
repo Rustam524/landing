@@ -1,0 +1,11 @@
+{
+  "id": "amocrm",
+  "title": "Внедрение amoCRM",
+  "description": "Настраиваем amoCRM под процессы компании, чтобы заявки не терялись.",
+  "href": "/uslugi/amocrm/",
+  "cta": "Посмотреть внедрение amoCRM",
+  "icon": "crm",
+  "price": "",
+  "order": 6,
+  "kind": "service"
+}

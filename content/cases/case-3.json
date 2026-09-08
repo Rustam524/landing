@@ -1,0 +1,14 @@
+{
+  "id": "case-3",
+  "niche": "Онлайн-обучение",
+  "categories": [
+    "target"
+  ],
+  "service": "Таргетированная реклама",
+  "task": "Задача проекта будет описана после подтверждения деталей клиентом.",
+  "result": "Результат уточняется у владельца агентства.",
+  "image": "/assets/img/cases/case-placeholder-3.svg",
+  "href": "/keysy/",
+  "placeholder": true,
+  "order": 3
+}
