@@ -1,3 +1,8 @@
+# ЧЕРНОВИК многостраничника. Не назначать эту ветку Production в Netlify.
+# Боевой сайт — ветка main (одностраничник algoritm.top).
+# Если эту ветку всё же назначат Production, сборка должна упасть,
+# а не затереть живой сайт.
+
 [build]
   publish = "."
   functions = "netlify/functions"
@@ -5,6 +10,9 @@
   # пересобираем /content в готовые данные и статические страницы блога —
   # см. scripts/build-content.js.
   command = "npm install && npm run build"
+
+[context.production]
+  command = "echo 'STOP: this is the draft multi-page site. Production branch must be main.' && exit 1"
 
 [build.environment]
   NODE_VERSION = "20"
