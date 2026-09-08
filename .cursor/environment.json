@@ -1,6 +1,6 @@
 {
   "name": "ALGORITM landing",
-  "install": "npm ci && npm config set prefix \"$HOME/.npm-global\" && npm install -g netlify-cli && npm run build",
+  "install": "npm ci && npm install -g --prefix \"$HOME/.npm-global\" netlify-cli && npm run build",
   "start": "cd /workspace && npm run build",
   "terminals": [
     {
