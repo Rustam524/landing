@@ -1,0 +1,12 @@
+{
+  "name": "ALGORITM landing",
+  "install": "npm ci && npm install -g --prefix \"$HOME/.npm-global\" netlify-cli && npm run build",
+  "start": "cd /workspace && npm run build",
+  "terminals": [
+    {
+      "name": "netlify-dev",
+      "command": "export PATH=\"$HOME/.npm-global/bin:$PATH\" && cd /workspace && netlify dev"
+    }
+  ],
+  "ports": [{ "name": "netlify dev", "port": 8888 }]
+}

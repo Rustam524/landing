@@ -3,5 +3,8 @@ node_modules/
 *.log
 .DS_Store
 
+# Создаётся `netlify dev` при инициализации окружения Edge Functions (в проекте их нет)
+deno.lock
+
 # Собирается автоматически при деплое из /content — см. scripts/build-content.js
 content/generated/
