@@ -2,6 +2,3 @@ node_modules/
 .netlify/
 *.log
 .DS_Store
-
-# Собирается автоматически при деплое из /content — см. scripts/build-content.js
-content/generated/

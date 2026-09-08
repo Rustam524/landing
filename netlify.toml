@@ -1,13 +1,11 @@
+# Боевой сайт algoritm.top — одностраничник.
+# Production branch в Netlify: main
+# Черновик многостраничника: ветка cursor/multipage-homepage-draft-f437
+# (её нельзя ставить как Production).
+
 [build]
   publish = "."
-  functions = "netlify/functions"
-  # При каждом деплое (в том числе после сохранения в /admin через Decap CMS)
-  # пересобираем /content в готовые данные и статические страницы блога —
-  # см. scripts/build-content.js.
-  command = "npm install && npm run build"
-
-[build.environment]
-  NODE_VERSION = "20"
+  command = "true"
 
 [[headers]]
   for = "/*"
@@ -15,7 +13,3 @@
     X-Frame-Options = "SAMEORIGIN"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-
-# Тестовые заглушки закрываются от индексации через meta noindex в самих
-# страницах (см. каждую страницу в /uslugi, /obuchenie, /blog и т.д.).
-# На проде noindex не устанавливается — см. index.html.
