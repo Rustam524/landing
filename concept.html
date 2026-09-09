@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>ALGORITM — 3D-секция (превью)</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+body{margin:0;background:#f4f0eb;color:#1b1712;font-family:Manrope,Arial,sans-serif}
+.pv-note{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:80;font-size:10px;letter-spacing:.12em;text-transform:uppercase;background:#b91c1c;color:#f4f0eb;padding:8px 14px;border-radius:2px;white-space:nowrap}
+.pv-pad{min-height:38vh;display:grid;place-items:center;padding:40px 6%;text-align:center;font-size:13px;color:#675c55;letter-spacing:.08em;text-transform:uppercase}
+body>#algoritm-3d{width:100%;margin-left:0}
+</style>
+</head>
+<body>
+<p class="pv-note">Только новая 3D-секция · пыль и главная не тронуты</p>
+<div class="pv-pad" id="algoritm-first-screen">Здесь стоит ваш первый экран с пылью. Листайте вниз.</div>
+<!-- ALGORITM 3D scroll section: start -->
+<link rel="stylesheet" href="assets/3d/algoritm-3d.css">
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.1/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.1/examples/jsm/"}}</script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<section id="algoritm-3d" aria-label="Как работает система ALGORITM">
+  <div class="a3-pin">
+    <canvas class="a3-canvas" aria-hidden="true"></canvas>
+    <div class="a3-glow" aria-hidden="true"></div>
+    <div class="a3-grain" aria-hidden="true"></div>
+    <div class="a3-top"><span data-kz="Жүйе қалай жұмыс істейді">Как работает система</span><span class="a3-counter"><b>01</b> / 05</span></div>
+    <div class="a3-stages">
+      <article class="a3-stage" data-stage="0">
+        <p class="a3-kicker" data-kz="ALGORITM · жүйе">ALGORITM · система</p>
+        <h2 class="a3-title" data-kz="Көрінетін маркетинг пен ЖИ.">Маркетинг и ИИ, которые видно.</h2>
+        <p class="a3-text" data-kz="Контент, жарнама, бот және CRM бір жүйе ретінде жұмыс істейді. Төмен қарай айналдырыңыз — қалай екенін көрсетеміз.">Контент, реклама, бот и CRM работают как одна система. Листайте — покажем, как.</p>
+      </article>
+      <article class="a3-stage" data-stage="1">
+        <p class="a3-kicker" data-kz="01 / SMM және таргет">01 / SMM и таргет</p>
+        <h2 class="a3-title" data-kz="Ролик лентаны тоқтатады.">Ролик останавливает ленту.</h2>
+        <p class="a3-text" data-kz="Контент түсіреміз, Шымкент пен Қазақстанға таргет іске қосамыз. Клиент WhatsApp-қа жазады.">Снимаем контент, запускаем таргет на Шымкент и Казахстан. Клиент пишет в WhatsApp.</p>
+        <ul class="a3-chips"><li>Reels</li><li data-kz="Таргет">Таргет</li><li data-kz="Өтінім">Заявка</li></ul>
+      </article>
+      <article class="a3-stage" data-stage="2">
+        <p class="a3-kicker" data-kz="02 / ЖИ-боттар және CRM">02 / ИИ-боты и CRM</p>
+        <h2 class="a3-title" data-kz="Бот бірнеше секундта жауап береді.">Бот отвечает за секунды.</h2>
+        <p class="a3-text" data-kz="Мәліметтерді нақтылайды, CRM-ге сақтайды, менеджерге береді. Тәулік бойы.">Уточняет детали, сохраняет в CRM, передаёт менеджеру. Круглосуточно.</p>
+        <ul class="a3-chips"><li>WhatsApp</li><li>CRM</li><li>24/7</li></ul>
+      </article>
+      <article class="a3-stage" data-stage="3">
+        <p class="a3-kicker" data-kz="03 / SMM және UGC оқыту">03 / Обучение SMM и UGC</p>
+        <h2 class="a3-title" data-kz="Сатып алатындай түсіруге үйретеміз.">Учим снимать так, чтобы покупали.</h2>
+        <p class="a3-text" data-kz="Түсірілім, монтаж, мәтіндер. Бірінші роликті курста-ақ жасайсыз.">Съёмка, монтаж, тексты. Первый ролик вы собираете уже на курсе.</p>
+        <ul class="a3-chips"><li data-kz="Түсірілім">Съёмка</li><li data-kz="Монтаж">Монтаж</li><li data-kz="Сатылым">Продажи</li></ul>
+      </article>
+      <article class="a3-stage" data-stage="4">
+        <p class="a3-kicker" data-kz="04 / ЖИ және бот жасауды оқыту">04 / Обучение ИИ и ботам</p>
+        <h2 class="a3-title" data-kz="Өз ботыңызды құрастырасыз.">Собираете своего бота.</h2>
+        <p class="a3-text" data-kz="Рөл, сценарий, тексеру. Курстан кейін бот сіздің бизнесіңізге жұмыс істейді.">Роль, сценарий, проверка. После курса бот работает на ваш бизнес.</p>
+        <ul class="a3-chips"><li data-kz="Рөл">Роль</li><li data-kz="Сценарий">Сценарий</li><li data-kz="Іске қосу">Запуск</li></ul>
+        <a class="a3-cta" href="#algoritm-contacts"><span data-kz="Бизнесіңізден бастайық">Начнём с вашего бизнеса</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </article>
+    </div>
+    <div class="a3-progress" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+    <p class="a3-hint" data-kz="Айналдырыңыз">Листайте</p>
+  </div>
+</section>
+<script type="module" src="assets/3d/algoritm-3d.js"></script>
+<!-- ALGORITM 3D scroll section: end -->
+
+<div class="pv-pad" id="algoritm-contacts">Дальше идут ваши секции: услуги, кейсы, о нас, контакты.</div>
+</body>
+</html>
