@@ -1,10 +1,11 @@
 /* ALGORITM 3D scroll section (Three.js + GSAP). Sits between the first screen and services. */
 html{overflow-x:hidden}
-#algoritm-complete-home>section#algoritm-3d,#algoritm-3d{padding:0;border:0;margin:0}
+/* Full-bleed: the parent is a centered max-width container, so pull the section out to the viewport edges. */
+#algoritm-complete-home>section#algoritm-3d,#algoritm-3d{padding:0;border:0;margin:0 0 0 calc(50% - 50vw);width:100vw}
 #algoritm-3d+section{border-top:0}
 #algoritm-3d{
   --a3-bg:#0d0a0b;--a3-cream:#f4f0eb;--a3-red:#b91c1c;--a3-muted:#a1968b;--a3-stages:5;
-  position:relative;width:100vw;margin-left:calc(50% - 50vw);height:calc(var(--a3-stages) * 100vh);
+  position:relative;height:calc(var(--a3-stages) * 100vh);
   background:var(--a3-bg);color:var(--a3-cream);font-family:Manrope,Arial,sans-serif;text-align:left;color-scheme:dark
 }
 #algoritm-3d *{box-sizing:border-box}
