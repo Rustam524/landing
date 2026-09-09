@@ -41,9 +41,9 @@ export const SCENES = {
     alt: 'Ночная улица Шымкента с высоты, следы фар',
     temporary: true,
     credit: 'Временный кадр · Wikimedia Commons, CC0',
-    focus: { x: 0.42, y: 0.46 },
-    camera: { from: { s: 1.0, x: 0, y: 0 }, to: { s: 1.42, x: 0, y: 0.03 } },
-    exit: { s: 1.75 }
+    focus: { x: 0.80, y: 0.42 },
+    camera: { from: { s: 1.0, x: 0, y: 0 }, to: { s: 1.5, x: 0, y: 0 } },
+    exit: { s: 1.8 }
   },
   ads: {
     kind: 'photo',
@@ -51,9 +51,9 @@ export const SCENES = {
     alt: 'Торгово-деловой центр в Шымкенте ночью',
     temporary: true,
     credit: 'Временный кадр · Wikimedia Commons, public domain',
-    focus: { x: 0.40, y: 0.46 },
-    camera: { from: { s: 1.0, x: 0, y: -0.02 }, to: { s: 1.55, x: 0, y: 0 } },
-    exit: { s: 3.2 }
+    focus: { x: 0.36, y: 0.33 },
+    camera: { from: { s: 1.42, x: 0, y: 0 }, to: { s: 1.6, x: 0, y: 0 } },
+    exit: { s: 2.6 }
   },
   team: {
     kind: 'dom',
@@ -61,6 +61,7 @@ export const SCENES = {
     credit: 'Временная иллюстрация · заменится на видео студии',
     windowSrc: 'assets/city/media/shymkent-mega-center.jpg',
     focus: { x: 0.5, y: 0.5 },
+    focusMobile: { x: 0.3, y: 0.5 },
     camera: { from: { s: 1.12, x: -0.03, y: 0 }, to: { s: 1.0, x: 0.02, y: 0 } },
     exit: { s: 1.25 }
   },
@@ -69,6 +70,7 @@ export const SCENES = {
     temporary: true,
     credit: 'Временная иллюстрация · заменится на видео',
     focus: { x: 0.48, y: 0.5 },
+    focusMobile: { x: 0.5, y: 0.5 },
     camera: { from: { s: 1.18, x: 0.05, y: 0 }, to: { s: 1.0, x: 0, y: 0 } },
     exit: { s: 1.0 }
   }

@@ -39,6 +39,7 @@ function init() {
   const caps = [...root.querySelectorAll('.cj-cap')];
   const stepEl = root.querySelector('.cj-step');
   const stageBtns = [...root.querySelectorAll('.cj-stages button')];
+  const black = root.querySelector('.cj-black');
 
   if (reduced) root.classList.add('is-reduced');
 
@@ -100,7 +101,7 @@ function init() {
   function placePlate(s, cam) {
     const cover = Math.max(W / PLATE_W, H / PLATE_H);
     const S = cover * cam.s;
-    const f = s.cfg.focus || { x: .5, y: .5 };
+    const f = (W < H && s.cfg.focusMobile) || s.cfg.focus || { x: .5, y: .5 };
     const par = reduced ? 0 : 1;
     let tx = W / 2 - f.x * PLATE_W * S + cam.x * W + mouse.x * 7 * par;
     let ty = H / 2 - f.y * PLATE_H * S + cam.y * H + mouse.y * 5 * par;
@@ -135,6 +136,14 @@ function init() {
         s.video.currentTime = t * s.video.duration; s.lastVideoT = t;
       }
     });
+
+    // brief dip to black on every cut; the fly-through into the building goes fully dark
+    let dark = 0;
+    if (!reduced) scenes.slice(0, -1).forEach(s => {
+      const k = s.id === 'ads' ? 1 : 0.6;
+      dark = Math.max(dark, k * (1 - smooth(Math.abs(p - s.to) / FADE)));
+    });
+    black.style.opacity = dark.toFixed(3);
 
     root.style.setProperty('--intro', current === 0 ? (1 - smooth((p - (scenes[0].to - FADE * 2)) / (FADE * 2))).toFixed(3) : '0');
     if (p > 0.02) root.dataset.started = '';
@@ -173,13 +182,21 @@ function init() {
   }
   scenes.forEach(s => {
     s.el.querySelectorAll('.cj-hot').forEach(h => {
+      let armed = null; // live state before a tap, captured before focus flips it
       if (hoverable) {
         h.addEventListener('pointerenter', () => setLive(s, true));
         h.addEventListener('pointerleave', () => { if (document.activeElement !== h) setLive(s, false); });
       }
       h.addEventListener('focus', () => setLive(s, true));
-      h.addEventListener('blur', () => setLive(s, false));
-      h.addEventListener('click', () => setLive(s, !s.el.classList.contains('is-live')));
+      h.addEventListener('blur', () => { if (hoverable) setLive(s, false); });
+      h.addEventListener('pointerdown', () => { armed = s.el.classList.contains('is-live'); });
+      h.addEventListener('click', e => {
+        const keyboard = e.detail === 0;
+        if (hoverable && !keyboard) return; // mouse users already got the effect on hover
+        const was = armed === null ? s.el.classList.contains('is-live') : armed;
+        armed = null;
+        setLive(s, keyboard ? !s.el.classList.contains('is-live') : !was);
+      });
     });
   });
 
