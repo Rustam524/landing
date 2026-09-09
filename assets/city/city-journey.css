@@ -73,6 +73,7 @@
 #algoritm-city .cj-scene.is-live .cj-sign-text{text-shadow:0 0 2px #fff,0 0 22px #f4f0eb,0 0 70px #b91c1c,0 6px 30px #00000088}/* ---------- rooms (scenes 3–4) ---------- */
 
 #algoritm-city .cj-room{background:#090707}
+#algoritm-city .has-video>.cj-room-wall,#algoritm-city .has-video>.cj-room-floor,#algoritm-city .has-video>.cj-room-window{display:none}
 #algoritm-city .cj-room-wall{position:absolute;inset:0 0 30% 0;background:
   repeating-linear-gradient(90deg,transparent 0 118px,#ffffff05 118px 120px),
   radial-gradient(60% 90% at 24% 40%,#b91c1c2e,transparent 70%),linear-gradient(#171214,#0f0b0c 60%,#0a0808)}

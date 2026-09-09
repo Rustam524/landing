@@ -62,9 +62,23 @@ function init() {
   // ---- media loading: first scene right away, the rest when the block is near ----
   const load = s => {
     if (s.loaded) return; s.loaded = true;
+    if (s.cfg.kind === 'video' && s.cfg.src) {
+      // a manifest swap to video needs no markup change: the element is created here
+      if (!s.video) {
+        s.video = document.createElement('video');
+        s.video.className = 'cj-photo';
+        s.video.muted = true; s.video.playsInline = true; s.video.preload = 'auto';
+        if (s.cfg.poster) s.video.poster = s.cfg.poster;
+        s.plate.prepend(s.video);
+        s.plate.classList.add('has-video');
+        s.video.addEventListener('loadedmetadata', () => render(state.p));
+        if (s.photo) s.photo.remove();
+      }
+      s.video.src = s.cfg.src; s.video.load();
+      return;
+    }
     if (s.photo && s.cfg.src) { s.photo.src = s.cfg.src; s.photo.alt = s.cfg.alt || ''; }
     if (s.windowPhoto && s.cfg.windowSrc) s.windowPhoto.src = s.cfg.windowSrc;
-    if (s.video && s.cfg.src) { s.video.src = s.cfg.src; s.video.muted = true; s.video.preload = 'auto'; s.video.load(); }
   };
   scenes.filter(s => s.cfg.eager).forEach(load);
   const near = new IntersectionObserver(entries => {
@@ -238,8 +252,6 @@ function init() {
   new IntersectionObserver(entries => {
     root.classList.toggle('is-offscreen', !entries.some(e => e.isIntersecting));
   }, { threshold: 0.01 }).observe(root);
-
-  scenes.forEach(s => { if (s.video) s.video.addEventListener('loadedmetadata', () => render(state.p)); });
 
   root.classList.add('is-ready');
   render(0);
