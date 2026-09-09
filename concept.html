@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>ALGORITM — концепция главной (превью)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#09070a;
+      --cream:#f3eadf;
+      --red:#d21f1f;
+      --muted:#8a7f74;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{background:var(--bg);color:var(--cream);font-family:Syne,Arial,sans-serif;min-height:100%}
+    button{font:inherit;color:inherit;cursor:pointer}
+    a{color:inherit}
+    .note{
+      position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:80;
+      font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+      background:#d21f1ee6;color:#fff;padding:8px 14px;border-radius:2px;white-space:nowrap;
+    }
+    #webgl{position:fixed;inset:0;width:100%;height:100%;z-index:0}
+    .vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 70% 45%,transparent 20%,#09070ad4 78%)}
+    .grain{position:fixed;inset:0;z-index:40;pointer-events:none;opacity:.14;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+
+    #intro{
+      position:fixed;inset:0;z-index:60;background:#100c11;display:flex;align-items:center;justify-content:center;
+      transition:opacity .7s ease;
+    }
+    #intro.gone{opacity:0;pointer-events:none}
+    #dust{position:absolute;inset:0;width:100%;height:100%}
+    .skip{
+      position:fixed;bottom:24px;right:5%;z-index:70;background:transparent;border:1px solid #f4e8d844;
+      color:#f4e8d8;padding:12px 20px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+    }
+
+    .page{position:relative;z-index:2;opacity:0;transition:opacity 1s ease .15s}
+    .page.on{opacity:1}
+    .hero{min-height:100dvh;display:grid;grid-template-columns:minmax(280px,.92fr) minmax(280px,1.08fr);gap:4%;align-items:center;padding:88px 6% 40px}
+    .kicker{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:22px}
+    h1{font-size:clamp(40px,6.4vw,78px);line-height:.95;letter-spacing:-.05em;font-weight:800;max-width:11ch}
+    h1 em{font-style:normal;color:var(--red)}
+    .lead{margin-top:22px;max-width:38ch;color:#c9bdb0;font-size:16px;line-height:1.55;font-weight:500}
+    .tabs{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
+    .tabs button{
+      border:1px solid #f3eadf22;background:transparent;padding:10px 14px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+    }
+    .tabs button[aria-pressed="true"]{background:var(--cream);color:#111;border-color:var(--cream)}
+
+    .stage{position:relative;min-height:520px}
+    .hud{
+      position:absolute;right:0;top:50%;transform:translateY(-50%);
+      width:min(100%,340px);border:1px solid #f3eadf26;background:#0c0a0ccc;backdrop-filter:blur(14px);
+      padding:16px;overflow:hidden;
+    }
+    .hud-top{display:flex;justify-content:space-between;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+    .phone{
+      position:relative;aspect-ratio:9/16;border-radius:28px;overflow:hidden;border:1px solid #f3eadf33;
+      background:#120e14;box-shadow:0 0 0 1px #000, 0 30px 80px #000a;
+    }
+    .phone:before{content:"";position:absolute;left:50%;top:8px;transform:translateX(-50%);width:28%;height:4%;background:#050406;border-radius:20px;z-index:3}
+    .frame{position:absolute;inset:0;opacity:0;transition:opacity .45s ease;pointer-events:none}
+    .frame.on{opacity:1}
+    .signal{
+      position:absolute;inset:0;background:
+        radial-gradient(circle at 30% 30%, #d21f1f88, transparent 42%),
+        linear-gradient(160deg,#1a0c12,#09070a 55%,#3a1515);
+    }
+    .signal .orb{
+      position:absolute;width:46%;aspect-ratio:1;border:1px solid #f3eadf55;border-radius:50%;
+      left:27%;top:28%;animation:spin 14s linear infinite;
+      box-shadow:inset 0 0 40px #d21f1f55, 0 0 50px #d21f1f55;
+    }
+    .signal .orb:after{content:"";position:absolute;inset:18%;border:1px dashed #f3eadf66;border-radius:50%;animation:spin 7s linear infinite reverse}
+    .signal h3{position:absolute;left:8%;right:8%;bottom:18%;font-size:22px;line-height:1.1;letter-spacing:-.04em}
+    .signal small{position:absolute;left:8%;top:12%;font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#ffb4b4}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    .ads{padding:18% 8% 10%;font-family:"IBM Plex Mono",monospace}
+    .ads .live{display:flex;align-items:center;gap:8px;color:#7dff9a;font-size:10px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:18px}
+    .ads .live i{width:7px;height:7px;border-radius:50%;background:#7dff9a;display:block;box-shadow:0 0 10px #7dff9a;animation:pulse 1.2s ease infinite}
+    @keyframes pulse{50%{opacity:.35}}
+    .ads h3{font-family:Syne,Arial,sans-serif;font-size:26px;letter-spacing:-.04em;margin-bottom:18px}
+    .row{display:flex;justify-content:space-between;border-top:1px solid #f3eadf22;padding:10px 0;font-size:11px;color:#c9bdb0}
+    .row b{color:var(--cream);font-weight:500}
+
+    .chat{padding:22% 8% 12%;display:flex;flex-direction:column;gap:10px}
+    .bubble{background:#efe9df;color:#18251f;padding:12px 12px 10px;border-radius:4px 14px 14px 14px;max-width:92%}
+    .bubble b{display:block;font-size:11px;margin-bottom:4px}
+    .bubble p{font-size:14px;line-height:1.35}
+    .bubble em{display:block;margin-top:6px;font-style:normal;font-size:10px;color:#66706a;font-family:"IBM Plex Mono",monospace}
+    .status{align-self:flex-end;font-family:"IBM Plex Mono",monospace;font-size:10px;color:#7dff9a}
+
+    .steps{display:flex;gap:6px;margin-top:12px}
+    .steps i{flex:1;height:3px;background:#f3eadf22}
+    .steps i.on{background:var(--red)}
+
+    .rest{padding:10vh 6% 12vh;display:grid;gap:18px;max-width:1280px}
+    .card{
+      border:1px solid #f3eadf18;padding:28px 24px;background:#0c0a0c99;
+      display:grid;grid-template-columns:120px 1fr;gap:20px;align-items:center;
+    }
+    .card small{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--red)}
+    .card p{color:#c9bdb0;max-width:62ch;line-height:1.55}
+    @media(max-width:860px){
+      .hero{grid-template-columns:1fr;padding-top:96px}
+      .stage{min-height:560px}
+      .hud{position:relative;top:auto;transform:none;width:100%;margin-top:12px}
+      .card{grid-template-columns:1fr}
+      .note{font-size:9px;width:calc(100% - 24px);text-align:center;white-space:normal}
+    }
+  </style>
+</head>
+<body>
+  <p class="note">Пример концепции · старый черновик не тронут</p>
+  <canvas id="webgl"></canvas>
+  <div class="vignette"></div>
+  <div class="grain"></div>
+
+  <div id="intro">
+    <canvas id="dust"></canvas>
+  </div>
+  <button class="skip" type="button" id="skip">Пропустить</button>
+
+  <main class="page" id="page">
+    <section class="hero">
+      <div>
+        <p class="kicker">Шымкент · digital-система</p>
+        <h1>Маркетинг и ИИ, <em>которые видно.</em></h1>
+        <p class="lead">Не фото еды. Живая сцена: ролик → реклама → заявка. Клиент сразу понимает, чем вы занимаетесь.</p>
+        <div class="tabs" role="tablist">
+          <button type="button" data-mode="smm" aria-pressed="true">SMM / таргет</button>
+          <button type="button" data-mode="ai" aria-pressed="false">ИИ / CRM</button>
+          <button type="button" data-mode="learn" aria-pressed="false">Обучение</button>
+        </div>
+      </div>
+      <div class="stage">
+        <div class="hud" id="hud">
+          <div class="hud-top"><span id="hud-label">ALGORITM / SMM</span><span id="hud-step">01 контент</span></div>
+          <div class="phone">
+            <div class="frame on" data-frame="0">
+              <div class="signal">
+                <small>Creative · live</small>
+                <div class="orb"></div>
+                <h3>Сигнал, который останавливает ленту</h3>
+              </div>
+            </div>
+            <div class="frame" data-frame="1">
+              <div class="ads">
+                <div class="live"><i></i> В эфире</div>
+                <h3>Запуск в Шымкенте</h3>
+                <div class="row"><span>Город</span><b>Шымкент</b></div>
+                <div class="row"><span>Аудитория</span><b>18–45</b></div>
+                <div class="row"><span>Показы</span><b id="shows">2 140</b></div>
+                <div class="row"><span>Цель</span><b>заявки</b></div>
+              </div>
+            </div>
+            <div class="frame" data-frame="2">
+              <div class="chat">
+                <div class="bubble">
+                  <b>Клиент</b>
+                  <p>Хочу записаться. Это ещё актуально?</p>
+                  <em>только что</em>
+                </div>
+                <div class="status">заявка получена</div>
+              </div>
+            </div>
+          </div>
+          <div class="steps" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="rest">
+      <article class="card"><small>Кейсы</small><p>Не галерея блюд. Бренды как данные: охват, заявки, ответ бота. Карточка загорается внутри той же системы.</p></article>
+      <article class="card"><small>Процесс</small><p>Задача клиента проходит через 3D-сцену: анализ → запуск → результат. Не четыре бумажные карточки.</p></article>
+      <article class="card"><small>Контакты</small><p>Тот же тёмный экран. Человек оставляет задачу — объект на фоне принимает её как новый сигнал.</p></article>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/three@0.160.1/build/three.min.js"></script>
+  <script>
+    const intro = document.getElementById('intro');
+    const skip = document.getElementById('skip');
+    const page = document.getElementById('page');
+    const dust = document.getElementById('dust');
+    const dctx = dust.getContext('2d');
+    let particles = [];
+    let introStart = 0;
+    let introDone = false;
+
+    function sizeDust(){
+      dust.width = innerWidth * devicePixelRatio;
+      dust.height = innerHeight * devicePixelRatio;
+      dctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+    }
+    function makeParticles(){
+      const off = document.createElement('canvas');
+      const ox = off.getContext('2d');
+      const w = Math.min(innerWidth * 0.86, 920);
+      off.width = w; off.height = 180;
+      ox.fillStyle = '#fff';
+      ox.font = '800 92px Syne, Arial, sans-serif';
+      ox.textAlign = 'center';
+      ox.textBaseline = 'middle';
+      ox.fillText('ALGORITM', w/2, 96);
+      const img = ox.getImageData(0,0,off.width,off.height).data;
+      const pts = [];
+      for (let y=0;y<off.height;y+=3){
+        for (let x=0;x<off.width;x+=3){
+          if (img[(y*off.width+x)*4+3] > 140) pts.push({x,y});
+        }
+      }
+      const dx = (innerWidth - w) / 2;
+      const dy = innerHeight/2 - 90;
+      particles = pts.map(p => ({
+        x: Math.random()*innerWidth,
+        y: Math.random()*innerHeight,
+        tx: p.x + dx,
+        ty: p.y + dy
+      }));
+    }
+    function drawIntro(t){
+      if (introDone) return;
+      const p = Math.min(1, t / 2800);
+      const ease = 1 - Math.pow(1-p, 3);
+      dctx.clearRect(0,0,innerWidth,innerHeight);
+      dctx.fillStyle = '#e7d7c6';
+      for (const pt of particles){
+        const x = pt.x + (pt.tx - pt.x) * ease;
+        const y = pt.y + (pt.ty - pt.y) * ease;
+        dctx.fillRect(x, y, 1.4, 1.4);
+      }
+      if (t > 3800) closeIntro();
+      else requestAnimationFrame(now => drawIntro(now - introStart));
+    }
+    function closeIntro(){
+      if (introDone) return;
+      introDone = true;
+      intro.classList.add('gone');
+      skip.style.display = 'none';
+      page.classList.add('on');
+      startThree();
+    }
+    sizeDust(); makeParticles();
+    introStart = performance.now();
+    requestAnimationFrame(now => { introStart = now; drawIntro(0); });
+    skip.onclick = closeIntro;
+    addEventListener('resize', () => { if (!introDone){ sizeDust(); makeParticles(); }});
+
+    const frames = [...document.querySelectorAll('.frame')];
+    const stepMarks = [...document.querySelectorAll('.steps i')];
+    const hudLabel = document.getElementById('hud-label');
+    const hudStep = document.getElementById('hud-step');
+    const shows = document.getElementById('shows');
+    const copy = {
+      smm: [
+        ['ALGORITM / SMM', '01 контент'],
+        ['ALGORITM / SMM', '02 реклама'],
+        ['ALGORITM / SMM', '03 заявка']
+      ],
+      ai: [
+        ['ALGORITM / AI', '01 обращение'],
+        ['ALGORITM / AI', '02 бот'],
+        ['ALGORITM / AI', '03 менеджер']
+      ],
+      learn: [
+        ['ALGORITM / LEARN', '01 урок'],
+        ['ALGORITM / LEARN', '02 практика'],
+        ['ALGORITM / LEARN', '03 навык']
+      ]
+    };
+    let mode = 'smm', frame = 0, timer;
+    function setFrame(n){
+      frame = n;
+      frames.forEach((el,i)=>el.classList.toggle('on', i===n));
+      stepMarks.forEach((el,i)=>el.classList.toggle('on', i<=n));
+      hudLabel.textContent = copy[mode][n][0];
+      hudStep.textContent = copy[mode][n][1];
+    }
+    function tickShows(){
+      if (frame !== 1 || mode !== 'smm') return;
+      const n = 2140 + Math.floor((Date.now()/80)%1800);
+      shows.textContent = n.toLocaleString('ru-RU');
+    }
+    function loop(){
+      clearInterval(timer);
+      timer = setInterval(() => setFrame((frame+1)%3), 2400);
+    }
+    document.querySelectorAll('.tabs button').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('.tabs button').forEach(b => b.setAttribute('aria-pressed', String(b===btn)));
+        mode = btn.dataset.mode;
+        setFrame(0); loop();
+      };
+    });
+    loop();
+    setInterval(tickShows, 90);
+
+    let renderer, scene, camera, core, ring, spin;
+    function startThree(){
+      if (!window.THREE) return;
+      const canvas = document.getElementById('webgl');
+      renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+      renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+      renderer.setSize(innerWidth, innerHeight);
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(32, innerWidth/innerHeight, 0.1, 100);
+      camera.position.set(0, 0, 8);
+      const amb = new THREE.AmbientLight(0x66584c, .7);
+      scene.add(amb);
+      const red = new THREE.PointLight(0xd21f1f, 40, 18);
+      red.position.set(2.2, 1.2, 3);
+      scene.add(red);
+      const cream = new THREE.PointLight(0xf3eadf, 12, 16);
+      cream.position.set(-3, -1, 4);
+      scene.add(cream);
+
+      const geo = new THREE.IcosahedronGeometry(1.55, 1);
+      core = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({
+        color: 0x1a1214, metalness: .85, roughness: .22, emissive: 0x3a0a0a, emissiveIntensity: .55
+      }));
+      scene.add(core);
+      const wire = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({color:0xf3eadf, wireframe:true, transparent:true, opacity:.22}));
+      core.add(wire);
+      ring = new THREE.Mesh(
+        new THREE.TorusGeometry(2.35, 0.012, 8, 120),
+        new THREE.MeshBasicMaterial({color:0xd21f1f, transparent:true, opacity:.7})
+      );
+      ring.rotation.x = Math.PI/2.6;
+      scene.add(ring);
+
+      const pgeo = new THREE.BufferGeometry();
+      const n = 500, arr = new Float32Array(n*3);
+      for (let i=0;i<n;i++){
+        const r = 3.2 + Math.random()*5;
+        const a = Math.random()*Math.PI*2;
+        const b = (Math.random()-.5)*Math.PI;
+        arr[i*3] = Math.cos(a)*Math.cos(b)*r;
+        arr[i*3+1] = Math.sin(b)*r*.6;
+        arr[i*3+2] = Math.sin(a)*Math.cos(b)*r;
+      }
+      pgeo.setAttribute('position', new THREE.BufferAttribute(arr,3));
+      scene.add(new THREE.Points(pgeo, new THREE.PointsMaterial({color:0xf3eadf, size:.018, transparent:true, opacity:.55})));
+
+      const target = new THREE.Vector2();
+      addEventListener('pointermove', e => {
+        target.x = (e.clientX/innerWidth)*2-1;
+        target.y = -(e.clientY/innerHeight)*2+1;
+      });
+      addEventListener('resize', () => {
+        renderer.setSize(innerWidth, innerHeight);
+        camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix();
+      });
+      function anim(){
+        requestAnimationFrame(anim);
+        core.rotation.y += 0.004 + frame*0.0015;
+        core.rotation.x += 0.0015;
+        ring.rotation.z += 0.006;
+        camera.position.x += (target.x*0.6 - camera.position.x)*0.04;
+        camera.position.y += (target.y*0.35 - camera.position.y)*0.04;
+        camera.lookAt(0,0,0);
+        renderer.render(scene, camera);
+      }
+      anim();
+    }
+  </script>
+</body>
+</html>
