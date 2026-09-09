@@ -132,7 +132,7 @@
       <div>
         <p class="kicker">Шымкент · digital-система</p>
         <h1>Маркетинг и ИИ, <em>которые видно.</em></h1>
-        <p class="lead">Не фото еды. Живая сцена: ролик → реклама → заявка. Клиент сразу понимает, чем вы занимаетесь.</p>
+        <p class="lead">Сначала ролик. Потом реклама в городе. Потом заявка в чат. Клиент видит систему, а не картинку.</p>
         <div class="tabs" role="tablist">
           <button type="button" data-mode="smm" aria-pressed="true">SMM / таргет</button>
           <button type="button" data-mode="ai" aria-pressed="false">ИИ / CRM</button>
@@ -142,15 +142,15 @@
       <div class="stage">
         <div class="hud" id="hud">
           <div class="hud-top"><span id="hud-label">ALGORITM / SMM</span><span id="hud-step">01 контент</span></div>
-          <div class="phone">
-            <div class="frame on" data-frame="0">
+          <div class="phone" data-show="smm">
+            <div class="frame on" data-mode="smm" data-frame="0">
               <div class="signal">
                 <small>Creative · live</small>
                 <div class="orb"></div>
                 <h3>Сигнал, который останавливает ленту</h3>
               </div>
             </div>
-            <div class="frame" data-frame="1">
+            <div class="frame" data-mode="smm" data-frame="1">
               <div class="ads">
                 <div class="live"><i></i> В эфире</div>
                 <h3>Запуск в Шымкенте</h3>
@@ -160,7 +160,7 @@
                 <div class="row"><span>Цель</span><b>заявки</b></div>
               </div>
             </div>
-            <div class="frame" data-frame="2">
+            <div class="frame" data-mode="smm" data-frame="2">
               <div class="chat">
                 <div class="bubble">
                   <b>Клиент</b>
@@ -168,6 +168,60 @@
                   <em>только что</em>
                 </div>
                 <div class="status">заявка получена</div>
+              </div>
+            </div>
+            <div class="frame" data-mode="ai" data-frame="0">
+              <div class="chat">
+                <div class="bubble">
+                  <b>Клиент</b>
+                  <p>Сколько стоит отдых на выходные?</p>
+                  <em>сейчас</em>
+                </div>
+              </div>
+            </div>
+            <div class="frame" data-mode="ai" data-frame="1">
+              <div class="ads">
+                <div class="live"><i></i> Бот отвечает</div>
+                <h3>Уточнил даты и гостей</h3>
+                <div class="row"><span>Даты</span><b>12–14 сен</b></div>
+                <div class="row"><span>Гости</span><b>2 взрослых</b></div>
+                <div class="row"><span>Ответ</span><b>12 сек</b></div>
+              </div>
+            </div>
+            <div class="frame" data-mode="ai" data-frame="2">
+              <div class="chat">
+                <div class="bubble">
+                  <b>CRM</b>
+                  <p>Заявка передана менеджеру. Данные сохранены.</p>
+                  <em>готово</em>
+                </div>
+                <div class="status">менеджер в работе</div>
+              </div>
+            </div>
+            <div class="frame" data-mode="learn" data-frame="0">
+              <div class="signal">
+                <small>Lesson 01</small>
+                <div class="orb"></div>
+                <h3>Как собрать ролик, который держат до конца</h3>
+              </div>
+            </div>
+            <div class="frame" data-mode="learn" data-frame="1">
+              <div class="ads">
+                <div class="live"><i></i> Практика</div>
+                <h3>Монтаж за 20 минут</h3>
+                <div class="row"><span>Кадр</span><b>хук 3 сек</b></div>
+                <div class="row"><span>Текст</span><b>на экране</b></div>
+                <div class="row"><span>Звук</span><b>тренд</b></div>
+              </div>
+            </div>
+            <div class="frame" data-mode="learn" data-frame="2">
+              <div class="chat">
+                <div class="bubble">
+                  <b>Ученик</b>
+                  <p>Собрала первый ролик. Можно в рекламу?</p>
+                  <em>навык закреплён</em>
+                </div>
+                <div class="status">урок пройден</div>
               </div>
             </div>
           </div>
@@ -258,6 +312,7 @@
     const hudLabel = document.getElementById('hud-label');
     const hudStep = document.getElementById('hud-step');
     const shows = document.getElementById('shows');
+    const phone = document.querySelector('.phone');
     const copy = {
       smm: [
         ['ALGORITM / SMM', '01 контент'],
@@ -278,10 +333,14 @@
     let mode = 'smm', frame = 0, timer;
     function setFrame(n){
       frame = n;
-      frames.forEach((el,i)=>el.classList.toggle('on', i===n));
+      frames.forEach(el => {
+        const match = el.dataset.mode === mode && Number(el.dataset.frame) === n;
+        el.classList.toggle('on', match);
+      });
       stepMarks.forEach((el,i)=>el.classList.toggle('on', i<=n));
       hudLabel.textContent = copy[mode][n][0];
       hudStep.textContent = copy[mode][n][1];
+      if (phone) phone.dataset.show = mode;
     }
     function tickShows(){
       if (frame !== 1 || mode !== 'smm') return;
