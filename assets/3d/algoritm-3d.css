@@ -1,0 +1,48 @@
+/* ALGORITM 3D scroll section (Three.js + GSAP). Sits between the first screen and services. */
+html{overflow-x:hidden}
+#algoritm-complete-home>section#algoritm-3d,#algoritm-3d{padding:0;border:0;margin:0}
+#algoritm-3d+section{border-top:0}
+#algoritm-3d{
+  --a3-bg:#0d0a0b;--a3-cream:#f4f0eb;--a3-red:#b91c1c;--a3-muted:#a1968b;--a3-stages:5;
+  position:relative;width:100vw;margin-left:calc(50% - 50vw);height:calc(var(--a3-stages) * 100vh);
+  background:var(--a3-bg);color:var(--a3-cream);font-family:Manrope,Arial,sans-serif;text-align:left;color-scheme:dark
+}
+#algoritm-3d *{box-sizing:border-box}
+.a3-pin{position:sticky;top:0;height:100svh;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center}
+.a3-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.a3-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(55% 45% at 72% 52%,#b91c1c24,transparent 72%),radial-gradient(40% 40% at 12% 90%,#f4f0eb0a,transparent 70%)}
+.a3-grain{position:absolute;inset:0;pointer-events:none;opacity:.09;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.a3-top{position:absolute;top:0;left:0;right:0;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:26px 5%;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--a3-muted)}
+.a3-top b{color:var(--a3-cream);font-weight:600}
+.a3-stages{position:relative;z-index:2;grid-column:1;padding:0 5%;display:grid}
+.a3-stage{grid-area:1/1;align-self:center;visibility:hidden;opacity:0}
+.a3-kicker{display:flex;align-items:center;gap:12px;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--a3-red);margin:0 0 26px}
+.a3-kicker::before{content:'';width:27px;height:2px;background:var(--a3-red);flex-shrink:0}
+.a3-title{font-size:clamp(38px,5.2vw,72px);line-height:1.02;letter-spacing:-.05em;font-weight:500;margin:0;max-width:12ch;color:var(--a3-cream)}
+.a3-w{display:inline-block;overflow:hidden;vertical-align:bottom;padding-bottom:.1em;margin-bottom:-.1em}
+.a3-w>span{display:inline-block;will-change:transform}
+.a3-text{margin:26px 0 0;max-width:40ch;font-size:clamp(15px,1.2vw,18px);line-height:1.7;color:#cfc4b8}
+.a3-chips{list-style:none;display:flex;flex-wrap:wrap;gap:8px;margin:30px 0 0;padding:0}
+.a3-chips li{border:1px solid #f4f0eb2b;padding:9px 14px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;border-radius:2px;color:var(--a3-cream)}
+.a3-cta{display:inline-flex;gap:14px;align-items:center;margin-top:34px;background:var(--a3-red);color:var(--a3-cream);padding:17px 22px;font-size:14px;font-weight:600;border-radius:2px;text-decoration:none;transition:background .2s,transform .2s}
+.a3-cta:hover{background:#961717;transform:translateY(-2px)}
+.a3-cta svg{width:18px;height:18px}
+.a3-progress{position:absolute;left:5%;bottom:30px;display:flex;gap:6px;z-index:2}
+.a3-progress i{width:34px;height:2px;background:#f4f0eb2b;position:relative;overflow:hidden}
+.a3-progress i::after{content:'';position:absolute;inset:0;background:var(--a3-red);transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.a3-progress i.is-done::after{transform:scaleX(1)}
+.a3-hint{position:absolute;right:5%;bottom:28px;z-index:2;margin:0;display:flex;gap:12px;align-items:center;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--a3-muted)}
+.a3-hint::after{content:'';width:1px;height:30px;background:linear-gradient(var(--a3-red),transparent);animation:a3drop 1.7s cubic-bezier(.4,0,.2,1) infinite}
+@keyframes a3drop{0%{transform:scaleY(0);transform-origin:top}45%{transform:scaleY(1);transform-origin:top}55%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+@media(max-width:860px){
+  .a3-pin{grid-template-columns:1fr;align-items:end}
+  .a3-stages{padding:0 6% 92px}
+  .a3-title{font-size:clamp(34px,9.5vw,54px)}
+  .a3-text{font-size:15px;margin-top:18px}
+  .a3-chips{margin-top:20px}
+  .a3-top{padding:20px 6%}
+  .a3-progress{bottom:26px;left:6%}
+  .a3-hint{display:none}
+  .a3-glow{background:radial-gradient(60% 40% at 50% 28%,#b91c1c26,transparent 70%)}
+}
+@media(prefers-reduced-motion:reduce){.a3-hint::after{animation:none}}
